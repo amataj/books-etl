@@ -1,0 +1,40 @@
+{
+  "annotations": {
+    "changelogDate": "20251016001122"
+  },
+  "applications": ["booksEtl"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "documentId",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength", "maxlength"],
+      "fieldValidateRulesMaxlength": "64",
+      "fieldValidateRulesMinlength": "10"
+    },
+    {
+      "fieldName": "pageNo",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "1"
+    },
+    {
+      "fieldName": "text",
+      "fieldType": "TextBlob"
+    }
+  ],
+  "name": "BookPageText",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityField": "documentId",
+      "otherEntityName": "book",
+      "otherEntityRelationshipName": "pageText",
+      "relationshipName": "book",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

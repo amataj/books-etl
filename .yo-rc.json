@@ -1,0 +1,27 @@
+{
+  "generator-jhipster": {
+    "applicationType": "monolith",
+    "authenticationType": "jwt",
+    "baseName": "booksEtl",
+    "buildTool": "maven",
+    "cacheProvider": "caffeine",
+    "clientFramework": "react",
+    "clientTheme": "none",
+    "creationTimestamp": 1760573532161,
+    "devDatabaseType": "postgresql",
+    "enableHibernateCache": true,
+    "enableSwaggerCodegen": true,
+    "entities": ["Book", "BookFile", "BookPageText", "IngestRun", "IngestEvent"],
+    "jhipsterVersion": "8.11.0",
+    "jwtSecretKey": "YzQyOTQyMmI2Y2RmN2UzMjljNjljMzI0ODUwNjMzMzM2MDJjOTI1YmI2MTRiM2QyNWQxMWZlZWRhYzA5Zjc0MTcxMDE3ODQ2ODAwNzllYjZjZmNkMmI4NjA1ODNkOGIyMTcyMjRjYWMzZTdiYTJhNjdlMDQzMTI5ODg2MTI5ZTA=",
+    "languages": ["en"],
+    "lastLiquibaseTimestamp": 1760573602000,
+    "messageBroker": "kafka",
+    "nativeLanguage": "en",
+    "packageName": "com.example.books",
+    "prodDatabaseType": "postgresql",
+    "serviceDiscoveryType": "no",
+    "testFrameworks": ["cucumber"],
+    "withAdminUi": true
+  }
+}

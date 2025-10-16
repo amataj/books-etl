@@ -1,0 +1,55 @@
+{
+  "annotations": {
+    "changelogDate": "20251016001022"
+  },
+  "applications": ["booksEtl"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "pathNorm",
+      "fieldType": "TextBlob",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "sha256",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength", "maxlength"],
+      "fieldValidateRulesMaxlength": "64",
+      "fieldValidateRulesMinlength": "10"
+    },
+    {
+      "fieldName": "sizeBytes",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "mtime",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "storageUri",
+      "fieldType": "TextBlob"
+    },
+    {
+      "fieldName": "firstSeenAt",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "lastSeenAt",
+      "fieldType": "ZonedDateTime"
+    }
+  ],
+  "name": "BookFile",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityField": "documentId",
+      "otherEntityName": "book",
+      "otherEntityRelationshipName": "file",
+      "relationshipName": "book",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

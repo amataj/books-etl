@@ -1,0 +1,45 @@
+{
+  "annotations": {
+    "changelogDate": "20251016001222"
+  },
+  "applications": ["booksEtl"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "startedAt",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "finishedAt",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "32"
+    },
+    {
+      "fieldName": "filesSeen",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "filesParsed",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "filesFailed",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "0"
+    }
+  ],
+  "name": "IngestRun",
+  "relationships": [],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

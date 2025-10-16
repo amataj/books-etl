@@ -1,0 +1,27 @@
+{
+  "booksEtlApp": {
+    "bookPageText": {
+      "home": {
+        "title": "Book Page Texts",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Book Page Text",
+        "createOrEditLabel": "Create or edit a Book Page Text",
+        "notFound": "No Book Page Texts found"
+      },
+      "created": "A new Book Page Text is created with identifier {{ param }}",
+      "updated": "A Book Page Text is updated with identifier {{ param }}",
+      "deleted": "A Book Page Text is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Book Page Text {{ id }}?"
+      },
+      "detail": {
+        "title": "Book Page Text"
+      },
+      "id": "ID",
+      "documentId": "Document Id",
+      "pageNo": "Page No",
+      "text": "Text",
+      "book": "Book"
+    }
+  }
+}

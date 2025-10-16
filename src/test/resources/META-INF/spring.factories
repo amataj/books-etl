@@ -1,0 +1,4 @@
+org.springframework.test.context.ContextCustomizerFactory = \
+    com.example.books.config.\
+    SqlTestContainersSpringContextCustomizerFactory,com.example.books.config.\
+    KafkaTestContainersSpringContextCustomizerFactory

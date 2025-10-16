@@ -1,0 +1,14 @@
+{
+  "generator-jhipster": {
+    "deploymentType": "docker-compose",
+    "appsFolders": [
+      "booksetl"
+    ],
+    "directoryPath": "../",
+    "gatewayType": "SpringCloudGateway",
+    "monitoring": "no",
+    "clusteredDbApps": [],
+    "serviceDiscoveryType": "consul",
+    "dockerRepositoryName": "booksetl"
+  }
+}

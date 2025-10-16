@@ -1,0 +1,29 @@
+{
+  "booksEtlApp": {
+    "ingestEvent": {
+      "home": {
+        "title": "Ingest Events",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Ingest Event",
+        "createOrEditLabel": "Create or edit a Ingest Event",
+        "notFound": "No Ingest Events found"
+      },
+      "created": "A new Ingest Event is created with identifier {{ param }}",
+      "updated": "A Ingest Event is updated with identifier {{ param }}",
+      "deleted": "A Ingest Event is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Ingest Event {{ id }}?"
+      },
+      "detail": {
+        "title": "Ingest Event"
+      },
+      "id": "ID",
+      "runId": "Run Id",
+      "documentId": "Document Id",
+      "topic": "Topic",
+      "payload": "Payload",
+      "createdAt": "Created At",
+      "ingestRun": "Ingest Run"
+    }
+  }
+}

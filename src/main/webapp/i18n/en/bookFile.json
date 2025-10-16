@@ -1,0 +1,31 @@
+{
+  "booksEtlApp": {
+    "bookFile": {
+      "home": {
+        "title": "Book Files",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Book File",
+        "createOrEditLabel": "Create or edit a Book File",
+        "notFound": "No Book Files found"
+      },
+      "created": "A new Book File is created with identifier {{ param }}",
+      "updated": "A Book File is updated with identifier {{ param }}",
+      "deleted": "A Book File is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Book File {{ id }}?"
+      },
+      "detail": {
+        "title": "Book File"
+      },
+      "id": "ID",
+      "pathNorm": "Path Norm",
+      "sha256": "Sha 256",
+      "sizeBytes": "Size Bytes",
+      "mtime": "Mtime",
+      "storageUri": "Storage Uri",
+      "firstSeenAt": "First Seen At",
+      "lastSeenAt": "Last Seen At",
+      "book": "Book"
+    }
+  }
+}

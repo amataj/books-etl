@@ -1,0 +1,45 @@
+{
+  "annotations": {
+    "changelogDate": "20251016001322"
+  },
+  "applications": ["booksEtl"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "runId",
+      "fieldType": "UUID"
+    },
+    {
+      "fieldName": "documentId",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "64"
+    },
+    {
+      "fieldName": "topic",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "64"
+    },
+    {
+      "fieldName": "payload",
+      "fieldType": "TextBlob",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "createdAt",
+      "fieldType": "ZonedDateTime"
+    }
+  ],
+  "name": "IngestEvent",
+  "relationships": [
+    {
+      "otherEntityName": "ingestRun",
+      "relationshipName": "ingestRun",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

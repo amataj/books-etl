@@ -1,0 +1,87 @@
+application {
+  config {
+    baseName booksEtl
+    applicationType monolith
+    packageName com.example.books
+    prodDatabaseType postgresql
+    devDatabaseType postgresql
+    buildTool maven
+    authenticationType jwt
+    cacheProvider caffeine
+    enableHibernateCache true
+    enableSwaggerCodegen true
+    messageBroker kafka
+    serviceDiscoveryType no
+    testFrameworks [cucumber]
+    nativeLanguage en
+    languages [en]
+    clientFramework react
+    clientTheme none
+    withAdminUi true
+  }
+  entities *
+}
+
+entity Book {
+  documentId String required minlength(10) maxlength(64) unique,
+  title String maxlength(512),
+  author String maxlength(256),
+  lang String maxlength(16),
+  pages Integer min(1)
+}
+
+entity BookFile {
+  pathNorm TextBlob required,
+  sha256 String required minlength(10) maxlength(64),
+  sizeBytes Long,
+  mtime ZonedDateTime,
+  storageUri TextBlob,
+  firstSeenAt ZonedDateTime,
+  lastSeenAt ZonedDateTime
+}
+
+entity BookPageText {
+  documentId String required minlength(10) maxlength(64),
+  pageNo Integer required min(1),
+  text TextBlob
+}
+
+entity IngestRun {
+  startedAt ZonedDateTime,
+  finishedAt ZonedDateTime,
+  status String required maxlength(32),
+  filesSeen Integer min(0),
+  filesParsed Integer min(0),
+  filesFailed Integer min(0)
+}
+
+entity IngestEvent {
+  runId UUID,
+  documentId String maxlength(64),
+  topic String required maxlength(64),
+  payload TextBlob required,
+  createdAt ZonedDateTime
+}
+
+// Relationships
+relationship OneToMany {
+  Book{file} to BookFile{book(documentId)}
+  Book{pageText} to BookPageText{book(documentId)}
+}
+relationship ManyToOne {
+  IngestEvent{ingestRun} to IngestRun
+}
+
+// Options
+paginate Book with pagination
+paginate BookFile with pagination
+paginate BookPageText with pagination
+dto * with mapstruct
+service * with serviceClass
+
+// Database & deployment
+deployment {
+  deploymentType docker-compose
+  appsFolders [booksetl]
+  dockerRepositoryName "booksetl"
+}
