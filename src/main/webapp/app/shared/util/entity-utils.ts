@@ -9,7 +9,20 @@ import { IPaginationBaseState, ISortBaseState } from 'react-jhipster';
  * @param entity Object to clean.
  */
 export const cleanEntity = entity => {
-  const keysToKeep = Object.keys(entity).filter(k => !(entity[k] instanceof Object) || (entity[k].id !== '' && entity[k].id !== -1));
+  if (entity === null || entity === undefined || typeof entity !== 'object' || Array.isArray(entity)) {
+    return entity;
+  }
+
+  const keysToKeep = Object.keys(entity).filter(key => {
+    const value = entity[key];
+
+    if (value === null || value === undefined || typeof value !== 'object' || Array.isArray(value)) {
+      return true;
+    }
+
+    const { id } = value as { id?: unknown };
+    return id !== '' && id !== -1;
+  });
 
   return pick(entity, keysToKeep);
 };
@@ -20,7 +33,8 @@ export const cleanEntity = entity => {
  * @param idList Elements to map.
  * @returns The list of objects with mapped ids.
  */
-export const mapIdList = (idList: ReadonlyArray<any>) => idList?.filter((id: any) => id !== '').map((id: any) => ({ id }));
+export const mapIdList = (idList?: ReadonlyArray<any>) =>
+  (idList ?? []).filter((id: any) => id !== '' && id !== undefined && id !== null).map((id: any) => ({ id }));
 
 export const overrideSortStateWithQueryParams = (paginationBaseState: ISortBaseState, locationSearch: string) => {
   const params = new URLSearchParams(locationSearch);
