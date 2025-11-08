@@ -1,6 +1,6 @@
 package com.example.books.service.dto;
 
-import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestEvent;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestEventEntity;
 import jakarta.persistence.Lob;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * A DTO for the {@link IngestEvent} entity.
+ * A DTO for the {@link IngestEventEntity} entity.
  */
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class IngestEventDTO implements Serializable {

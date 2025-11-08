@@ -1,6 +1,6 @@
 package com.example.books.service;
 
-import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookFile;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookFileEntity;
 import com.example.books.infrastructure.infrastructure.database.jpa.repository.BookFileRepository;
 import com.example.books.service.dto.BookFileDTO;
 import com.example.books.service.mapper.BookFileMapper;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service Implementation for managing {@link BookFile}.
+ * Service Implementation for managing {@link BookFileEntity}.
  */
 @Service
 @Transactional
@@ -38,7 +38,7 @@ public class BookFileService {
      */
     public BookFileDTO save(BookFileDTO bookFileDTO) {
         LOG.debug("Request to save BookFile : {}", bookFileDTO);
-        BookFile bookFile = bookFileMapper.toEntity(bookFileDTO);
+        BookFileEntity bookFile = bookFileMapper.toEntity(bookFileDTO);
         bookFile = bookFileRepository.save(bookFile);
         return bookFileMapper.toDto(bookFile);
     }
@@ -51,7 +51,7 @@ public class BookFileService {
      */
     public BookFileDTO update(BookFileDTO bookFileDTO) {
         LOG.debug("Request to update BookFile : {}", bookFileDTO);
-        BookFile bookFile = bookFileMapper.toEntity(bookFileDTO);
+        BookFileEntity bookFile = bookFileMapper.toEntity(bookFileDTO);
         bookFile = bookFileRepository.save(bookFile);
         return bookFileMapper.toDto(bookFile);
     }

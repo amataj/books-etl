@@ -1,6 +1,6 @@
 package com.example.books.service;
 
-import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestRun;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestRunEntity;
 import com.example.books.infrastructure.infrastructure.database.jpa.repository.IngestRunRepository;
 import com.example.books.service.dto.IngestRunDTO;
 import com.example.books.service.mapper.IngestRunMapper;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service Implementation for managing {@link IngestRun}.
+ * Service Implementation for managing {@link IngestRunEntity}.
  */
 @Service
 @Transactional
@@ -39,7 +39,7 @@ public class IngestRunService {
      */
     public IngestRunDTO save(IngestRunDTO ingestRunDTO) {
         LOG.debug("Request to save IngestRun : {}", ingestRunDTO);
-        IngestRun ingestRun = ingestRunMapper.toEntity(ingestRunDTO);
+        IngestRunEntity ingestRun = ingestRunMapper.toEntity(ingestRunDTO);
         ingestRun = ingestRunRepository.save(ingestRun);
         return ingestRunMapper.toDto(ingestRun);
     }
@@ -52,7 +52,7 @@ public class IngestRunService {
      */
     public IngestRunDTO update(IngestRunDTO ingestRunDTO) {
         LOG.debug("Request to update IngestRun : {}", ingestRunDTO);
-        IngestRun ingestRun = ingestRunMapper.toEntity(ingestRunDTO);
+        IngestRunEntity ingestRun = ingestRunMapper.toEntity(ingestRunDTO);
         ingestRun = ingestRunRepository.save(ingestRun);
         return ingestRunMapper.toDto(ingestRun);
     }

@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookFile;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookFileEntity;
 import com.example.books.infrastructure.infrastructure.database.jpa.repository.BookFileRepository;
 import com.example.books.service.BookFileService;
 import com.example.books.service.dto.BookFileDTO;
@@ -96,9 +96,9 @@ class BookFileResourceIT {
     @Autowired
     private MockMvc restBookFileMockMvc;
 
-    private BookFile bookFile;
+    private BookFileEntity bookFile;
 
-    private BookFile insertedBookFile;
+    private BookFileEntity insertedBookFile;
 
     /**
      * Create an entity for this test.
@@ -106,8 +106,8 @@ class BookFileResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static BookFile createEntity() {
-        return new BookFile()
+    public static BookFileEntity createEntity() {
+        return new BookFileEntity()
             .pathNorm(DEFAULT_PATH_NORM)
             .sha256(DEFAULT_SHA_256)
             .sizeBytes(DEFAULT_SIZE_BYTES)
@@ -123,8 +123,8 @@ class BookFileResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static BookFile createUpdatedEntity() {
-        return new BookFile()
+    public static BookFileEntity createUpdatedEntity() {
+        return new BookFileEntity()
             .pathNorm(UPDATED_PATH_NORM)
             .sha256(UPDATED_SHA_256)
             .sizeBytes(UPDATED_SIZE_BYTES)
@@ -281,7 +281,7 @@ class BookFileResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the bookFile
-        BookFile updatedBookFile = bookFileRepository.findById(bookFile.getId()).orElseThrow();
+        BookFileEntity updatedBookFile = bookFileRepository.findById(bookFile.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedBookFile are not directly saved in db
         em.detach(updatedBookFile);
         updatedBookFile
@@ -378,7 +378,7 @@ class BookFileResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the bookFile using partial update
-        BookFile partialUpdatedBookFile = new BookFile();
+        BookFileEntity partialUpdatedBookFile = new BookFileEntity();
         partialUpdatedBookFile.setId(bookFile.getId());
 
         partialUpdatedBookFile
@@ -411,7 +411,7 @@ class BookFileResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the bookFile using partial update
-        BookFile partialUpdatedBookFile = new BookFile();
+        BookFileEntity partialUpdatedBookFile = new BookFileEntity();
         partialUpdatedBookFile.setId(bookFile.getId());
 
         partialUpdatedBookFile
@@ -532,15 +532,15 @@ class BookFileResourceIT {
         assertThat(countBefore).isEqualTo(getRepositoryCount());
     }
 
-    protected BookFile getPersistedBookFile(BookFile bookFile) {
+    protected BookFileEntity getPersistedBookFile(BookFileEntity bookFile) {
         return bookFileRepository.findById(bookFile.getId()).orElseThrow();
     }
 
-    protected void assertPersistedBookFileToMatchAllProperties(BookFile expectedBookFile) {
+    protected void assertPersistedBookFileToMatchAllProperties(BookFileEntity expectedBookFile) {
         assertBookFileAllPropertiesEquals(expectedBookFile, getPersistedBookFile(expectedBookFile));
     }
 
-    protected void assertPersistedBookFileToMatchUpdatableProperties(BookFile expectedBookFile) {
+    protected void assertPersistedBookFileToMatchUpdatableProperties(BookFileEntity expectedBookFile) {
         assertBookFileAllUpdatablePropertiesEquals(expectedBookFile, getPersistedBookFile(expectedBookFile));
     }
 }

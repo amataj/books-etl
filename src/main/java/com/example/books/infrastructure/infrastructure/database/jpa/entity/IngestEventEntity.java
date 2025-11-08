@@ -1,7 +1,8 @@
 package com.example.books.infrastructure.infrastructure.database.jpa.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.UUID;
@@ -9,13 +10,13 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
- * A IngestEvent.
+ * JPA entity for ingest event persistence.
  */
 @Entity
 @Table(name = "ingest_event")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class IngestEvent implements Serializable {
+public class IngestEventEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -37,15 +38,14 @@ public class IngestEvent implements Serializable {
     @Column(name = "topic", length = 64, nullable = false)
     private String topic;
 
-    @Lob
-    @Column(name = "payload", nullable = false)
+    @Column(name = "payload", nullable = false, columnDefinition = "text")
     private String payload;
 
     @Column(name = "created_at")
     private ZonedDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private IngestRun ingestRun;
+    private IngestRunEntity ingestRun;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -53,89 +53,89 @@ public class IngestEvent implements Serializable {
         return this.id;
     }
 
-    public IngestEvent id(Long id) {
-        this.setId(id);
-        return this;
-    }
-
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public IngestEventEntity id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public UUID getRunId() {
         return this.runId;
     }
 
-    public IngestEvent runId(UUID runId) {
-        this.setRunId(runId);
-        return this;
-    }
-
     public void setRunId(UUID runId) {
         this.runId = runId;
+    }
+
+    public IngestEventEntity runId(UUID runId) {
+        this.setRunId(runId);
+        return this;
     }
 
     public String getDocumentId() {
         return this.documentId;
     }
 
-    public IngestEvent documentId(String documentId) {
-        this.setDocumentId(documentId);
-        return this;
-    }
-
     public void setDocumentId(String documentId) {
         this.documentId = documentId;
+    }
+
+    public IngestEventEntity documentId(String documentId) {
+        this.setDocumentId(documentId);
+        return this;
     }
 
     public String getTopic() {
         return this.topic;
     }
 
-    public IngestEvent topic(String topic) {
-        this.setTopic(topic);
-        return this;
-    }
-
     public void setTopic(String topic) {
         this.topic = topic;
+    }
+
+    public IngestEventEntity topic(String topic) {
+        this.setTopic(topic);
+        return this;
     }
 
     public String getPayload() {
         return this.payload;
     }
 
-    public IngestEvent payload(String payload) {
-        this.setPayload(payload);
-        return this;
-    }
-
     public void setPayload(String payload) {
         this.payload = payload;
+    }
+
+    public IngestEventEntity payload(String payload) {
+        this.setPayload(payload);
+        return this;
     }
 
     public ZonedDateTime getCreatedAt() {
         return this.createdAt;
     }
 
-    public IngestEvent createdAt(ZonedDateTime createdAt) {
-        this.setCreatedAt(createdAt);
-        return this;
-    }
-
     public void setCreatedAt(ZonedDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public IngestRun getIngestRun() {
+    public IngestEventEntity createdAt(ZonedDateTime createdAt) {
+        this.setCreatedAt(createdAt);
+        return this;
+    }
+
+    public IngestRunEntity getIngestRun() {
         return this.ingestRun;
     }
 
-    public void setIngestRun(IngestRun ingestRun) {
+    public void setIngestRun(IngestRunEntity ingestRun) {
         this.ingestRun = ingestRun;
     }
 
-    public IngestEvent ingestRun(IngestRun ingestRun) {
+    public IngestEventEntity ingestRun(IngestRunEntity ingestRun) {
         this.setIngestRun(ingestRun);
         return this;
     }
@@ -147,10 +147,10 @@ public class IngestEvent implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof IngestEvent)) {
+        if (!(o instanceof IngestEventEntity)) {
             return false;
         }
-        return getId() != null && getId().equals(((IngestEvent) o).getId());
+        return getId() != null && getId().equals(((IngestEventEntity) o).getId());
     }
 
     @Override
@@ -162,7 +162,7 @@ public class IngestEvent implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return "IngestEvent{" +
+        return "IngestEventEntity{" +
             "id=" + getId() +
             ", runId='" + getRunId() + "'" +
             ", documentId='" + getDocumentId() + "'" +

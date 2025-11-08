@@ -7,30 +7,34 @@
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <!--
-        Added the entity Book.
+        Added the entity IngestEvent.
     -->
-    <changeSet id="20251108035117-1" author="jhipster">
-        <createTable tableName="book">
+    <changeSet id="20251016001322-1" author="jhipster">
+        <createTable tableName="ingest_event">
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+            <column name="run_id" type="${uuidType}">
+                <constraints nullable="true" />
+            </column>
             <column name="document_id" type="varchar(64)">
-                <constraints nullable="false" unique="true" uniqueConstraintName="ux_book__document_id" />
-            </column>
-            <column name="title" type="varchar(512)">
                 <constraints nullable="true" />
             </column>
-            <column name="author" type="varchar(256)">
+            <column name="topic" type="varchar(64)">
+                <constraints nullable="false" />
+            </column>
+            <column name="payload" type="${clobType}">
+                <constraints nullable="false" />
+            </column>
+            <column name="created_at" type="${datetimeType}">
                 <constraints nullable="true" />
             </column>
-            <column name="lang" type="varchar(16)">
-                <constraints nullable="true" />
-            </column>
-            <column name="pages" type="integer">
+            <column name="ingest_run_id" type="bigint">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
+        <dropDefaultValue tableName="ingest_event" columnName="created_at" columnDataType="${datetimeType}"/>
     </changeSet>
 
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
@@ -43,18 +47,18 @@
           This can be customized by adding or removing 'faker' in the 'spring.liquibase.contexts'
           Spring Boot configuration key.
     -->
-    <changeSet id="20251108035117-1-data" author="jhipster" context="faker">
+    <changeSet id="20251016001322-1-data" author="jhipster" context="faker">
         <loadData
-                  file="config/liquibase/fake-data/book.csv"
+                  file="config/liquibase/fake-data/ingest_event.csv"
                   separator=";"
-                  tableName="book"
+                  tableName="ingest_event"
                   usePreparedStatements="true">
             <column name="id" type="numeric"/>
+            <column name="run_id" type="${uuidType}"/>
             <column name="document_id" type="string"/>
-            <column name="title" type="string"/>
-            <column name="author" type="string"/>
-            <column name="lang" type="string"/>
-            <column name="pages" type="numeric"/>
+            <column name="topic" type="string"/>
+            <column name="payload" type="clob"/>
+            <column name="created_at" type="date"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

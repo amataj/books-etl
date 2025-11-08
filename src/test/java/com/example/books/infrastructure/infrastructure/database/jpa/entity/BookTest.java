@@ -14,9 +14,9 @@ class BookTest {
 
     @Test
     void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(Book.class);
-        Book book1 = getBookSample1();
-        Book book2 = new Book();
+        TestUtil.equalsVerifier(BookEntity.class);
+        BookEntity book1 = getBookSample1();
+        BookEntity book2 = new BookEntity();
         assertThat(book1).isNotEqualTo(book2);
 
         book2.setId(book1.getId());
@@ -28,8 +28,8 @@ class BookTest {
 
     @Test
     void fileTest() {
-        Book book = getBookRandomSampleGenerator();
-        BookFile bookFileBack = getBookFileRandomSampleGenerator();
+        BookEntity book = getBookRandomSampleGenerator();
+        BookFileEntity bookFileBack = getBookFileRandomSampleGenerator();
 
         book.addFile(bookFileBack);
         assertThat(book.getFiles()).containsOnly(bookFileBack);
@@ -50,8 +50,8 @@ class BookTest {
 
     @Test
     void pageTextTest() {
-        Book book = getBookRandomSampleGenerator();
-        BookPageText bookPageTextBack = getBookPageTextRandomSampleGenerator();
+        BookEntity book = getBookRandomSampleGenerator();
+        BookPageTextEntity bookPageTextBack = getBookPageTextRandomSampleGenerator();
 
         book.addPageText(bookPageTextBack);
         assertThat(book.getPageTexts()).containsOnly(bookPageTextBack);

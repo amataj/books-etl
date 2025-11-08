@@ -2,20 +2,22 @@ package com.example.books.infrastructure.infrastructure.database.jpa.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
- * A BookFile.
+ * JPA entity for BookFile persistence.
  */
 @Entity
 @Table(name = "book_file")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class BookFile implements Serializable {
+public class BookFileEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -25,8 +27,9 @@ public class BookFile implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Lob
-    @Column(name = "path_norm", nullable = false)
+    @NotBlank
+    @Size(max = 4096)
+    @Column(name = "path_norm", length = 4096, nullable = false)
     private String pathNorm;
 
     @NotNull
@@ -40,8 +43,8 @@ public class BookFile implements Serializable {
     @Column(name = "mtime")
     private ZonedDateTime mtime;
 
-    @Lob
-    @Column(name = "storage_uri")
+    @Size(max = 2048)
+    @Column(name = "storage_uri", length = 2048)
     private String storageUri;
 
     @Column(name = "first_seen_at")
@@ -52,7 +55,9 @@ public class BookFile implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "files", "pageTexts" }, allowSetters = true)
-    private Book book;
+    @JoinColumn(name = "book_id", nullable = false)
+    @NotNull
+    private BookEntity book;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -60,115 +65,115 @@ public class BookFile implements Serializable {
         return this.id;
     }
 
-    public BookFile id(Long id) {
-        this.setId(id);
-        return this;
-    }
-
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public BookFileEntity id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public String getPathNorm() {
         return this.pathNorm;
     }
 
-    public BookFile pathNorm(String pathNorm) {
-        this.setPathNorm(pathNorm);
-        return this;
-    }
-
     public void setPathNorm(String pathNorm) {
         this.pathNorm = pathNorm;
+    }
+
+    public BookFileEntity pathNorm(String pathNorm) {
+        this.setPathNorm(pathNorm);
+        return this;
     }
 
     public String getSha256() {
         return this.sha256;
     }
 
-    public BookFile sha256(String sha256) {
-        this.setSha256(sha256);
-        return this;
-    }
-
     public void setSha256(String sha256) {
         this.sha256 = sha256;
+    }
+
+    public BookFileEntity sha256(String sha256) {
+        this.setSha256(sha256);
+        return this;
     }
 
     public Long getSizeBytes() {
         return this.sizeBytes;
     }
 
-    public BookFile sizeBytes(Long sizeBytes) {
-        this.setSizeBytes(sizeBytes);
-        return this;
-    }
-
     public void setSizeBytes(Long sizeBytes) {
         this.sizeBytes = sizeBytes;
+    }
+
+    public BookFileEntity sizeBytes(Long sizeBytes) {
+        this.setSizeBytes(sizeBytes);
+        return this;
     }
 
     public ZonedDateTime getMtime() {
         return this.mtime;
     }
 
-    public BookFile mtime(ZonedDateTime mtime) {
-        this.setMtime(mtime);
-        return this;
-    }
-
     public void setMtime(ZonedDateTime mtime) {
         this.mtime = mtime;
+    }
+
+    public BookFileEntity mtime(ZonedDateTime mtime) {
+        this.setMtime(mtime);
+        return this;
     }
 
     public String getStorageUri() {
         return this.storageUri;
     }
 
-    public BookFile storageUri(String storageUri) {
-        this.setStorageUri(storageUri);
-        return this;
-    }
-
     public void setStorageUri(String storageUri) {
         this.storageUri = storageUri;
+    }
+
+    public BookFileEntity storageUri(String storageUri) {
+        this.setStorageUri(storageUri);
+        return this;
     }
 
     public ZonedDateTime getFirstSeenAt() {
         return this.firstSeenAt;
     }
 
-    public BookFile firstSeenAt(ZonedDateTime firstSeenAt) {
-        this.setFirstSeenAt(firstSeenAt);
-        return this;
-    }
-
     public void setFirstSeenAt(ZonedDateTime firstSeenAt) {
         this.firstSeenAt = firstSeenAt;
+    }
+
+    public BookFileEntity firstSeenAt(ZonedDateTime firstSeenAt) {
+        this.setFirstSeenAt(firstSeenAt);
+        return this;
     }
 
     public ZonedDateTime getLastSeenAt() {
         return this.lastSeenAt;
     }
 
-    public BookFile lastSeenAt(ZonedDateTime lastSeenAt) {
-        this.setLastSeenAt(lastSeenAt);
-        return this;
-    }
-
     public void setLastSeenAt(ZonedDateTime lastSeenAt) {
         this.lastSeenAt = lastSeenAt;
     }
 
-    public Book getBook() {
+    public BookFileEntity lastSeenAt(ZonedDateTime lastSeenAt) {
+        this.setLastSeenAt(lastSeenAt);
+        return this;
+    }
+
+    public BookEntity getBook() {
         return this.book;
     }
 
-    public void setBook(Book book) {
+    public void setBook(BookEntity book) {
         this.book = book;
     }
 
-    public BookFile book(Book book) {
+    public BookFileEntity book(BookEntity book) {
         this.setBook(book);
         return this;
     }
@@ -180,10 +185,10 @@ public class BookFile implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof BookFile)) {
+        if (!(o instanceof BookFileEntity)) {
             return false;
         }
-        return getId() != null && getId().equals(((BookFile) o).getId());
+        return getId() != null && getId().equals(((BookFileEntity) o).getId());
     }
 
     @Override
@@ -195,7 +200,7 @@ public class BookFile implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return "BookFile{" +
+        return "BookFileEntity{" +
             "id=" + getId() +
             ", pathNorm='" + getPathNorm() + "'" +
             ", sha256='" + getSha256() + "'" +

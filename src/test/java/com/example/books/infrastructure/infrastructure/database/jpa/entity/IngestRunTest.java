@@ -10,9 +10,9 @@ class IngestRunTest {
 
     @Test
     void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(IngestRun.class);
-        IngestRun ingestRun1 = getIngestRunSample1();
-        IngestRun ingestRun2 = new IngestRun();
+        TestUtil.equalsVerifier(IngestRunEntity.class);
+        IngestRunEntity ingestRun1 = getIngestRunSample1();
+        IngestRunEntity ingestRun2 = new IngestRunEntity();
         assertThat(ingestRun1).isNotEqualTo(ingestRun2);
 
         ingestRun2.setId(ingestRun1.getId());

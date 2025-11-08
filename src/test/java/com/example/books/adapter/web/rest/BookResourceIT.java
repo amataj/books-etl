@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.infrastructure.infrastructure.database.jpa.entity.Book;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookEntity;
 import com.example.books.infrastructure.infrastructure.database.jpa.repository.BookRepository;
 import com.example.books.service.dto.BookDTO;
 import com.example.books.service.mapper.BookMapper;
@@ -70,9 +70,9 @@ class BookResourceIT {
     @Autowired
     private MockMvc restBookMockMvc;
 
-    private Book book;
+    private BookEntity book;
 
-    private Book insertedBook;
+    private BookEntity insertedBook;
 
     /**
      * Create an entity for this test.
@@ -80,8 +80,8 @@ class BookResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Book createEntity() {
-        return new Book()
+    public static BookEntity createEntity() {
+        return new BookEntity()
             .documentId(DEFAULT_DOCUMENT_ID)
             .title(DEFAULT_TITLE)
             .author(DEFAULT_AUTHOR)
@@ -95,8 +95,8 @@ class BookResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Book createUpdatedEntity() {
-        return new Book()
+    public static BookEntity createUpdatedEntity() {
+        return new BookEntity()
             .documentId(UPDATED_DOCUMENT_ID)
             .title(UPDATED_TITLE)
             .author(UPDATED_AUTHOR)
@@ -230,7 +230,7 @@ class BookResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the book
-        Book updatedBook = bookRepository.findById(book.getId()).orElseThrow();
+        BookEntity updatedBook = bookRepository.findById(book.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedBook are not directly saved in db
         em.detach(updatedBook);
         updatedBook.documentId(UPDATED_DOCUMENT_ID).title(UPDATED_TITLE).author(UPDATED_AUTHOR).lang(UPDATED_LANG).pages(UPDATED_PAGES);
@@ -312,7 +312,7 @@ class BookResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the book using partial update
-        Book partialUpdatedBook = new Book();
+        BookEntity partialUpdatedBook = new BookEntity();
         partialUpdatedBook.setId(book.getId());
 
         partialUpdatedBook.documentId(UPDATED_DOCUMENT_ID).author(UPDATED_AUTHOR).lang(UPDATED_LANG);
@@ -340,7 +340,7 @@ class BookResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the book using partial update
-        Book partialUpdatedBook = new Book();
+        BookEntity partialUpdatedBook = new BookEntity();
         partialUpdatedBook.setId(book.getId());
 
         partialUpdatedBook
@@ -457,15 +457,15 @@ class BookResourceIT {
         assertThat(countBefore).isEqualTo(getRepositoryCount());
     }
 
-    protected Book getPersistedBook(Book book) {
+    protected BookEntity getPersistedBook(BookEntity book) {
         return bookRepository.findById(book.getId()).orElseThrow();
     }
 
-    protected void assertPersistedBookToMatchAllProperties(Book expectedBook) {
+    protected void assertPersistedBookToMatchAllProperties(BookEntity expectedBook) {
         assertBookAllPropertiesEquals(expectedBook, getPersistedBook(expectedBook));
     }
 
-    protected void assertPersistedBookToMatchUpdatableProperties(Book expectedBook) {
+    protected void assertPersistedBookToMatchUpdatableProperties(BookEntity expectedBook) {
         assertBookAllUpdatablePropertiesEquals(expectedBook, getPersistedBook(expectedBook));
     }
 }

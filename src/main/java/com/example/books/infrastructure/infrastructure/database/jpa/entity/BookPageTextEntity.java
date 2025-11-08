@@ -2,19 +2,23 @@ package com.example.books.infrastructure.infrastructure.database.jpa.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 /**
- * A BookPageText.
+ * JPA entity for page text persistence.
  */
 @Entity
 @Table(name = "book_page_text")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class BookPageText implements Serializable {
+public class BookPageTextEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -34,13 +38,15 @@ public class BookPageText implements Serializable {
     @Column(name = "page_no", nullable = false)
     private Integer pageNo;
 
-    @Lob
-    @Column(name = "text")
+    @JdbcTypeCode(SqlTypes.LONGVARCHAR)
+    @Column(name = "text", columnDefinition = "text")
     private String text;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "book_id", nullable = false)
     @JsonIgnoreProperties(value = { "files", "pageTexts" }, allowSetters = true)
-    private Book book;
+    private BookEntity book;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -48,63 +54,63 @@ public class BookPageText implements Serializable {
         return this.id;
     }
 
-    public BookPageText id(Long id) {
-        this.setId(id);
-        return this;
-    }
-
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public BookPageTextEntity id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public String getDocumentId() {
         return this.documentId;
     }
 
-    public BookPageText documentId(String documentId) {
-        this.setDocumentId(documentId);
-        return this;
-    }
-
     public void setDocumentId(String documentId) {
         this.documentId = documentId;
+    }
+
+    public BookPageTextEntity documentId(String documentId) {
+        this.setDocumentId(documentId);
+        return this;
     }
 
     public Integer getPageNo() {
         return this.pageNo;
     }
 
-    public BookPageText pageNo(Integer pageNo) {
-        this.setPageNo(pageNo);
-        return this;
-    }
-
     public void setPageNo(Integer pageNo) {
         this.pageNo = pageNo;
+    }
+
+    public BookPageTextEntity pageNo(Integer pageNo) {
+        this.setPageNo(pageNo);
+        return this;
     }
 
     public String getText() {
         return this.text;
     }
 
-    public BookPageText text(String text) {
-        this.setText(text);
-        return this;
-    }
-
     public void setText(String text) {
         this.text = text;
     }
 
-    public Book getBook() {
+    public BookPageTextEntity text(String text) {
+        this.setText(text);
+        return this;
+    }
+
+    public BookEntity getBook() {
         return this.book;
     }
 
-    public void setBook(Book book) {
+    public void setBook(BookEntity book) {
         this.book = book;
     }
 
-    public BookPageText book(Book book) {
+    public BookPageTextEntity book(BookEntity book) {
         this.setBook(book);
         return this;
     }
@@ -116,10 +122,10 @@ public class BookPageText implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof BookPageText)) {
+        if (!(o instanceof BookPageTextEntity)) {
             return false;
         }
-        return getId() != null && getId().equals(((BookPageText) o).getId());
+        return getId() != null && getId().equals(((BookPageTextEntity) o).getId());
     }
 
     @Override
@@ -131,7 +137,7 @@ public class BookPageText implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return "BookPageText{" +
+        return "BookPageTextEntity{" +
             "id=" + getId() +
             ", documentId='" + getDocumentId() + "'" +
             ", pageNo=" + getPageNo() +

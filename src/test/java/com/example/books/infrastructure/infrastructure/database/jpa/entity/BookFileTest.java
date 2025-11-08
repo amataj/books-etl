@@ -11,9 +11,9 @@ class BookFileTest {
 
     @Test
     void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(BookFile.class);
-        BookFile bookFile1 = getBookFileSample1();
-        BookFile bookFile2 = new BookFile();
+        TestUtil.equalsVerifier(BookFileEntity.class);
+        BookFileEntity bookFile1 = getBookFileSample1();
+        BookFileEntity bookFile2 = new BookFileEntity();
         assertThat(bookFile1).isNotEqualTo(bookFile2);
 
         bookFile2.setId(bookFile1.getId());
@@ -25,8 +25,8 @@ class BookFileTest {
 
     @Test
     void bookTest() {
-        BookFile bookFile = getBookFileRandomSampleGenerator();
-        Book bookBack = getBookRandomSampleGenerator();
+        BookFileEntity bookFile = getBookFileRandomSampleGenerator();
+        BookEntity bookBack = getBookRandomSampleGenerator();
 
         bookFile.setBook(bookBack);
         assertThat(bookFile.getBook()).isEqualTo(bookBack);

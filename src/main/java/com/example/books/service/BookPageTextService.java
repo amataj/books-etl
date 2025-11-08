@@ -1,6 +1,6 @@
 package com.example.books.service;
 
-import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookPageText;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookPageTextEntity;
 import com.example.books.infrastructure.infrastructure.database.jpa.repository.BookPageTextRepository;
 import com.example.books.service.dto.BookPageTextDTO;
 import com.example.books.service.mapper.BookPageTextMapper;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service Implementation for managing {@link BookPageText}.
+ * Service Implementation for managing {@link BookPageTextEntity}.
  */
 @Service
 @Transactional
@@ -38,7 +38,7 @@ public class BookPageTextService {
      */
     public BookPageTextDTO save(BookPageTextDTO bookPageTextDTO) {
         LOG.debug("Request to save BookPageText : {}", bookPageTextDTO);
-        BookPageText bookPageText = bookPageTextMapper.toEntity(bookPageTextDTO);
+        BookPageTextEntity bookPageText = bookPageTextMapper.toEntity(bookPageTextDTO);
         bookPageText = bookPageTextRepository.save(bookPageText);
         return bookPageTextMapper.toDto(bookPageText);
     }
@@ -51,7 +51,7 @@ public class BookPageTextService {
      */
     public BookPageTextDTO update(BookPageTextDTO bookPageTextDTO) {
         LOG.debug("Request to update BookPageText : {}", bookPageTextDTO);
-        BookPageText bookPageText = bookPageTextMapper.toEntity(bookPageTextDTO);
+        BookPageTextEntity bookPageText = bookPageTextMapper.toEntity(bookPageTextDTO);
         bookPageText = bookPageTextRepository.save(bookPageText);
         return bookPageTextMapper.toDto(bookPageText);
     }

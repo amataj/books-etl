@@ -9,15 +9,18 @@ public class BookFileTestSamples {
     private static final Random random = new Random();
     private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
-    public static BookFile getBookFileSample1() {
-        return new BookFile().id(1L).sha256("sha2561").sizeBytes(1L);
+    public static BookFileEntity getBookFileSample1() {
+        return new BookFileEntity().id(1L).sha256("sha2561").sizeBytes(1L);
     }
 
-    public static BookFile getBookFileSample2() {
-        return new BookFile().id(2L).sha256("sha2562").sizeBytes(2L);
+    public static BookFileEntity getBookFileSample2() {
+        return new BookFileEntity().id(2L).sha256("sha2562").sizeBytes(2L);
     }
 
-    public static BookFile getBookFileRandomSampleGenerator() {
-        return new BookFile().id(longCount.incrementAndGet()).sha256(UUID.randomUUID().toString()).sizeBytes(longCount.incrementAndGet());
+    public static BookFileEntity getBookFileRandomSampleGenerator() {
+        return new BookFileEntity()
+            .id(longCount.incrementAndGet())
+            .sha256(UUID.randomUUID().toString())
+            .sizeBytes(longCount.incrementAndGet());
     }
 }

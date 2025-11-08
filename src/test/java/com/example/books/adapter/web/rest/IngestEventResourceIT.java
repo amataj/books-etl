@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestEvent;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestEventEntity;
 import com.example.books.infrastructure.infrastructure.database.jpa.repository.IngestEventRepository;
 import com.example.books.service.dto.IngestEventDTO;
 import com.example.books.service.mapper.IngestEventMapper;
@@ -76,9 +76,9 @@ class IngestEventResourceIT {
     @Autowired
     private MockMvc restIngestEventMockMvc;
 
-    private IngestEvent ingestEvent;
+    private IngestEventEntity ingestEvent;
 
-    private IngestEvent insertedIngestEvent;
+    private IngestEventEntity insertedIngestEvent;
 
     /**
      * Create an entity for this test.
@@ -86,8 +86,8 @@ class IngestEventResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static IngestEvent createEntity() {
-        return new IngestEvent()
+    public static IngestEventEntity createEntity() {
+        return new IngestEventEntity()
             .runId(DEFAULT_RUN_ID)
             .documentId(DEFAULT_DOCUMENT_ID)
             .topic(DEFAULT_TOPIC)
@@ -101,8 +101,8 @@ class IngestEventResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static IngestEvent createUpdatedEntity() {
-        return new IngestEvent()
+    public static IngestEventEntity createUpdatedEntity() {
+        return new IngestEventEntity()
             .runId(UPDATED_RUN_ID)
             .documentId(UPDATED_DOCUMENT_ID)
             .topic(UPDATED_TOPIC)
@@ -236,7 +236,7 @@ class IngestEventResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the ingestEvent
-        IngestEvent updatedIngestEvent = ingestEventRepository.findById(ingestEvent.getId()).orElseThrow();
+        IngestEventEntity updatedIngestEvent = ingestEventRepository.findById(ingestEvent.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedIngestEvent are not directly saved in db
         em.detach(updatedIngestEvent);
         updatedIngestEvent
@@ -331,7 +331,7 @@ class IngestEventResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the ingestEvent using partial update
-        IngestEvent partialUpdatedIngestEvent = new IngestEvent();
+        IngestEventEntity partialUpdatedIngestEvent = new IngestEventEntity();
         partialUpdatedIngestEvent.setId(ingestEvent.getId());
 
         partialUpdatedIngestEvent.topic(UPDATED_TOPIC);
@@ -362,7 +362,7 @@ class IngestEventResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the ingestEvent using partial update
-        IngestEvent partialUpdatedIngestEvent = new IngestEvent();
+        IngestEventEntity partialUpdatedIngestEvent = new IngestEventEntity();
         partialUpdatedIngestEvent.setId(ingestEvent.getId());
 
         partialUpdatedIngestEvent
@@ -481,15 +481,15 @@ class IngestEventResourceIT {
         assertThat(countBefore).isEqualTo(getRepositoryCount());
     }
 
-    protected IngestEvent getPersistedIngestEvent(IngestEvent ingestEvent) {
+    protected IngestEventEntity getPersistedIngestEvent(IngestEventEntity ingestEvent) {
         return ingestEventRepository.findById(ingestEvent.getId()).orElseThrow();
     }
 
-    protected void assertPersistedIngestEventToMatchAllProperties(IngestEvent expectedIngestEvent) {
+    protected void assertPersistedIngestEventToMatchAllProperties(IngestEventEntity expectedIngestEvent) {
         assertIngestEventAllPropertiesEquals(expectedIngestEvent, getPersistedIngestEvent(expectedIngestEvent));
     }
 
-    protected void assertPersistedIngestEventToMatchUpdatableProperties(IngestEvent expectedIngestEvent) {
+    protected void assertPersistedIngestEventToMatchUpdatableProperties(IngestEventEntity expectedIngestEvent) {
         assertIngestEventAllUpdatablePropertiesEquals(expectedIngestEvent, getPersistedIngestEvent(expectedIngestEvent));
     }
 }

@@ -1,20 +1,22 @@
 package com.example.books.infrastructure.infrastructure.database.jpa.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
- * A IngestRun.
+ * JPA entity for ingest run persistence.
  */
 @Entity
 @Table(name = "ingest_run")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class IngestRun implements Serializable {
+public class IngestRunEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -53,91 +55,91 @@ public class IngestRun implements Serializable {
         return this.id;
     }
 
-    public IngestRun id(Long id) {
-        this.setId(id);
-        return this;
-    }
-
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public IngestRunEntity id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public ZonedDateTime getStartedAt() {
         return this.startedAt;
     }
 
-    public IngestRun startedAt(ZonedDateTime startedAt) {
-        this.setStartedAt(startedAt);
-        return this;
-    }
-
     public void setStartedAt(ZonedDateTime startedAt) {
         this.startedAt = startedAt;
+    }
+
+    public IngestRunEntity startedAt(ZonedDateTime startedAt) {
+        this.setStartedAt(startedAt);
+        return this;
     }
 
     public ZonedDateTime getFinishedAt() {
         return this.finishedAt;
     }
 
-    public IngestRun finishedAt(ZonedDateTime finishedAt) {
-        this.setFinishedAt(finishedAt);
-        return this;
-    }
-
     public void setFinishedAt(ZonedDateTime finishedAt) {
         this.finishedAt = finishedAt;
+    }
+
+    public IngestRunEntity finishedAt(ZonedDateTime finishedAt) {
+        this.setFinishedAt(finishedAt);
+        return this;
     }
 
     public String getStatus() {
         return this.status;
     }
 
-    public IngestRun status(String status) {
-        this.setStatus(status);
-        return this;
-    }
-
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public IngestRunEntity status(String status) {
+        this.setStatus(status);
+        return this;
     }
 
     public Integer getFilesSeen() {
         return this.filesSeen;
     }
 
-    public IngestRun filesSeen(Integer filesSeen) {
-        this.setFilesSeen(filesSeen);
-        return this;
-    }
-
     public void setFilesSeen(Integer filesSeen) {
         this.filesSeen = filesSeen;
+    }
+
+    public IngestRunEntity filesSeen(Integer filesSeen) {
+        this.setFilesSeen(filesSeen);
+        return this;
     }
 
     public Integer getFilesParsed() {
         return this.filesParsed;
     }
 
-    public IngestRun filesParsed(Integer filesParsed) {
-        this.setFilesParsed(filesParsed);
-        return this;
-    }
-
     public void setFilesParsed(Integer filesParsed) {
         this.filesParsed = filesParsed;
+    }
+
+    public IngestRunEntity filesParsed(Integer filesParsed) {
+        this.setFilesParsed(filesParsed);
+        return this;
     }
 
     public Integer getFilesFailed() {
         return this.filesFailed;
     }
 
-    public IngestRun filesFailed(Integer filesFailed) {
-        this.setFilesFailed(filesFailed);
-        return this;
-    }
-
     public void setFilesFailed(Integer filesFailed) {
         this.filesFailed = filesFailed;
+    }
+
+    public IngestRunEntity filesFailed(Integer filesFailed) {
+        this.setFilesFailed(filesFailed);
+        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
@@ -147,10 +149,10 @@ public class IngestRun implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof IngestRun)) {
+        if (!(o instanceof IngestRunEntity)) {
             return false;
         }
-        return getId() != null && getId().equals(((IngestRun) o).getId());
+        return getId() != null && getId().equals(((IngestRunEntity) o).getId());
     }
 
     @Override
@@ -162,7 +164,7 @@ public class IngestRun implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return "IngestRun{" +
+        return "IngestRunEntity{" +
             "id=" + getId() +
             ", startedAt='" + getStartedAt() + "'" +
             ", finishedAt='" + getFinishedAt() + "'" +

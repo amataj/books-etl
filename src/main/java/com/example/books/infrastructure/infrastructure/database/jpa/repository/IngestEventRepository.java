@@ -1,6 +1,6 @@
 package com.example.books.infrastructure.infrastructure.database.jpa.repository;
 
-import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestEvent;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestEventEntity;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -9,4 +9,4 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface IngestEventRepository extends JpaRepository<IngestEvent, Long> {}
+public interface IngestEventRepository extends JpaRepository<IngestEventEntity, Long> {}

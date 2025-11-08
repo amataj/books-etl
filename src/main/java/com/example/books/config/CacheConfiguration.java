@@ -48,13 +48,13 @@ public class CacheConfiguration {
             createCache(cm, User.class.getName());
             createCache(cm, Authority.class.getName());
             createCache(cm, User.class.getName() + ".authorities");
-            createCache(cm, Book.class.getName());
-            createCache(cm, Book.class.getName() + ".files");
-            createCache(cm, Book.class.getName() + ".pageTexts");
-            createCache(cm, BookFile.class.getName());
-            createCache(cm, BookPageText.class.getName());
-            createCache(cm, IngestRun.class.getName());
-            createCache(cm, IngestEvent.class.getName());
+            createCache(cm, BookEntity.class.getName());
+            createCache(cm, BookEntity.class.getName() + ".files");
+            createCache(cm, BookEntity.class.getName() + ".pageTexts");
+            createCache(cm, BookFileEntity.class.getName());
+            createCache(cm, BookPageTextEntity.class.getName());
+            createCache(cm, IngestRunEntity.class.getName());
+            createCache(cm, IngestEventEntity.class.getName());
             // jhipster-needle-caffeine-add-entry
         };
     }

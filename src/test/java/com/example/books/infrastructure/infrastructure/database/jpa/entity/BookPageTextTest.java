@@ -11,9 +11,9 @@ class BookPageTextTest {
 
     @Test
     void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(BookPageText.class);
-        BookPageText bookPageText1 = getBookPageTextSample1();
-        BookPageText bookPageText2 = new BookPageText();
+        TestUtil.equalsVerifier(BookPageTextEntity.class);
+        BookPageTextEntity bookPageText1 = getBookPageTextSample1();
+        BookPageTextEntity bookPageText2 = new BookPageTextEntity();
         assertThat(bookPageText1).isNotEqualTo(bookPageText2);
 
         bookPageText2.setId(bookPageText1.getId());
@@ -25,8 +25,8 @@ class BookPageTextTest {
 
     @Test
     void bookTest() {
-        BookPageText bookPageText = getBookPageTextRandomSampleGenerator();
-        Book bookBack = getBookRandomSampleGenerator();
+        BookPageTextEntity bookPageText = getBookPageTextRandomSampleGenerator();
+        BookEntity bookBack = getBookRandomSampleGenerator();
 
         bookPageText.setBook(bookBack);
         assertThat(bookPageText.getBook()).isEqualTo(bookBack);

@@ -1,7 +1,7 @@
 package com.example.books.adapter.web.rest;
 
 import com.example.books.adapter.web.rest.errors.BadRequestAlertException;
-import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestRun;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestRunEntity;
 import com.example.books.infrastructure.infrastructure.database.jpa.repository.IngestRunRepository;
 import com.example.books.service.IngestRunService;
 import com.example.books.service.dto.IngestRunDTO;
@@ -21,7 +21,7 @@ import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
- * REST controller for managing {@link IngestRun}.
+ * REST controller for managing {@link IngestRunEntity}.
  */
 @RestController
 @RequestMapping("/api/ingest-runs")

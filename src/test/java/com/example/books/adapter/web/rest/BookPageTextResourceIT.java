@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookPageText;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookPageTextEntity;
 import com.example.books.infrastructure.infrastructure.database.jpa.repository.BookPageTextRepository;
 import com.example.books.service.BookPageTextService;
 import com.example.books.service.dto.BookPageTextDTO;
@@ -79,9 +79,9 @@ class BookPageTextResourceIT {
     @Autowired
     private MockMvc restBookPageTextMockMvc;
 
-    private BookPageText bookPageText;
+    private BookPageTextEntity bookPageText;
 
-    private BookPageText insertedBookPageText;
+    private BookPageTextEntity insertedBookPageText;
 
     /**
      * Create an entity for this test.
@@ -89,8 +89,8 @@ class BookPageTextResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static BookPageText createEntity() {
-        return new BookPageText().documentId(DEFAULT_DOCUMENT_ID).pageNo(DEFAULT_PAGE_NO).text(DEFAULT_TEXT);
+    public static BookPageTextEntity createEntity() {
+        return new BookPageTextEntity().documentId(DEFAULT_DOCUMENT_ID).pageNo(DEFAULT_PAGE_NO).text(DEFAULT_TEXT);
     }
 
     /**
@@ -99,8 +99,8 @@ class BookPageTextResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static BookPageText createUpdatedEntity() {
-        return new BookPageText().documentId(UPDATED_DOCUMENT_ID).pageNo(UPDATED_PAGE_NO).text(UPDATED_TEXT);
+    public static BookPageTextEntity createUpdatedEntity() {
+        return new BookPageTextEntity().documentId(UPDATED_DOCUMENT_ID).pageNo(UPDATED_PAGE_NO).text(UPDATED_TEXT);
     }
 
     @BeforeEach
@@ -259,7 +259,7 @@ class BookPageTextResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the bookPageText
-        BookPageText updatedBookPageText = bookPageTextRepository.findById(bookPageText.getId()).orElseThrow();
+        BookPageTextEntity updatedBookPageText = bookPageTextRepository.findById(bookPageText.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedBookPageText are not directly saved in db
         em.detach(updatedBookPageText);
         updatedBookPageText.documentId(UPDATED_DOCUMENT_ID).pageNo(UPDATED_PAGE_NO).text(UPDATED_TEXT);
@@ -349,7 +349,7 @@ class BookPageTextResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the bookPageText using partial update
-        BookPageText partialUpdatedBookPageText = new BookPageText();
+        BookPageTextEntity partialUpdatedBookPageText = new BookPageTextEntity();
         partialUpdatedBookPageText.setId(bookPageText.getId());
 
         partialUpdatedBookPageText.documentId(UPDATED_DOCUMENT_ID).pageNo(UPDATED_PAGE_NO).text(UPDATED_TEXT);
@@ -380,7 +380,7 @@ class BookPageTextResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the bookPageText using partial update
-        BookPageText partialUpdatedBookPageText = new BookPageText();
+        BookPageTextEntity partialUpdatedBookPageText = new BookPageTextEntity();
         partialUpdatedBookPageText.setId(bookPageText.getId());
 
         partialUpdatedBookPageText.documentId(UPDATED_DOCUMENT_ID).pageNo(UPDATED_PAGE_NO).text(UPDATED_TEXT);
@@ -494,15 +494,15 @@ class BookPageTextResourceIT {
         assertThat(countBefore).isEqualTo(getRepositoryCount());
     }
 
-    protected BookPageText getPersistedBookPageText(BookPageText bookPageText) {
+    protected BookPageTextEntity getPersistedBookPageText(BookPageTextEntity bookPageText) {
         return bookPageTextRepository.findById(bookPageText.getId()).orElseThrow();
     }
 
-    protected void assertPersistedBookPageTextToMatchAllProperties(BookPageText expectedBookPageText) {
+    protected void assertPersistedBookPageTextToMatchAllProperties(BookPageTextEntity expectedBookPageText) {
         assertBookPageTextAllPropertiesEquals(expectedBookPageText, getPersistedBookPageText(expectedBookPageText));
     }
 
-    protected void assertPersistedBookPageTextToMatchUpdatableProperties(BookPageText expectedBookPageText) {
+    protected void assertPersistedBookPageTextToMatchUpdatableProperties(BookPageTextEntity expectedBookPageText) {
         assertBookPageTextAllUpdatablePropertiesEquals(expectedBookPageText, getPersistedBookPageText(expectedBookPageText));
     }
 }

@@ -1,6 +1,6 @@
 package com.example.books.infrastructure.infrastructure.database.jpa.repository;
 
-import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestRun;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestRunEntity;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -9,4 +9,4 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface IngestRunRepository extends JpaRepository<IngestRun, Long> {}
+public interface IngestRunRepository extends JpaRepository<IngestRunEntity, Long> {}

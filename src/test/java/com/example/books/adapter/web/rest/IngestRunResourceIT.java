@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestRun;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestRunEntity;
 import com.example.books.infrastructure.infrastructure.database.jpa.repository.IngestRunRepository;
 import com.example.books.service.dto.IngestRunDTO;
 import com.example.books.service.mapper.IngestRunMapper;
@@ -78,9 +78,9 @@ class IngestRunResourceIT {
     @Autowired
     private MockMvc restIngestRunMockMvc;
 
-    private IngestRun ingestRun;
+    private IngestRunEntity ingestRun;
 
-    private IngestRun insertedIngestRun;
+    private IngestRunEntity insertedIngestRun;
 
     /**
      * Create an entity for this test.
@@ -88,8 +88,8 @@ class IngestRunResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static IngestRun createEntity() {
-        return new IngestRun()
+    public static IngestRunEntity createEntity() {
+        return new IngestRunEntity()
             .startedAt(DEFAULT_STARTED_AT)
             .finishedAt(DEFAULT_FINISHED_AT)
             .status(DEFAULT_STATUS)
@@ -104,8 +104,8 @@ class IngestRunResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static IngestRun createUpdatedEntity() {
-        return new IngestRun()
+    public static IngestRunEntity createUpdatedEntity() {
+        return new IngestRunEntity()
             .startedAt(UPDATED_STARTED_AT)
             .finishedAt(UPDATED_FINISHED_AT)
             .status(UPDATED_STATUS)
@@ -242,7 +242,7 @@ class IngestRunResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the ingestRun
-        IngestRun updatedIngestRun = ingestRunRepository.findById(ingestRun.getId()).orElseThrow();
+        IngestRunEntity updatedIngestRun = ingestRunRepository.findById(ingestRun.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedIngestRun are not directly saved in db
         em.detach(updatedIngestRun);
         updatedIngestRun
@@ -338,7 +338,7 @@ class IngestRunResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the ingestRun using partial update
-        IngestRun partialUpdatedIngestRun = new IngestRun();
+        IngestRunEntity partialUpdatedIngestRun = new IngestRunEntity();
         partialUpdatedIngestRun.setId(ingestRun.getId());
 
         partialUpdatedIngestRun.finishedAt(UPDATED_FINISHED_AT).filesSeen(UPDATED_FILES_SEEN).filesFailed(UPDATED_FILES_FAILED);
@@ -369,7 +369,7 @@ class IngestRunResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the ingestRun using partial update
-        IngestRun partialUpdatedIngestRun = new IngestRun();
+        IngestRunEntity partialUpdatedIngestRun = new IngestRunEntity();
         partialUpdatedIngestRun.setId(ingestRun.getId());
 
         partialUpdatedIngestRun
@@ -489,15 +489,15 @@ class IngestRunResourceIT {
         assertThat(countBefore).isEqualTo(getRepositoryCount());
     }
 
-    protected IngestRun getPersistedIngestRun(IngestRun ingestRun) {
+    protected IngestRunEntity getPersistedIngestRun(IngestRunEntity ingestRun) {
         return ingestRunRepository.findById(ingestRun.getId()).orElseThrow();
     }
 
-    protected void assertPersistedIngestRunToMatchAllProperties(IngestRun expectedIngestRun) {
+    protected void assertPersistedIngestRunToMatchAllProperties(IngestRunEntity expectedIngestRun) {
         assertIngestRunAllPropertiesEquals(expectedIngestRun, getPersistedIngestRun(expectedIngestRun));
     }
 
-    protected void assertPersistedIngestRunToMatchUpdatableProperties(IngestRun expectedIngestRun) {
+    protected void assertPersistedIngestRunToMatchUpdatableProperties(IngestRunEntity expectedIngestRun) {
         assertIngestRunAllUpdatablePropertiesEquals(expectedIngestRun, getPersistedIngestRun(expectedIngestRun));
     }
 }

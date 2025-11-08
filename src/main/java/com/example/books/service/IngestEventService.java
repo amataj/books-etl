@@ -1,6 +1,6 @@
 package com.example.books.service;
 
-import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestEvent;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestEventEntity;
 import com.example.books.infrastructure.infrastructure.database.jpa.repository.IngestEventRepository;
 import com.example.books.service.dto.IngestEventDTO;
 import com.example.books.service.mapper.IngestEventMapper;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service Implementation for managing {@link IngestEvent}.
+ * Service Implementation for managing {@link IngestEventEntity}.
  */
 @Service
 @Transactional
@@ -39,7 +39,7 @@ public class IngestEventService {
      */
     public IngestEventDTO save(IngestEventDTO ingestEventDTO) {
         LOG.debug("Request to save IngestEvent : {}", ingestEventDTO);
-        IngestEvent ingestEvent = ingestEventMapper.toEntity(ingestEventDTO);
+        IngestEventEntity ingestEvent = ingestEventMapper.toEntity(ingestEventDTO);
         ingestEvent = ingestEventRepository.save(ingestEvent);
         return ingestEventMapper.toDto(ingestEvent);
     }
@@ -52,7 +52,7 @@ public class IngestEventService {
      */
     public IngestEventDTO update(IngestEventDTO ingestEventDTO) {
         LOG.debug("Request to update IngestEvent : {}", ingestEventDTO);
-        IngestEvent ingestEvent = ingestEventMapper.toEntity(ingestEventDTO);
+        IngestEventEntity ingestEvent = ingestEventMapper.toEntity(ingestEventDTO);
         ingestEvent = ingestEventRepository.save(ingestEvent);
         return ingestEventMapper.toDto(ingestEvent);
     }

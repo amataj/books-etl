@@ -1,6 +1,6 @@
 package com.example.books.infrastructure.infrastructure.database.jpa.repository;
 
-import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookPageText;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookPageTextEntity;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -13,28 +13,28 @@ import org.springframework.stereotype.Repository;
  * Spring Data JPA repository for the BookPageText entity.
  */
 @Repository
-public interface BookPageTextRepository extends JpaRepository<BookPageText, Long> {
-    default Optional<BookPageText> findOneWithEagerRelationships(Long id) {
+public interface BookPageTextRepository extends JpaRepository<BookPageTextEntity, Long> {
+    default Optional<BookPageTextEntity> findOneWithEagerRelationships(Long id) {
         return this.findOneWithToOneRelationships(id);
     }
 
-    default List<BookPageText> findAllWithEagerRelationships() {
+    default List<BookPageTextEntity> findAllWithEagerRelationships() {
         return this.findAllWithToOneRelationships();
     }
 
-    default Page<BookPageText> findAllWithEagerRelationships(Pageable pageable) {
+    default Page<BookPageTextEntity> findAllWithEagerRelationships(Pageable pageable) {
         return this.findAllWithToOneRelationships(pageable);
     }
 
     @Query(
-        value = "select bookPageText from BookPageText bookPageText left join fetch bookPageText.book",
-        countQuery = "select count(bookPageText) from BookPageText bookPageText"
+        value = "select bookPageText from BookPageTextEntity bookPageText left join fetch bookPageText.book",
+        countQuery = "select count(bookPageText) from BookPageTextEntity bookPageText"
     )
-    Page<BookPageText> findAllWithToOneRelationships(Pageable pageable);
+    Page<BookPageTextEntity> findAllWithToOneRelationships(Pageable pageable);
 
-    @Query("select bookPageText from BookPageText bookPageText left join fetch bookPageText.book")
-    List<BookPageText> findAllWithToOneRelationships();
+    @Query("select bookPageText from BookPageTextEntity bookPageText left join fetch bookPageText.book")
+    List<BookPageTextEntity> findAllWithToOneRelationships();
 
-    @Query("select bookPageText from BookPageText bookPageText left join fetch bookPageText.book where bookPageText.id =:id")
-    Optional<BookPageText> findOneWithToOneRelationships(@Param("id") Long id);
+    @Query("select bookPageText from BookPageTextEntity bookPageText left join fetch bookPageText.book where bookPageText.id =:id")
+    Optional<BookPageTextEntity> findOneWithToOneRelationships(@Param("id") Long id);
 }

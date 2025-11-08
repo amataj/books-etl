@@ -1,7 +1,7 @@
 package com.example.books.adapter.web.rest;
 
 import com.example.books.adapter.web.rest.errors.BadRequestAlertException;
-import com.example.books.infrastructure.infrastructure.database.jpa.entity.Book;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookEntity;
 import com.example.books.infrastructure.infrastructure.database.jpa.repository.BookRepository;
 import com.example.books.service.BookService;
 import com.example.books.service.dto.BookDTO;
@@ -26,7 +26,7 @@ import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
- * REST controller for managing {@link Book}.
+ * REST controller for managing {@link BookEntity}.
  */
 @RestController
 @RequestMapping("/api/books")

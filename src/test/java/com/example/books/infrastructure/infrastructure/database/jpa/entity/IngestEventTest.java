@@ -11,9 +11,9 @@ class IngestEventTest {
 
     @Test
     void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(IngestEvent.class);
-        IngestEvent ingestEvent1 = getIngestEventSample1();
-        IngestEvent ingestEvent2 = new IngestEvent();
+        TestUtil.equalsVerifier(IngestEventEntity.class);
+        IngestEventEntity ingestEvent1 = getIngestEventSample1();
+        IngestEventEntity ingestEvent2 = new IngestEventEntity();
         assertThat(ingestEvent1).isNotEqualTo(ingestEvent2);
 
         ingestEvent2.setId(ingestEvent1.getId());
@@ -25,8 +25,8 @@ class IngestEventTest {
 
     @Test
     void ingestRunTest() {
-        IngestEvent ingestEvent = getIngestEventRandomSampleGenerator();
-        IngestRun ingestRunBack = getIngestRunRandomSampleGenerator();
+        IngestEventEntity ingestEvent = getIngestEventRandomSampleGenerator();
+        IngestRunEntity ingestRunBack = getIngestRunRandomSampleGenerator();
 
         ingestEvent.setIngestRun(ingestRunBack);
         assertThat(ingestEvent.getIngestRun()).isEqualTo(ingestRunBack);

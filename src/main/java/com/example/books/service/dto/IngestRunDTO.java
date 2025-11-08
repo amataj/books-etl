@@ -1,13 +1,13 @@
 package com.example.books.service.dto;
 
-import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestRun;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestRunEntity;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 
 /**
- * A DTO for the {@link IngestRun} entity.
+ * A DTO for the {@link IngestRunEntity} entity.
  */
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class IngestRunDTO implements Serializable {

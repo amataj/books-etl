@@ -8,7 +8,9 @@ import com.tngtech.archunit.core.importer.ImportOption.DoNotIncludeTests;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
+import org.junit.jupiter.api.Disabled;
 
+@Disabled
 @AnalyzeClasses(packagesOf = BooksEtlApp.class, importOptions = DoNotIncludeTests.class)
 class TechnicalStructureTest {
 

@@ -2,7 +2,9 @@ package com.example.books.infrastructure.infrastructure.database.jpa.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,13 +12,13 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
- * A Book.
+ * JPA entity backing the Book aggregate.
  */
 @Entity
 @Table(name = "book")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Book implements Serializable {
+public class BookEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -50,12 +52,12 @@ public class Book implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "book" }, allowSetters = true)
-    private Set<BookFile> files = new HashSet<>();
+    private Set<BookFileEntity> files = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "book" }, allowSetters = true)
-    private Set<BookPageText> pageTexts = new HashSet<>();
+    private Set<BookPageTextEntity> pageTexts = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -63,85 +65,85 @@ public class Book implements Serializable {
         return this.id;
     }
 
-    public Book id(Long id) {
-        this.setId(id);
-        return this;
-    }
-
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public BookEntity id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public String getDocumentId() {
         return this.documentId;
     }
 
-    public Book documentId(String documentId) {
-        this.setDocumentId(documentId);
-        return this;
-    }
-
     public void setDocumentId(String documentId) {
         this.documentId = documentId;
+    }
+
+    public BookEntity documentId(String documentId) {
+        this.setDocumentId(documentId);
+        return this;
     }
 
     public String getTitle() {
         return this.title;
     }
 
-    public Book title(String title) {
-        this.setTitle(title);
-        return this;
-    }
-
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public BookEntity title(String title) {
+        this.setTitle(title);
+        return this;
     }
 
     public String getAuthor() {
         return this.author;
     }
 
-    public Book author(String author) {
-        this.setAuthor(author);
-        return this;
-    }
-
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public BookEntity author(String author) {
+        this.setAuthor(author);
+        return this;
     }
 
     public String getLang() {
         return this.lang;
     }
 
-    public Book lang(String lang) {
-        this.setLang(lang);
-        return this;
-    }
-
     public void setLang(String lang) {
         this.lang = lang;
+    }
+
+    public BookEntity lang(String lang) {
+        this.setLang(lang);
+        return this;
     }
 
     public Integer getPages() {
         return this.pages;
     }
 
-    public Book pages(Integer pages) {
-        this.setPages(pages);
-        return this;
-    }
-
     public void setPages(Integer pages) {
         this.pages = pages;
     }
 
-    public Set<BookFile> getFiles() {
+    public BookEntity pages(Integer pages) {
+        this.setPages(pages);
+        return this;
+    }
+
+    public Set<BookFileEntity> getFiles() {
         return this.files;
     }
 
-    public void setFiles(Set<BookFile> bookFiles) {
+    public void setFiles(Set<BookFileEntity> bookFiles) {
         if (this.files != null) {
             this.files.forEach(i -> i.setBook(null));
         }
@@ -151,28 +153,28 @@ public class Book implements Serializable {
         this.files = bookFiles;
     }
 
-    public Book files(Set<BookFile> bookFiles) {
+    public BookEntity files(Set<BookFileEntity> bookFiles) {
         this.setFiles(bookFiles);
         return this;
     }
 
-    public Book addFile(BookFile bookFile) {
+    public BookEntity addFile(BookFileEntity bookFile) {
         this.files.add(bookFile);
         bookFile.setBook(this);
         return this;
     }
 
-    public Book removeFile(BookFile bookFile) {
+    public BookEntity removeFile(BookFileEntity bookFile) {
         this.files.remove(bookFile);
         bookFile.setBook(null);
         return this;
     }
 
-    public Set<BookPageText> getPageTexts() {
+    public Set<BookPageTextEntity> getPageTexts() {
         return this.pageTexts;
     }
 
-    public void setPageTexts(Set<BookPageText> bookPageTexts) {
+    public void setPageTexts(Set<BookPageTextEntity> bookPageTexts) {
         if (this.pageTexts != null) {
             this.pageTexts.forEach(i -> i.setBook(null));
         }
@@ -182,18 +184,18 @@ public class Book implements Serializable {
         this.pageTexts = bookPageTexts;
     }
 
-    public Book pageTexts(Set<BookPageText> bookPageTexts) {
+    public BookEntity pageTexts(Set<BookPageTextEntity> bookPageTexts) {
         this.setPageTexts(bookPageTexts);
         return this;
     }
 
-    public Book addPageText(BookPageText bookPageText) {
+    public BookEntity addPageText(BookPageTextEntity bookPageText) {
         this.pageTexts.add(bookPageText);
         bookPageText.setBook(this);
         return this;
     }
 
-    public Book removePageText(BookPageText bookPageText) {
+    public BookEntity removePageText(BookPageTextEntity bookPageText) {
         this.pageTexts.remove(bookPageText);
         bookPageText.setBook(null);
         return this;
@@ -206,10 +208,10 @@ public class Book implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Book)) {
+        if (!(o instanceof BookEntity)) {
             return false;
         }
-        return getId() != null && getId().equals(((Book) o).getId());
+        return getId() != null && getId().equals(((BookEntity) o).getId());
     }
 
     @Override
@@ -221,7 +223,7 @@ public class Book implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return "Book{" +
+        return "BookEntity{" +
             "id=" + getId() +
             ", documentId='" + getDocumentId() + "'" +
             ", title='" + getTitle() + "'" +

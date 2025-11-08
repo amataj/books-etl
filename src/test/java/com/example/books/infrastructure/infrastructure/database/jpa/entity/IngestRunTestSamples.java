@@ -11,16 +11,16 @@ public class IngestRunTestSamples {
     private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
     private static final AtomicInteger intCount = new AtomicInteger(random.nextInt() + (2 * Short.MAX_VALUE));
 
-    public static IngestRun getIngestRunSample1() {
-        return new IngestRun().id(1L).status("status1").filesSeen(1).filesParsed(1).filesFailed(1);
+    public static IngestRunEntity getIngestRunSample1() {
+        return new IngestRunEntity().id(1L).status("status1").filesSeen(1).filesParsed(1).filesFailed(1);
     }
 
-    public static IngestRun getIngestRunSample2() {
-        return new IngestRun().id(2L).status("status2").filesSeen(2).filesParsed(2).filesFailed(2);
+    public static IngestRunEntity getIngestRunSample2() {
+        return new IngestRunEntity().id(2L).status("status2").filesSeen(2).filesParsed(2).filesFailed(2);
     }
 
-    public static IngestRun getIngestRunRandomSampleGenerator() {
-        return new IngestRun()
+    public static IngestRunEntity getIngestRunRandomSampleGenerator() {
+        return new IngestRunEntity()
             .id(longCount.incrementAndGet())
             .status(UUID.randomUUID().toString())
             .filesSeen(intCount.incrementAndGet())
