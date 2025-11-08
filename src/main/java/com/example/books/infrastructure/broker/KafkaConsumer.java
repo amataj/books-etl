@@ -3,7 +3,6 @@ package com.example.books.infrastructure.broker;
 import static org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -18,12 +17,22 @@ public class KafkaConsumer implements Consumer<String> {
 
     private static final Logger LOG = LoggerFactory.getLogger(KafkaConsumer.class);
 
-    private Map<String, SseEmitter> emitters = new HashMap<>();
+    private static final long SSE_TIMEOUT = Long.MAX_VALUE;
+
+    private final Map<String, SseEmitter> emitters = new java.util.concurrent.ConcurrentHashMap<>();
 
     public SseEmitter register(String key) {
         LOG.debug("Registering sse client for {}", key);
-        SseEmitter emitter = new SseEmitter();
+        SseEmitter emitter = new SseEmitter(SSE_TIMEOUT);
         emitter.onCompletion(() -> emitters.remove(key));
+        emitter.onTimeout(() -> {
+            LOG.debug("sse emitter for {} timed out", key);
+            emitters.remove(key);
+        });
+        emitter.onError(error -> {
+            LOG.debug("sse emitter for {} failed", key, error);
+            emitters.remove(key);
+        });
         emitters.put(key, emitter);
         return emitter;
     }
@@ -45,6 +54,8 @@ public class KafkaConsumer implements Consumer<String> {
                     emitter.send(event().data(input, MediaType.TEXT_PLAIN));
                 } catch (IOException e) {
                     LOG.debug("error sending sse message, {}", input);
+                    emitters.values().remove(emitter);
+                    emitter.completeWithError(e);
                 }
             });
     }
