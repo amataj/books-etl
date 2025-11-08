@@ -3,7 +3,7 @@ package com.example.books.domain;
 import static com.example.books.domain.IngestRunTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.example.books.web.rest.TestUtil;
+import com.example.books.adapter.web.rest.TestUtil;
 import org.junit.jupiter.api.Test;
 
 class IngestRunTest {
