@@ -69,18 +69,15 @@ public class KafkaConsumer implements Consumer<String> {
     @Override
     public void accept(String input) {
         LOG.info("Received message from kafka stream: {}", input);
-        emitters
-            .entrySet()
-            .forEach(entry -> {
-                String key = entry.getKey();
-                SseEmitter emitter = entry.getValue().emitter;
-                try {
-                    emitter.send(event().data(input, MediaType.TEXT_PLAIN));
-                } catch (Exception e) {
-                    LOG.debug("error sending sse message, {}", input, e);
-                    Optional.ofNullable(removeEmitterContext(key, emitter)).ifPresent(context -> context.emitter.completeWithError(e));
-                }
-            });
+        emitters.forEach((key, value) -> {
+            SseEmitter emitter = value.emitter;
+            try {
+                emitter.send(event().data(input, MediaType.TEXT_PLAIN));
+            } catch (Exception e) {
+                LOG.debug("error sending sse message, {}", input, e);
+                Optional.ofNullable(removeEmitterContext(key, emitter)).ifPresent(context -> context.emitter.completeWithError(e));
+            }
+        });
     }
 
     @PreDestroy
