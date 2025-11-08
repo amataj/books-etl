@@ -50,7 +50,14 @@
             <column name="document_id" type="string"/>
             <column name="page_no" type="numeric"/>
             <column name="text" type="clob"/>
+            <column name="book_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
+    </changeSet>
+
+    <changeSet id="20251016001122-3" author="books-etl">
+        <addNotNullConstraint columnDataType="bigint"
+                               columnName="book_id"
+                               tableName="book_page_text"/>
     </changeSet>
 </databaseChangeLog>

@@ -42,7 +42,9 @@ public class BookPageTextEntity implements Serializable {
     @Column(name = "text", columnDefinition = "text")
     private String text;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "book_id", nullable = false)
     @JsonIgnoreProperties(value = { "files", "pageTexts" }, allowSetters = true)
     private BookEntity book;
 
