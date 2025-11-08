@@ -117,7 +117,7 @@ spring:
           group: books-etl
   docker:
     compose:
-      enabled: true
+      enabled: false
       lifecycle-management: start-only
       file: src/main/docker/services.yml
   profiles:
