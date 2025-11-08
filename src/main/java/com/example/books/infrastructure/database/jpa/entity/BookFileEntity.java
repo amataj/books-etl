@@ -55,6 +55,8 @@ public class BookFileEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "files", "pageTexts" }, allowSetters = true)
+    @JoinColumn(name = "book_id", nullable = false)
+    @NotNull
     private BookEntity book;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
