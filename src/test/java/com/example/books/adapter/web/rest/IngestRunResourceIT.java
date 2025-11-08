@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.example.books.IntegrationTest;
 import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestRun;
-import com.example.books.repository.IngestRunRepository;
+import com.example.books.infrastructure.infrastructure.database.jpa.repository.IngestRunRepository;
 import com.example.books.service.dto.IngestRunDTO;
 import com.example.books.service.mapper.IngestRunMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;

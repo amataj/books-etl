@@ -5,7 +5,7 @@ import static org.mockito.Mockito.when;
 
 import com.example.books.IntegrationTest;
 import com.example.books.infrastructure.infrastructure.database.jpa.entity.User;
-import com.example.books.repository.UserRepository;
+import com.example.books.infrastructure.infrastructure.database.jpa.repository.UserRepository;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;

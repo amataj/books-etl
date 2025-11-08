@@ -1,4 +1,4 @@
-package com.example.books.security.jwt;
+package com.example.books.shared.security.jwt;
 
 import com.example.books.adapter.web.rest.AuthenticateController;
 import com.example.books.config.SecurityConfiguration;

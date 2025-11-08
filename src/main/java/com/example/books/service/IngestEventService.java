@@ -1,7 +1,7 @@
 package com.example.books.service;
 
 import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestEvent;
-import com.example.books.repository.IngestEventRepository;
+import com.example.books.infrastructure.infrastructure.database.jpa.repository.IngestEventRepository;
 import com.example.books.service.dto.IngestEventDTO;
 import com.example.books.service.mapper.IngestEventMapper;
 import java.util.LinkedList;

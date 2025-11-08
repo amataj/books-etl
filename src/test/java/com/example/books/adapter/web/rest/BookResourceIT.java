@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.example.books.IntegrationTest;
 import com.example.books.infrastructure.infrastructure.database.jpa.entity.Book;
-import com.example.books.repository.BookRepository;
+import com.example.books.infrastructure.infrastructure.database.jpa.repository.BookRepository;
 import com.example.books.service.dto.BookDTO;
 import com.example.books.service.mapper.BookMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;

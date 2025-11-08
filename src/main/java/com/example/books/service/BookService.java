@@ -1,7 +1,7 @@
 package com.example.books.service;
 
 import com.example.books.infrastructure.infrastructure.database.jpa.entity.Book;
-import com.example.books.repository.BookRepository;
+import com.example.books.infrastructure.infrastructure.database.jpa.repository.BookRepository;
 import com.example.books.service.dto.BookDTO;
 import com.example.books.service.mapper.BookMapper;
 import java.util.Optional;

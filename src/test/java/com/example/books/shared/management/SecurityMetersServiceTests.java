@@ -1,4 +1,4 @@
-package com.example.books.management;
+package com.example.books.shared.management;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

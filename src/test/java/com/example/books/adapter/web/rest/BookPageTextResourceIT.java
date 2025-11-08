@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.example.books.IntegrationTest;
 import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookPageText;
-import com.example.books.repository.BookPageTextRepository;
+import com.example.books.infrastructure.infrastructure.database.jpa.repository.BookPageTextRepository;
 import com.example.books.service.BookPageTextService;
 import com.example.books.service.dto.BookPageTextDTO;
 import com.example.books.service.mapper.BookPageTextMapper;

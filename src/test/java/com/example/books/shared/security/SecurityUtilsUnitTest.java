@@ -1,4 +1,4 @@
-package com.example.books.security;
+package com.example.books.shared.security;
 
 import static com.example.books.shared.security.SecurityUtils.USER_ID_CLAIM;
 import static org.assertj.core.api.Assertions.assertThat;

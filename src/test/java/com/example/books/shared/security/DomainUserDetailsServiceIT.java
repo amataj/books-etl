@@ -1,11 +1,11 @@
-package com.example.books.security;
+package com.example.books.shared.security;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.example.books.IntegrationTest;
 import com.example.books.infrastructure.infrastructure.database.jpa.entity.User;
-import com.example.books.repository.UserRepository;
+import com.example.books.infrastructure.infrastructure.database.jpa.repository.UserRepository;
 import com.example.books.service.UserService;
 import com.example.books.shared.security.DomainUserDetailsService;
 import com.example.books.shared.security.UserNotActivatedException;

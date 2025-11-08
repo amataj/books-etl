@@ -2,7 +2,7 @@ package com.example.books.adapter.web.rest;
 
 import com.example.books.adapter.web.rest.errors.BadRequestAlertException;
 import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookFile;
-import com.example.books.repository.BookFileRepository;
+import com.example.books.infrastructure.infrastructure.database.jpa.repository.BookFileRepository;
 import com.example.books.service.BookFileService;
 import com.example.books.service.dto.BookFileDTO;
 import jakarta.validation.Valid;

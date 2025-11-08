@@ -1,4 +1,4 @@
-package com.example.books.security.jwt;
+package com.example.books.shared.security.jwt;
 
 import static com.example.books.shared.security.AuthoritiesConstants.ADMIN;
 import static com.example.books.shared.security.SecurityUtils.AUTHORITIES_CLAIM;

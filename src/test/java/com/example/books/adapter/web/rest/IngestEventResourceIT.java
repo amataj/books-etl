@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.example.books.IntegrationTest;
 import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestEvent;
-import com.example.books.repository.IngestEventRepository;
+import com.example.books.infrastructure.infrastructure.database.jpa.repository.IngestEventRepository;
 import com.example.books.service.dto.IngestEventDTO;
 import com.example.books.service.mapper.IngestEventMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;

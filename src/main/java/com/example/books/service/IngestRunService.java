@@ -1,7 +1,7 @@
 package com.example.books.service;
 
 import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestRun;
-import com.example.books.repository.IngestRunRepository;
+import com.example.books.infrastructure.infrastructure.database.jpa.repository.IngestRunRepository;
 import com.example.books.service.dto.IngestRunDTO;
 import com.example.books.service.mapper.IngestRunMapper;
 import java.util.LinkedList;

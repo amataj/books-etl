@@ -1,6 +1,7 @@
 package com.example.books.config;
 
 import com.example.books.infrastructure.infrastructure.database.jpa.entity.*;
+import com.example.books.infrastructure.infrastructure.database.jpa.repository.UserRepository;
 import com.github.benmanes.caffeine.jcache.configuration.CaffeineConfiguration;
 import java.util.OptionalLong;
 import java.util.concurrent.TimeUnit;
@@ -42,8 +43,8 @@ public class CacheConfiguration {
     @Bean
     public JCacheManagerCustomizer cacheManagerCustomizer() {
         return cm -> {
-            createCache(cm, com.example.books.repository.UserRepository.USERS_BY_LOGIN_CACHE);
-            createCache(cm, com.example.books.repository.UserRepository.USERS_BY_EMAIL_CACHE);
+            createCache(cm, UserRepository.USERS_BY_LOGIN_CACHE);
+            createCache(cm, UserRepository.USERS_BY_EMAIL_CACHE);
             createCache(cm, User.class.getName());
             createCache(cm, Authority.class.getName());
             createCache(cm, User.class.getName() + ".authorities");

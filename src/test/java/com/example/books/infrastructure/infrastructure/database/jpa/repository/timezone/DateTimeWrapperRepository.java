@@ -1,4 +1,4 @@
-package com.example.books.repository.timezone;
+package com.example.books.infrastructure.infrastructure.database.jpa.repository.timezone;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

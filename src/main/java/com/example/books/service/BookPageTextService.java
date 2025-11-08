@@ -1,7 +1,7 @@
 package com.example.books.service;
 
 import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookPageText;
-import com.example.books.repository.BookPageTextRepository;
+import com.example.books.infrastructure.infrastructure.database.jpa.repository.BookPageTextRepository;
 import com.example.books.service.dto.BookPageTextDTO;
 import com.example.books.service.mapper.BookPageTextMapper;
 import java.util.Optional;

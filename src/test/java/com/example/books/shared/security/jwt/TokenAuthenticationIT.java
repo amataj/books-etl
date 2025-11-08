@@ -1,6 +1,6 @@
-package com.example.books.security.jwt;
+package com.example.books.shared.security.jwt;
 
-import static com.example.books.security.jwt.JwtAuthenticationTestUtils.*;
+import static com.example.books.shared.security.jwt.JwtAuthenticationTestUtils.*;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 

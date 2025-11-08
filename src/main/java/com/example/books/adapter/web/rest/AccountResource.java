@@ -6,7 +6,7 @@ import com.example.books.adapter.web.rest.errors.LoginAlreadyUsedException;
 import com.example.books.adapter.web.rest.vm.KeyAndPasswordVM;
 import com.example.books.adapter.web.rest.vm.ManagedUserVM;
 import com.example.books.infrastructure.infrastructure.database.jpa.entity.User;
-import com.example.books.repository.UserRepository;
+import com.example.books.infrastructure.infrastructure.database.jpa.repository.UserRepository;
 import com.example.books.service.MailService;
 import com.example.books.service.UserService;
 import com.example.books.service.dto.AdminUserDTO;

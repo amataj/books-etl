@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.example.books.IntegrationTest;
 import com.example.books.infrastructure.infrastructure.database.jpa.entity.User;
-import com.example.books.repository.UserRepository;
+import com.example.books.infrastructure.infrastructure.database.jpa.repository.UserRepository;
 import com.example.books.service.UserService;
 import com.example.books.shared.security.AuthoritiesConstants;
 import java.util.Objects;
