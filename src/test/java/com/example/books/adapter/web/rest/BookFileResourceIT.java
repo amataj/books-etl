@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookEntity;
 import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookFileEntity;
 import com.example.books.infrastructure.infrastructure.database.jpa.repository.BookFileRepository;
 import com.example.books.service.BookFileService;
@@ -106,8 +107,8 @@ class BookFileResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static BookFileEntity createEntity() {
-        return new BookFileEntity()
+    public static BookFileEntity createEntity(EntityManager em) {
+        BookFileEntity bookFile = new BookFileEntity()
             .pathNorm(DEFAULT_PATH_NORM)
             .sha256(DEFAULT_SHA_256)
             .sizeBytes(DEFAULT_SIZE_BYTES)
@@ -115,6 +116,18 @@ class BookFileResourceIT {
             .storageUri(DEFAULT_STORAGE_URI)
             .firstSeenAt(DEFAULT_FIRST_SEEN_AT)
             .lastSeenAt(DEFAULT_LAST_SEEN_AT);
+
+        BookEntity book;
+        var books = TestUtil.findAll(em, BookEntity.class);
+        if (books.isEmpty()) {
+            book = BookResourceIT.createEntity();
+            em.persist(book);
+            em.flush();
+        } else {
+            book = books.get(0);
+        }
+        bookFile.setBook(book);
+        return bookFile;
     }
 
     /**
@@ -123,8 +136,8 @@ class BookFileResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static BookFileEntity createUpdatedEntity() {
-        return new BookFileEntity()
+    public static BookFileEntity createUpdatedEntity(EntityManager em) {
+        BookFileEntity bookFile = new BookFileEntity()
             .pathNorm(UPDATED_PATH_NORM)
             .sha256(UPDATED_SHA_256)
             .sizeBytes(UPDATED_SIZE_BYTES)
@@ -132,11 +145,23 @@ class BookFileResourceIT {
             .storageUri(UPDATED_STORAGE_URI)
             .firstSeenAt(UPDATED_FIRST_SEEN_AT)
             .lastSeenAt(UPDATED_LAST_SEEN_AT);
+
+        BookEntity book;
+        var books = TestUtil.findAll(em, BookEntity.class);
+        if (books.isEmpty()) {
+            book = BookResourceIT.createUpdatedEntity();
+            em.persist(book);
+            em.flush();
+        } else {
+            book = books.get(0);
+        }
+        bookFile.setBook(book);
+        return bookFile;
     }
 
     @BeforeEach
     void initTest() {
-        bookFile = createEntity();
+        bookFile = createEntity(em);
     }
 
     @AfterEach
