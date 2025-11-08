@@ -21,7 +21,7 @@ export const sampleWithFullData: IIngestEvent = {
   documentId: 'like bleakly kindheartedly',
   topic: 'whenever event polarisation',
   payload: '../fake-data/blob/hipster.txt',
-  createdAt: dayjs('2025-11-07T03:47'),
+  createdAt: dayjs('2025-11-07T04:18'),
 };
 
 export const sampleWithNewData: NewIngestEvent = {

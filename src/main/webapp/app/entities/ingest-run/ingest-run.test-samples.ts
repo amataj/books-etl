@@ -9,15 +9,15 @@ export const sampleWithRequiredData: IIngestRun = {
 
 export const sampleWithPartialData: IIngestRun = {
   id: 1585,
-  finishedAt: dayjs('2025-11-08T02:18'),
+  finishedAt: dayjs('2025-11-08T02:49'),
   status: 'overheard imagineer',
   filesFailed: 16485,
 };
 
 export const sampleWithFullData: IIngestRun = {
   id: 327,
-  startedAt: dayjs('2025-11-07T08:27'),
-  finishedAt: dayjs('2025-11-07T23:45'),
+  startedAt: dayjs('2025-11-07T08:58'),
+  finishedAt: dayjs('2025-11-08T00:17'),
   status: 'mob',
   filesSeen: 23332,
   filesParsed: 26063,

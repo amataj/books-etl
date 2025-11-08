@@ -14,7 +14,7 @@ export const sampleWithPartialData: IBookFile = {
   sha256: 'oof following',
   sizeBytes: 20447,
   storageUri: '../fake-data/blob/hipster.txt',
-  lastSeenAt: dayjs('2025-11-07T14:55'),
+  lastSeenAt: dayjs('2025-11-07T15:27'),
 };
 
 export const sampleWithFullData: IBookFile = {
@@ -22,10 +22,10 @@ export const sampleWithFullData: IBookFile = {
   pathNorm: '../fake-data/blob/hipster.txt',
   sha256: 'modulo orX',
   sizeBytes: 18358,
-  mtime: dayjs('2025-11-07T14:07'),
+  mtime: dayjs('2025-11-07T14:38'),
   storageUri: '../fake-data/blob/hipster.txt',
-  firstSeenAt: dayjs('2025-11-07T15:06'),
-  lastSeenAt: dayjs('2025-11-07T03:42'),
+  firstSeenAt: dayjs('2025-11-07T15:37'),
+  lastSeenAt: dayjs('2025-11-07T04:14'),
 };
 
 export const sampleWithNewData: NewBookFile = {

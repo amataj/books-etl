@@ -4,7 +4,7 @@ import static com.example.books.domain.BookPageTextTestSamples.*;
 import static com.example.books.domain.BookTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.example.books.adapter.web.rest.TestUtil;
+import com.example.books.web.rest.TestUtil;
 import org.junit.jupiter.api.Test;
 
 class BookPageTextTest {
