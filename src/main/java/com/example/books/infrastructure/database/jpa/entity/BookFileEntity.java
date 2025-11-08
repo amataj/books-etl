@@ -2,6 +2,7 @@ package com.example.books.infrastructure.database.jpa.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
@@ -26,8 +27,9 @@ public class BookFileEntity implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Lob
-    @Column(name = "path_norm", nullable = false)
+    @NotBlank
+    @Size(max = 4096)
+    @Column(name = "path_norm", length = 4096, nullable = false)
     private String pathNorm;
 
     @NotNull
@@ -41,8 +43,8 @@ public class BookFileEntity implements Serializable {
     @Column(name = "mtime")
     private ZonedDateTime mtime;
 
-    @Lob
-    @Column(name = "storage_uri")
+    @Size(max = 2048)
+    @Column(name = "storage_uri", length = 2048)
     private String storageUri;
 
     @Column(name = "first_seen_at")

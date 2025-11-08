@@ -1,6 +1,6 @@
 package com.example.books.adapter.web.rest.dto;
 
-import jakarta.persistence.Lob;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
@@ -15,7 +15,8 @@ public class BookFileDTO implements Serializable {
 
     private Long id;
 
-    @Lob
+    @NotBlank
+    @Size(max = 4096)
     private String pathNorm;
 
     @NotNull
@@ -26,7 +27,7 @@ public class BookFileDTO implements Serializable {
 
     private ZonedDateTime mtime;
 
-    @Lob
+    @Size(max = 2048)
     private String storageUri;
 
     private ZonedDateTime firstSeenAt;
