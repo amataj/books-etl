@@ -22,6 +22,9 @@ const EntitiesMenu = () => {
       <MenuItem icon="asterisk" to="/ingest-event">
         <Translate contentKey="global.menu.entities.ingestEvent" />
       </MenuItem>
+      <MenuItem icon="asterisk" to="/books-etl-kafka">
+        <Translate contentKey="global.menu.entities.booksEtlKafka" />
+      </MenuItem>
       {/* jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here */}
     </>
   );

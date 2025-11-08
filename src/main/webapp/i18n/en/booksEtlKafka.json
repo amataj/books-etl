@@ -1,0 +1,24 @@
+{
+  "booksEtlKafka": {
+    "title": "Books ETL Kafka",
+    "description": "Send ad-hoc test messages to the Books ETL Kafka topic and monitor events in real time.",
+    "publish": {
+      "label": "Message to publish",
+      "button": "Publish message"
+    },
+    "stream": {
+      "title": "Incoming stream",
+      "start": "Start listening",
+      "stop": "Stop listening",
+      "empty": "No events received yet."
+    },
+    "alerts": {
+      "messageRequired": "Please provide a message before publishing.",
+      "publishSuccess": "Message sent to Kafka successfully.",
+      "publishError": "Message could not be sent to Kafka.",
+      "listenSuccess": "Listening for Kafka events...",
+      "stopSuccess": "Stopped listening for Kafka events.",
+      "streamError": "The Kafka event stream closed unexpectedly. Try starting it again."
+    }
+  }
+}
