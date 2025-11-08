@@ -13,7 +13,13 @@ import org.springframework.cloud.stream.binder.test.TestChannelBinderConfigurati
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest
+@SpringBootTest(
+    properties = "spring.autoconfigure.exclude=" +
+    "org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration," +
+    "org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration," +
+    "org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration," +
+    "org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration"
+)
 @ActiveProfiles("test")
 @ImportAutoConfiguration(TestChannelBinderConfiguration.class)
 class KafkaConsumerIT {
