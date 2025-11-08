@@ -1,6 +1,6 @@
 package com.example.books.adapter.web.rest;
 
-import com.example.books.adapter.web.rest.dto.UserDTO;
+import com.example.books.domain.core.User;
 import com.example.books.domain.service.UserService;
 import java.util.*;
 import org.slf4j.Logger;
@@ -38,13 +38,13 @@ public class PublicUserResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users.
      */
     @GetMapping("/users")
-    public ResponseEntity<List<UserDTO>> getAllPublicUsers(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
+    public ResponseEntity<List<User>> getAllPublicUsers(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
         LOG.debug("REST request to get all public User names");
         if (!onlyContainsAllowedProperties(pageable)) {
             return ResponseEntity.badRequest().build();
         }
 
-        final Page<UserDTO> page = userService.getAllPublicUsers(pageable);
+        final Page<User> page = userService.getAllPublicUsers(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }

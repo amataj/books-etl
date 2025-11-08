@@ -1,0 +1,66 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (bookFile(); as bookFileRef) {
+      <div>
+        <h2 data-cy="bookFileDetailsHeading"><span jhiTranslate="booksEtlApp.bookFile.detail.title">Book File</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ bookFileRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.bookFile.pathNorm">Path Norm</span></dt>
+          <dd>
+            <span>{{ bookFileRef.pathNorm }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.bookFile.sha256">Sha 256</span></dt>
+          <dd>
+            <span>{{ bookFileRef.sha256 }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.bookFile.sizeBytes">Size Bytes</span></dt>
+          <dd>
+            <span>{{ bookFileRef.sizeBytes }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.bookFile.mtime">Mtime</span></dt>
+          <dd>
+            <span>{{ bookFileRef.mtime | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.bookFile.storageUri">Storage Uri</span></dt>
+          <dd>
+            <span>{{ bookFileRef.storageUri }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.bookFile.firstSeenAt">First Seen At</span></dt>
+          <dd>
+            <span>{{ bookFileRef.firstSeenAt | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.bookFile.lastSeenAt">Last Seen At</span></dt>
+          <dd>
+            <span>{{ bookFileRef.lastSeenAt | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.bookFile.book">Book</span></dt>
+          <dd>
+            @if (bookFile()!.book) {
+              <div>
+                <a [routerLink]="['/book', bookFile()!.book?.id, 'view']">{{ bookFileRef.book?.documentId }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/book-file', bookFileRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

@@ -14,7 +14,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 /**
  * JPA entity backing the Book aggregate.
  */
-@Entity(name = "Book")
+@Entity
 @Table(name = "book")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")

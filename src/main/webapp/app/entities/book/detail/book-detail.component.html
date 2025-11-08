@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (book(); as bookRef) {
+      <div>
+        <h2 data-cy="bookDetailsHeading"><span jhiTranslate="booksEtlApp.book.detail.title">Book</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ bookRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.book.documentId">Document Id</span></dt>
+          <dd>
+            <span>{{ bookRef.documentId }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.book.title">Title</span></dt>
+          <dd>
+            <span>{{ bookRef.title }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.book.author">Author</span></dt>
+          <dd>
+            <span>{{ bookRef.author }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.book.lang">Lang</span></dt>
+          <dd>
+            <span>{{ bookRef.lang }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.book.pages">Pages</span></dt>
+          <dd>
+            <span>{{ bookRef.pages }}</span>
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/book', bookRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

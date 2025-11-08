@@ -1,11 +1,10 @@
 package com.example.books.adapter.web.rest;
 
-import com.example.books.adapter.web.rest.dto.IngestEventDTO;
 import com.example.books.adapter.web.rest.errors.BadRequestAlertException;
-import com.example.books.adapter.web.rest.mapper.IngestEventRestMapper;
-import com.example.books.adapter.web.rest.util.PageCriteriaFactory;
-import com.example.books.adapter.web.rest.util.PageResponseFactory;
-import com.example.books.usecase.ingestevent.IngestEventUseCase;
+import com.example.books.domain.core.IngestEvent;
+import com.example.books.domain.service.IngestEventService;
+import com.example.books.infrastructure.database.jpa.entity.IngestEventEntity;
+import com.example.books.infrastructure.database.jpa.repository.IngestEventJpaRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
@@ -16,51 +15,68 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
-import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
+/**
+ * REST controller for managing {@link IngestEventEntity}.
+ */
 @RestController
 @RequestMapping("/api/ingest-events")
 public class IngestEventResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(IngestEventResource.class);
+
     private static final String ENTITY_NAME = "ingestEvent";
-    private final IngestEventUseCase ingestEventUseCase;
-    private final IngestEventRestMapper mapper;
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    public IngestEventResource(IngestEventUseCase ingestEventUseCase, IngestEventRestMapper mapper) {
-        this.ingestEventUseCase = ingestEventUseCase;
-        this.mapper = mapper;
+    private final IngestEventService ingestEventService;
+
+    private final IngestEventJpaRepository ingestEventRepository;
+
+    public IngestEventResource(IngestEventService ingestEventService, IngestEventJpaRepository ingestEventRepository) {
+        this.ingestEventService = ingestEventService;
+        this.ingestEventRepository = ingestEventRepository;
     }
 
+    /**
+     * {@code POST  /ingest-events} : Create a new ingestEvent.
+     *
+     * @param ingestEventDTO the ingestEventDTO to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new ingestEventDTO, or with status {@code 400 (Bad Request)} if the ingestEvent has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
     @PostMapping("")
-    public ResponseEntity<IngestEventDTO> createIngestEvent(@Valid @RequestBody IngestEventDTO ingestEventDTO) throws URISyntaxException {
+    public ResponseEntity<IngestEvent> createIngestEvent(@Valid @RequestBody IngestEvent ingestEventDTO) throws URISyntaxException {
         LOG.debug("REST request to save IngestEvent : {}", ingestEventDTO);
         if (ingestEventDTO.getId() != null) {
             throw new BadRequestAlertException("A new ingestEvent cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        var saved = ingestEventUseCase.save(mapper.toDomain(ingestEventDTO));
-        IngestEventDTO response = mapper.toDto(saved);
-        return ResponseEntity.created(new URI("/api/ingest-events/" + response.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, response.getId().toString()))
-            .body(response);
+        ingestEventDTO = ingestEventService.save(ingestEventDTO);
+        return ResponseEntity.created(new URI("/api/ingest-events/" + ingestEventDTO.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, ingestEventDTO.getId().toString()))
+            .body(ingestEventDTO);
     }
 
+    /**
+     * {@code PUT  /ingest-events/:id} : Updates an existing ingestEvent.
+     *
+     * @param id the id of the ingestEventDTO to save.
+     * @param ingestEventDTO the ingestEventDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated ingestEventDTO,
+     * or with status {@code 400 (Bad Request)} if the ingestEventDTO is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the ingestEventDTO couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
     @PutMapping("/{id}")
-    public ResponseEntity<IngestEventDTO> updateIngestEvent(
+    public ResponseEntity<IngestEvent> updateIngestEvent(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody IngestEventDTO ingestEventDTO
-    ) {
+        @Valid @RequestBody IngestEvent ingestEventDTO
+    ) throws URISyntaxException {
         LOG.debug("REST request to update IngestEvent : {}, {}", id, ingestEventDTO);
         if (ingestEventDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -69,22 +85,33 @@ public class IngestEventResource {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
-        if (!ingestEventUseCase.existsById(id)) {
+        if (!ingestEventRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        IngestEventDTO response = mapper.toDto(ingestEventUseCase.update(mapper.toDomain(ingestEventDTO)));
+        ingestEventDTO = ingestEventService.update(ingestEventDTO);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, response.getId().toString()))
-            .body(response);
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, ingestEventDTO.getId().toString()))
+            .body(ingestEventDTO);
     }
 
+    /**
+     * {@code PATCH  /ingest-events/:id} : Partial updates given fields of an existing ingestEvent, field will ignore if it is null
+     *
+     * @param id the id of the ingestEventDTO to save.
+     * @param ingestEventDTO the ingestEventDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated ingestEventDTO,
+     * or with status {@code 400 (Bad Request)} if the ingestEventDTO is not valid,
+     * or with status {@code 404 (Not Found)} if the ingestEventDTO is not found,
+     * or with status {@code 500 (Internal Server Error)} if the ingestEventDTO couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<IngestEventDTO> partialUpdateIngestEvent(
+    public ResponseEntity<IngestEvent> partialUpdateIngestEvent(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody IngestEventDTO ingestEventDTO
-    ) {
-        LOG.debug("REST request to partial update IngestEvent : {}, {}", id, ingestEventDTO);
+        @NotNull @RequestBody IngestEvent ingestEventDTO
+    ) throws URISyntaxException {
+        LOG.debug("REST request to partial update IngestEvent partially : {}, {}", id, ingestEventDTO);
         if (ingestEventDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -92,40 +119,52 @@ public class IngestEventResource {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
-        if (!ingestEventUseCase.existsById(id)) {
+        if (!ingestEventRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<IngestEventDTO> result = ingestEventUseCase.partialUpdate(mapper.toDomain(ingestEventDTO)).map(mapper::toDto);
+        Optional<IngestEvent> result = ingestEventService.partialUpdate(ingestEventDTO);
+
         return ResponseUtil.wrapOrNotFound(
             result,
             HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, ingestEventDTO.getId().toString())
         );
     }
 
+    /**
+     * {@code GET  /ingest-events} : get all the ingestEvents.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of ingestEvents in body.
+     */
     @GetMapping("")
-    public ResponseEntity<List<IngestEventDTO>> getAllIngestEvents(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
-        LOG.debug("REST request to get a page of IngestEvents");
-        Page<IngestEventDTO> page = PageResponseFactory.toPage(
-            ingestEventUseCase.findAll(PageCriteriaFactory.from(pageable)),
-            pageable,
-            mapper::toDto
-        );
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    public List<IngestEvent> getAllIngestEvents() {
+        LOG.debug("REST request to get all IngestEvents");
+        return ingestEventService.findAll();
     }
 
+    /**
+     * {@code GET  /ingest-events/:id} : get the "id" ingestEvent.
+     *
+     * @param id the id of the ingestEventDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the ingestEventDTO, or with status {@code 404 (Not Found)}.
+     */
     @GetMapping("/{id}")
-    public ResponseEntity<IngestEventDTO> getIngestEvent(@PathVariable("id") Long id) {
+    public ResponseEntity<IngestEvent> getIngestEvent(@PathVariable("id") Long id) {
         LOG.debug("REST request to get IngestEvent : {}", id);
-        Optional<IngestEventDTO> ingestEventDTO = ingestEventUseCase.findOne(id).map(mapper::toDto);
+        Optional<IngestEvent> ingestEventDTO = ingestEventService.findOne(id);
         return ResponseUtil.wrapOrNotFound(ingestEventDTO);
     }
 
+    /**
+     * {@code DELETE  /ingest-events/:id} : delete the "id" ingestEvent.
+     *
+     * @param id the id of the ingestEventDTO to delete.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteIngestEvent(@PathVariable("id") Long id) {
         LOG.debug("REST request to delete IngestEvent : {}", id);
-        ingestEventUseCase.delete(id);
+        ingestEventService.delete(id);
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();

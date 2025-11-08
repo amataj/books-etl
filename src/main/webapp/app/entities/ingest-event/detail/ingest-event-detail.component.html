@@ -1,0 +1,58 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (ingestEvent(); as ingestEventRef) {
+      <div>
+        <h2 data-cy="ingestEventDetailsHeading"><span jhiTranslate="booksEtlApp.ingestEvent.detail.title">Ingest Event</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ ingestEventRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.ingestEvent.runId">Run Id</span></dt>
+          <dd>
+            <span>{{ ingestEventRef.runId }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.ingestEvent.documentId">Document Id</span></dt>
+          <dd>
+            <span>{{ ingestEventRef.documentId }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.ingestEvent.topic">Topic</span></dt>
+          <dd>
+            <span>{{ ingestEventRef.topic }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.ingestEvent.payload">Payload</span></dt>
+          <dd>
+            <span>{{ ingestEventRef.payload }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.ingestEvent.createdAt">Created At</span></dt>
+          <dd>
+            <span>{{ ingestEventRef.createdAt | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.ingestEvent.ingestRun">Ingest Run</span></dt>
+          <dd>
+            @if (ingestEvent()!.ingestRun) {
+              <div>
+                <a [routerLink]="['/ingest-run', ingestEvent()!.ingestRun?.id, 'view']">{{ ingestEventRef.ingestRun?.id }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/ingest-event', ingestEventRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

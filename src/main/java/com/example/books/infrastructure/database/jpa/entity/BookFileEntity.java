@@ -13,7 +13,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 /**
  * JPA entity for BookFile persistence.
  */
-@Entity(name = "BookFile")
+@Entity
 @Table(name = "book_file")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")

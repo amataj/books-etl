@@ -1,8 +1,7 @@
 package com.example.books.infrastructure.database.jpa.repository;
 
 import com.example.books.infrastructure.database.jpa.entity.BookEntity;
-import java.util.Optional;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,6 +9,4 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface BookJpaRepository extends JpaRepository<BookEntity, Long> {
-    Optional<BookEntity> findOneByDocumentId(String documentId);
-}
+public interface BookJpaRepository extends JpaRepository<BookEntity, Long> {}

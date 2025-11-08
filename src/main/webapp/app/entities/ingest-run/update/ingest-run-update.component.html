@@ -1,0 +1,161 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-ingest-run-heading" data-cy="IngestRunCreateUpdateHeading" jhiTranslate="booksEtlApp.ingestRun.home.createOrEditLabel">
+        Create or edit a Ingest Run
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="booksEtlApp.ingestRun.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" for="field_startedAt" jhiTranslate="booksEtlApp.ingestRun.startedAt">Started At</label>
+          <div class="d-flex">
+            <input
+              id="field_startedAt"
+              data-cy="startedAt"
+              type="datetime-local"
+              class="form-control"
+              name="startedAt"
+              formControlName="startedAt"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_finishedAt" jhiTranslate="booksEtlApp.ingestRun.finishedAt">Finished At</label>
+          <div class="d-flex">
+            <input
+              id="field_finishedAt"
+              data-cy="finishedAt"
+              type="datetime-local"
+              class="form-control"
+              name="finishedAt"
+              formControlName="finishedAt"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        @let statusRef = editForm.get('status')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_status" jhiTranslate="booksEtlApp.ingestRun.status">Status</label>
+          <input type="text" class="form-control" name="status" id="field_status" data-cy="status" formControlName="status" />
+          @if (statusRef.invalid && (statusRef.dirty || statusRef.touched)) {
+            <div>
+              @if (editForm.get('status')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+              @if (editForm.get('status')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '32' }"
+                  >This field cannot be longer than 32 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let filesSeenRef = editForm.get('filesSeen')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_filesSeen" jhiTranslate="booksEtlApp.ingestRun.filesSeen">Files Seen</label>
+          <input type="number" class="form-control" name="filesSeen" id="field_filesSeen" data-cy="filesSeen" formControlName="filesSeen" />
+          @if (filesSeenRef.invalid && (filesSeenRef.dirty || filesSeenRef.touched)) {
+            <div>
+              @if (editForm.get('filesSeen')?.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '0' }"
+                  >This field should be at least 0.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('filesSeen')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >This field should be a number.</small
+              >
+            </div>
+          }
+        </div>
+
+        @let filesParsedRef = editForm.get('filesParsed')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_filesParsed" jhiTranslate="booksEtlApp.ingestRun.filesParsed">Files Parsed</label>
+          <input
+            type="number"
+            class="form-control"
+            name="filesParsed"
+            id="field_filesParsed"
+            data-cy="filesParsed"
+            formControlName="filesParsed"
+          />
+          @if (filesParsedRef.invalid && (filesParsedRef.dirty || filesParsedRef.touched)) {
+            <div>
+              @if (editForm.get('filesParsed')?.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '0' }"
+                  >This field should be at least 0.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('filesParsed')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >This field should be a number.</small
+              >
+            </div>
+          }
+        </div>
+
+        @let filesFailedRef = editForm.get('filesFailed')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_filesFailed" jhiTranslate="booksEtlApp.ingestRun.filesFailed">Files Failed</label>
+          <input
+            type="number"
+            class="form-control"
+            name="filesFailed"
+            id="field_filesFailed"
+            data-cy="filesFailed"
+            formControlName="filesFailed"
+          />
+          @if (filesFailedRef.invalid && (filesFailedRef.dirty || filesFailedRef.touched)) {
+            <div>
+              @if (editForm.get('filesFailed')?.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '0' }"
+                  >This field should be at least 0.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('filesFailed')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >This field should be a number.</small
+              >
+            </div>
+          }
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

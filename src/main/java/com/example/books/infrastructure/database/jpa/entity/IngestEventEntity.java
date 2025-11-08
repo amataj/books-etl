@@ -12,7 +12,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 /**
  * JPA entity for ingest event persistence.
  */
-@Entity(name = "IngestEvent")
+@Entity
 @Table(name = "ingest_event")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")

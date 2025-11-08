@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (bookPageText(); as bookPageTextRef) {
+      <div>
+        <h2 data-cy="bookPageTextDetailsHeading"><span jhiTranslate="booksEtlApp.bookPageText.detail.title">Book Page Text</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ bookPageTextRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.bookPageText.documentId">Document Id</span></dt>
+          <dd>
+            <span>{{ bookPageTextRef.documentId }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.bookPageText.pageNo">Page No</span></dt>
+          <dd>
+            <span>{{ bookPageTextRef.pageNo }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.bookPageText.text">Text</span></dt>
+          <dd>
+            <span>{{ bookPageTextRef.text }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.bookPageText.book">Book</span></dt>
+          <dd>
+            @if (bookPageText()!.book) {
+              <div>
+                <a [routerLink]="['/book', bookPageText()!.book?.id, 'view']">{{ bookPageTextRef.book?.documentId }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/book-page-text', bookPageTextRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

@@ -2,7 +2,7 @@ package com.example.books.shared.security;
 
 import com.example.books.infrastructure.database.jpa.entity.Authority;
 import com.example.books.infrastructure.database.jpa.entity.User;
-import com.example.books.infrastructure.database.jpa.repository.UserRepository;
+import com.example.books.infrastructure.database.jpa.repository.UserJpaRepository;
 import java.util.*;
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 import org.slf4j.Logger;
@@ -23,9 +23,9 @@ public class DomainUserDetailsService implements UserDetailsService {
 
     private static final Logger LOG = LoggerFactory.getLogger(DomainUserDetailsService.class);
 
-    private final UserRepository userRepository;
+    private final UserJpaRepository userRepository;
 
-    public DomainUserDetailsService(UserRepository userRepository) {
+    public DomainUserDetailsService(UserJpaRepository userRepository) {
         this.userRepository = userRepository;
     }
 

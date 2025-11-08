@@ -12,7 +12,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 /**
  * JPA entity for ingest run persistence.
  */
-@Entity(name = "IngestRun")
+@Entity
 @Table(name = "ingest_run")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")

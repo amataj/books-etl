@@ -14,7 +14,7 @@ import org.hibernate.type.SqlTypes;
 /**
  * JPA entity for page text persistence.
  */
-@Entity(name = "BookPageText")
+@Entity
 @Table(name = "book_page_text")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")

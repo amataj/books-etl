@@ -1,0 +1,130 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-ingest-event-heading"
+        data-cy="IngestEventCreateUpdateHeading"
+        jhiTranslate="booksEtlApp.ingestEvent.home.createOrEditLabel"
+      >
+        Create or edit a Ingest Event
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="booksEtlApp.ingestEvent.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" for="field_runId" jhiTranslate="booksEtlApp.ingestEvent.runId">Run Id</label>
+          <input type="text" class="form-control" name="runId" id="field_runId" data-cy="runId" formControlName="runId" />
+        </div>
+
+        @let documentIdRef = editForm.get('documentId')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_documentId" jhiTranslate="booksEtlApp.ingestEvent.documentId">Document Id</label>
+          <input
+            type="text"
+            class="form-control"
+            name="documentId"
+            id="field_documentId"
+            data-cy="documentId"
+            formControlName="documentId"
+          />
+          @if (documentIdRef.invalid && (documentIdRef.dirty || documentIdRef.touched)) {
+            <div>
+              @if (editForm.get('documentId')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '64' }"
+                  >This field cannot be longer than 64 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let topicRef = editForm.get('topic')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_topic" jhiTranslate="booksEtlApp.ingestEvent.topic">Topic</label>
+          <input type="text" class="form-control" name="topic" id="field_topic" data-cy="topic" formControlName="topic" />
+          @if (topicRef.invalid && (topicRef.dirty || topicRef.touched)) {
+            <div>
+              @if (editForm.get('topic')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+              @if (editForm.get('topic')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '64' }"
+                  >This field cannot be longer than 64 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let payloadRef = editForm.get('payload')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_payload" jhiTranslate="booksEtlApp.ingestEvent.payload">Payload</label>
+          <textarea class="form-control" name="payload" id="field_payload" data-cy="payload" formControlName="payload"></textarea>
+          @if (payloadRef.invalid && (payloadRef.dirty || payloadRef.touched)) {
+            <div>
+              @if (editForm.get('payload')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_createdAt" jhiTranslate="booksEtlApp.ingestEvent.createdAt">Created At</label>
+          <div class="d-flex">
+            <input
+              id="field_createdAt"
+              data-cy="createdAt"
+              type="datetime-local"
+              class="form-control"
+              name="createdAt"
+              formControlName="createdAt"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_ingestRun" jhiTranslate="booksEtlApp.ingestEvent.ingestRun">Ingest Run</label>
+          <select
+            class="form-control"
+            id="field_ingestRun"
+            data-cy="ingestRun"
+            name="ingestRun"
+            formControlName="ingestRun"
+            [compareWith]="compareIngestRun"
+          >
+            <option [ngValue]="null"></option>
+            @for (ingestRunOption of ingestRunsSharedCollection; track $index) {
+              <option [ngValue]="ingestRunOption">{{ ingestRunOption.id }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

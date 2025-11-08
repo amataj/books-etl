@@ -1,0 +1,54 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (ingestRun(); as ingestRunRef) {
+      <div>
+        <h2 data-cy="ingestRunDetailsHeading"><span jhiTranslate="booksEtlApp.ingestRun.detail.title">Ingest Run</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ ingestRunRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.ingestRun.startedAt">Started At</span></dt>
+          <dd>
+            <span>{{ ingestRunRef.startedAt | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.ingestRun.finishedAt">Finished At</span></dt>
+          <dd>
+            <span>{{ ingestRunRef.finishedAt | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.ingestRun.status">Status</span></dt>
+          <dd>
+            <span>{{ ingestRunRef.status }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.ingestRun.filesSeen">Files Seen</span></dt>
+          <dd>
+            <span>{{ ingestRunRef.filesSeen }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.ingestRun.filesParsed">Files Parsed</span></dt>
+          <dd>
+            <span>{{ ingestRunRef.filesParsed }}</span>
+          </dd>
+          <dt><span jhiTranslate="booksEtlApp.ingestRun.filesFailed">Files Failed</span></dt>
+          <dd>
+            <span>{{ ingestRunRef.filesFailed }}</span>
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/ingest-run', ingestRunRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>
