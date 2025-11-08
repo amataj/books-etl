@@ -12,7 +12,8 @@
         "bookFile": "Book File",
         "bookPageText": "Book Page Text",
         "ingestRun": "Ingest Run",
-        "ingestEvent": "Ingest Event"
+        "ingestEvent": "Ingest Event",
+        "booksEtlKafka": "Books ETL Kafka"
       },
       "account": {
         "main": "Account",

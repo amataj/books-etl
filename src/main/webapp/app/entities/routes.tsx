@@ -8,6 +8,7 @@ import BookFile from './book-file';
 import BookPageText from './book-page-text';
 import IngestRun from './ingest-run';
 import IngestEvent from './ingest-event';
+import BooksEtlKafka from './books-etl-kafka';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 export default () => {
@@ -20,6 +21,7 @@ export default () => {
         <Route path="book-page-text/*" element={<BookPageText />} />
         <Route path="ingest-run/*" element={<IngestRun />} />
         <Route path="ingest-event/*" element={<IngestEvent />} />
+        <Route path="books-etl-kafka/*" element={<BooksEtlKafka />} />
         {/* jhipster-needle-add-route-path - JHipster will add routes here */}
       </ErrorBoundaryRoutes>
     </div>
