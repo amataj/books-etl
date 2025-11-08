@@ -70,15 +70,16 @@ const BooksEtlKafka = () => {
 
   const stopListening = useCallback(
     (shouldReport = true) => {
-      if (eventSourceRef.current) {
-        eventSourceRef.current.close();
+      const currentEventSource = eventSourceRef.current;
+      if (currentEventSource) {
+        currentEventSource.close();
         eventSourceRef.current = null;
+        unregister();
+        if (shouldReport) {
+          setSuccessKey('booksEtlKafka.alerts.stopSuccess');
+        }
       }
-      unregister();
       setIsListening(false);
-      if (shouldReport) {
-        setSuccessKey('booksEtlKafka.alerts.stopSuccess');
-      }
     },
     [unregister],
   );
