@@ -24,4 +24,5 @@
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
     <include file="config/liquibase/changelog/20251107193000_fix_book_file_path_fields.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20251107193500_enforce_book_file_book_not_null.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>
