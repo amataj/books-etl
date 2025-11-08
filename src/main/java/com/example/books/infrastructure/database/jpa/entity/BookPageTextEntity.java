@@ -8,6 +8,8 @@ import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 /**
  * JPA entity for page text persistence.
@@ -36,8 +38,8 @@ public class BookPageTextEntity implements Serializable {
     @Column(name = "page_no", nullable = false)
     private Integer pageNo;
 
-    @Lob
-    @Column(name = "text")
+    @JdbcTypeCode(SqlTypes.LONGVARCHAR)
+    @Column(name = "text", columnDefinition = "text")
     private String text;
 
     @ManyToOne(fetch = FetchType.LAZY)
