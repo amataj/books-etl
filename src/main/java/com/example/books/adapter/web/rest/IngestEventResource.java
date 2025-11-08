@@ -1,6 +1,7 @@
 package com.example.books.adapter.web.rest;
 
 import com.example.books.adapter.web.rest.errors.BadRequestAlertException;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestEvent;
 import com.example.books.repository.IngestEventRepository;
 import com.example.books.service.IngestEventService;
 import com.example.books.service.dto.IngestEventDTO;
@@ -20,7 +21,7 @@ import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
- * REST controller for managing {@link com.example.books.domain.IngestEvent}.
+ * REST controller for managing {@link IngestEvent}.
  */
 @RestController
 @RequestMapping("/api/ingest-events")

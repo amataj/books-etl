@@ -6,7 +6,7 @@ import static org.mockito.Mockito.*;
 
 import com.example.books.IntegrationTest;
 import com.example.books.config.Constants;
-import com.example.books.domain.User;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.User;
 import jakarta.mail.Multipart;
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeBodyPart;

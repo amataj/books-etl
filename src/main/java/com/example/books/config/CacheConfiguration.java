@@ -1,5 +1,6 @@
 package com.example.books.config;
 
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.*;
 import com.github.benmanes.caffeine.jcache.configuration.CaffeineConfiguration;
 import java.util.OptionalLong;
 import java.util.concurrent.TimeUnit;
@@ -43,16 +44,16 @@ public class CacheConfiguration {
         return cm -> {
             createCache(cm, com.example.books.repository.UserRepository.USERS_BY_LOGIN_CACHE);
             createCache(cm, com.example.books.repository.UserRepository.USERS_BY_EMAIL_CACHE);
-            createCache(cm, com.example.books.domain.User.class.getName());
-            createCache(cm, com.example.books.domain.Authority.class.getName());
-            createCache(cm, com.example.books.domain.User.class.getName() + ".authorities");
-            createCache(cm, com.example.books.domain.Book.class.getName());
-            createCache(cm, com.example.books.domain.Book.class.getName() + ".files");
-            createCache(cm, com.example.books.domain.Book.class.getName() + ".pageTexts");
-            createCache(cm, com.example.books.domain.BookFile.class.getName());
-            createCache(cm, com.example.books.domain.BookPageText.class.getName());
-            createCache(cm, com.example.books.domain.IngestRun.class.getName());
-            createCache(cm, com.example.books.domain.IngestEvent.class.getName());
+            createCache(cm, User.class.getName());
+            createCache(cm, Authority.class.getName());
+            createCache(cm, User.class.getName() + ".authorities");
+            createCache(cm, Book.class.getName());
+            createCache(cm, Book.class.getName() + ".files");
+            createCache(cm, Book.class.getName() + ".pageTexts");
+            createCache(cm, BookFile.class.getName());
+            createCache(cm, BookPageText.class.getName());
+            createCache(cm, IngestRun.class.getName());
+            createCache(cm, IngestEvent.class.getName());
             // jhipster-needle-caffeine-add-entry
         };
     }

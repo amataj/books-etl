@@ -1,6 +1,6 @@
 package com.example.books.service;
 
-import com.example.books.domain.IngestEvent;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestEvent;
 import com.example.books.repository.IngestEventRepository;
 import com.example.books.service.dto.IngestEventDTO;
 import com.example.books.service.mapper.IngestEventMapper;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service Implementation for managing {@link com.example.books.domain.IngestEvent}.
+ * Service Implementation for managing {@link IngestEvent}.
  */
 @Service
 @Transactional

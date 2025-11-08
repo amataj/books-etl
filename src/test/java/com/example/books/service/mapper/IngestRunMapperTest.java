@@ -1,7 +1,7 @@
 package com.example.books.service.mapper;
 
-import static com.example.books.domain.IngestRunAsserts.*;
-import static com.example.books.domain.IngestRunTestSamples.*;
+import static com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestRunAsserts.*;
+import static com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestRunTestSamples.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

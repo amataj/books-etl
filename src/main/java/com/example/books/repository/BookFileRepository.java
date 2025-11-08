@@ -1,6 +1,6 @@
 package com.example.books.repository;
 
-import com.example.books.domain.BookFile;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookFile;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;

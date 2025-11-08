@@ -1,7 +1,7 @@
 package com.example.books.service.mapper;
 
-import static com.example.books.domain.BookFileAsserts.*;
-import static com.example.books.domain.BookFileTestSamples.*;
+import static com.example.books.infrastructure.infrastructure.database.jpa.entity.BookFileAsserts.*;
+import static com.example.books.infrastructure.infrastructure.database.jpa.entity.BookFileTestSamples.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

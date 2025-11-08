@@ -1,14 +1,14 @@
 package com.example.books.service;
 
 import com.example.books.config.Constants;
-import com.example.books.domain.Authority;
-import com.example.books.domain.User;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.Authority;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.User;
 import com.example.books.repository.AuthorityRepository;
 import com.example.books.repository.UserRepository;
-import com.example.books.security.AuthoritiesConstants;
-import com.example.books.security.SecurityUtils;
 import com.example.books.service.dto.AdminUserDTO;
 import com.example.books.service.dto.UserDTO;
+import com.example.books.shared.security.AuthoritiesConstants;
+import com.example.books.shared.security.SecurityUtils;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;

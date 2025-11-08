@@ -1,6 +1,6 @@
 package com.example.books.service;
 
-import com.example.books.domain.User;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;

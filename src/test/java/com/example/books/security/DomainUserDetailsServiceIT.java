@@ -4,9 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.example.books.IntegrationTest;
-import com.example.books.domain.User;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.User;
 import com.example.books.repository.UserRepository;
 import com.example.books.service.UserService;
+import com.example.books.shared.security.DomainUserDetailsService;
+import com.example.books.shared.security.UserNotActivatedException;
 import java.util.Locale;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.AfterEach;

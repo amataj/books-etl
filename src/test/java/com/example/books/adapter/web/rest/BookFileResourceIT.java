@@ -2,7 +2,7 @@ package com.example.books.adapter.web.rest;
 
 import static com.example.books.adapter.web.rest.TestUtil.createUpdateProxyForBean;
 import static com.example.books.adapter.web.rest.TestUtil.sameInstant;
-import static com.example.books.domain.BookFileAsserts.*;
+import static com.example.books.infrastructure.infrastructure.database.jpa.entity.BookFileAsserts.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.Mockito.*;
@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.domain.BookFile;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookFile;
 import com.example.books.repository.BookFileRepository;
 import com.example.books.service.BookFileService;
 import com.example.books.service.dto.BookFileDTO;

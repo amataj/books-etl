@@ -1,6 +1,6 @@
 package com.example.books.repository;
 
-import com.example.books.domain.BookPageText;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookPageText;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;

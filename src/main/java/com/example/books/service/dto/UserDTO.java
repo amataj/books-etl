@@ -1,6 +1,6 @@
 package com.example.books.service.dto;
 
-import com.example.books.domain.User;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.User;
 import java.io.Serializable;
 import java.util.Objects;
 

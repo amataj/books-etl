@@ -1,7 +1,7 @@
 package com.example.books.service.mapper;
 
-import static com.example.books.domain.BookPageTextAsserts.*;
-import static com.example.books.domain.BookPageTextTestSamples.*;
+import static com.example.books.infrastructure.infrastructure.database.jpa.entity.BookPageTextAsserts.*;
+import static com.example.books.infrastructure.infrastructure.database.jpa.entity.BookPageTextTestSamples.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
 package com.example.books.service.mapper;
 
-import com.example.books.domain.IngestRun;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestRun;
 import com.example.books.service.dto.IngestRunDTO;
 import org.mapstruct.*;
 

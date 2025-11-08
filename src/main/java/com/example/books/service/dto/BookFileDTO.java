@@ -1,5 +1,6 @@
 package com.example.books.service.dto;
 
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookFile;
 import jakarta.persistence.Lob;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
@@ -7,7 +8,7 @@ import java.time.ZonedDateTime;
 import java.util.Objects;
 
 /**
- * A DTO for the {@link com.example.books.domain.BookFile} entity.
+ * A DTO for the {@link BookFile} entity.
  */
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class BookFileDTO implements Serializable {

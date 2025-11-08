@@ -1,8 +1,8 @@
 package com.example.books.service.dto;
 
 import com.example.books.config.Constants;
-import com.example.books.domain.Authority;
-import com.example.books.domain.User;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.Authority;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.User;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;

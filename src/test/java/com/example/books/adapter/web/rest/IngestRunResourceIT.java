@@ -2,14 +2,14 @@ package com.example.books.adapter.web.rest;
 
 import static com.example.books.adapter.web.rest.TestUtil.createUpdateProxyForBean;
 import static com.example.books.adapter.web.rest.TestUtil.sameInstant;
-import static com.example.books.domain.IngestRunAsserts.*;
+import static com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestRunAsserts.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.domain.IngestRun;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestRun;
 import com.example.books.repository.IngestRunRepository;
 import com.example.books.service.dto.IngestRunDTO;
 import com.example.books.service.mapper.IngestRunMapper;

@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.example.books.IntegrationTest;
 import com.example.books.adapter.web.rest.vm.LoginVM;
-import com.example.books.domain.User;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.User;
 import com.example.books.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;

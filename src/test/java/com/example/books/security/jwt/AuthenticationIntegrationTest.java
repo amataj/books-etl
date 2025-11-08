@@ -4,7 +4,7 @@ import com.example.books.adapter.web.rest.AuthenticateController;
 import com.example.books.config.SecurityConfiguration;
 import com.example.books.config.SecurityJwtConfiguration;
 import com.example.books.config.WebConfigurer;
-import com.example.books.management.SecurityMetersService;
+import com.example.books.shared.management.SecurityMetersService;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

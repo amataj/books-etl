@@ -2,11 +2,11 @@ package com.example.books.service.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.example.books.domain.Authority;
-import com.example.books.domain.User;
-import com.example.books.security.AuthoritiesConstants;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.Authority;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.User;
 import com.example.books.service.dto.AdminUserDTO;
 import com.example.books.service.dto.UserDTO;
+import com.example.books.shared.security.AuthoritiesConstants;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;

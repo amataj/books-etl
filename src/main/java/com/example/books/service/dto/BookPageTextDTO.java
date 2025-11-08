@@ -1,12 +1,13 @@
 package com.example.books.service.dto;
 
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookPageText;
 import jakarta.persistence.Lob;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * A DTO for the {@link com.example.books.domain.BookPageText} entity.
+ * A DTO for the {@link BookPageText} entity.
  */
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class BookPageTextDTO implements Serializable {

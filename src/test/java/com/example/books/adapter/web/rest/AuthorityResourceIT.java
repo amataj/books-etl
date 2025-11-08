@@ -1,13 +1,13 @@
 package com.example.books.adapter.web.rest;
 
-import static com.example.books.domain.AuthorityAsserts.*;
+import static com.example.books.infrastructure.infrastructure.database.jpa.entity.AuthorityAsserts.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.domain.Authority;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.Authority;
 import com.example.books.repository.AuthorityRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;

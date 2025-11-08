@@ -1,6 +1,6 @@
 package com.example.books.adapter.web.rest;
 
-import com.example.books.broker.KafkaConsumer;
+import com.example.books.infrastructure.broker.KafkaConsumer;
 import java.security.Principal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

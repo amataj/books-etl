@@ -1,6 +1,6 @@
 package com.example.books.service;
 
-import com.example.books.domain.BookPageText;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookPageText;
 import com.example.books.repository.BookPageTextRepository;
 import com.example.books.service.dto.BookPageTextDTO;
 import com.example.books.service.mapper.BookPageTextMapper;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service Implementation for managing {@link com.example.books.domain.BookPageText}.
+ * Service Implementation for managing {@link BookPageText}.
  */
 @Service
 @Transactional

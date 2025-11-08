@@ -1,6 +1,6 @@
 package com.example.books.repository;
 
-import com.example.books.domain.IngestRun;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestRun;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 

@@ -1,6 +1,6 @@
 package com.example.books.service;
 
-import com.example.books.domain.IngestRun;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestRun;
 import com.example.books.repository.IngestRunRepository;
 import com.example.books.service.dto.IngestRunDTO;
 import com.example.books.service.mapper.IngestRunMapper;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service Implementation for managing {@link com.example.books.domain.IngestRun}.
+ * Service Implementation for managing {@link IngestRun}.
  */
 @Service
 @Transactional
