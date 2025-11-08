@@ -1,15 +1,15 @@
 package com.example.books.adapter.web.rest;
 
-import com.example.books.adapter.web.rest.dto.AdminUserDTO;
 import com.example.books.adapter.web.rest.errors.BadRequestAlertException;
 import com.example.books.adapter.web.rest.errors.EmailAlreadyUsedException;
 import com.example.books.adapter.web.rest.errors.LoginAlreadyUsedException;
 import com.example.books.config.Constants;
-import com.example.books.domain.service.MailService;
-import com.example.books.domain.service.UserService;
-import com.example.books.infrastructure.database.jpa.entity.User;
-import com.example.books.infrastructure.database.jpa.repository.UserRepository;
-import com.example.books.shared.security.AuthoritiesConstants;
+import com.example.books.domain.User;
+import com.example.books.repository.UserRepository;
+import com.example.books.security.AuthoritiesConstants;
+import com.example.books.service.MailService;
+import com.example.books.service.UserService;
+import com.example.books.service.dto.AdminUserDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import java.net.URI;
@@ -34,7 +34,7 @@ import tech.jhipster.web.util.ResponseUtil;
 /**
  * REST controller for managing users.
  * <p>
- * This class accesses the {@link User} entity, and needs to fetch its collection of authorities.
+ * This class accesses the {@link com.example.books.domain.User} entity, and needs to fetch its collection of authorities.
  * <p>
  * For a normal use-case, it would be better to have an eager relationship between User and Authority,
  * and send everything to the client side: there would be no View Model and DTO, a lot less code, and an outer-join

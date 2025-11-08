@@ -2,8 +2,6 @@ package com.example.books.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.example.books.infrastructure.database.jpa.entity.Authority;
-
 public class AuthorityAsserts {
 
     /**

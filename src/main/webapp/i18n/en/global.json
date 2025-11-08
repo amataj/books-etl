@@ -8,12 +8,12 @@
       "entities": {
         "main": "Entities",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)",
+        "adminAuthority": "Authority",
         "book": "Book",
         "bookFile": "Book File",
         "bookPageText": "Book Page Text",
         "ingestRun": "Ingest Run",
-        "ingestEvent": "Ingest Event",
-        "booksEtlKafka": "Books ETL Kafka"
+        "ingestEvent": "Ingest Event"
       },
       "account": {
         "main": "Account",

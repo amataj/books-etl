@@ -1,6 +1,6 @@
 package com.example.books.adapter.web.rest.vm;
 
-import com.example.books.adapter.web.rest.dto.AdminUserDTO;
+import com.example.books.service.dto.AdminUserDTO;
 import jakarta.validation.constraints.Size;
 
 /**

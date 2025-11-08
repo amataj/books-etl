@@ -1,0 +1,124 @@
+<div>
+  <h2 id="page-heading" data-cy="IngestRunHeading">
+    <span jhiTranslate="booksEtlApp.ingestRun.home.title">Ingest Runs</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [animation]="isLoading ? 'spin' : undefined"></fa-icon>
+        <span jhiTranslate="booksEtlApp.ingestRun.home.refreshListLabel">Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-ingest-run"
+        [routerLink]="['/ingest-run/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="booksEtlApp.ingestRun.home.createLabel">Create a new Ingest Run</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (ingestRuns().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="booksEtlApp.ingestRun.home.notFound">No Ingest Runs found</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="startedAt">
+              <div class="d-flex">
+                <span jhiTranslate="booksEtlApp.ingestRun.startedAt">Started At</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="finishedAt">
+              <div class="d-flex">
+                <span jhiTranslate="booksEtlApp.ingestRun.finishedAt">Finished At</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="status">
+              <div class="d-flex">
+                <span jhiTranslate="booksEtlApp.ingestRun.status">Status</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="filesSeen">
+              <div class="d-flex">
+                <span jhiTranslate="booksEtlApp.ingestRun.filesSeen">Files Seen</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="filesParsed">
+              <div class="d-flex">
+                <span jhiTranslate="booksEtlApp.ingestRun.filesParsed">Files Parsed</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="filesFailed">
+              <div class="d-flex">
+                <span jhiTranslate="booksEtlApp.ingestRun.filesFailed">Files Failed</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (ingestRun of ingestRuns(); track trackId(ingestRun)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/ingest-run', ingestRun.id, 'view']">{{ ingestRun.id }}</a>
+              </td>
+              <td>{{ ingestRun.startedAt | formatMediumDatetime }}</td>
+              <td>{{ ingestRun.finishedAt | formatMediumDatetime }}</td>
+              <td>{{ ingestRun.status }}</td>
+              <td>{{ ingestRun.filesSeen }}</td>
+              <td>{{ ingestRun.filesParsed }}</td>
+              <td>{{ ingestRun.filesFailed }}</td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a [routerLink]="['/ingest-run', ingestRun.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye"></fa-icon>
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                  </a>
+
+                  <a [routerLink]="['/ingest-run', ingestRun.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt"></fa-icon>
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(ingestRun)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times"></fa-icon>
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

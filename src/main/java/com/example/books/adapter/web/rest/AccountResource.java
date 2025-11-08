@@ -1,15 +1,17 @@
 package com.example.books.adapter.web.rest;
 
-import com.example.books.adapter.web.rest.dto.AdminUserDTO;
-import com.example.books.adapter.web.rest.dto.PasswordChangeDTO;
-import com.example.books.adapter.web.rest.errors.*;
+import com.example.books.adapter.web.rest.errors.EmailAlreadyUsedException;
+import com.example.books.adapter.web.rest.errors.InvalidPasswordException;
+import com.example.books.adapter.web.rest.errors.LoginAlreadyUsedException;
 import com.example.books.adapter.web.rest.vm.KeyAndPasswordVM;
 import com.example.books.adapter.web.rest.vm.ManagedUserVM;
-import com.example.books.domain.service.MailService;
-import com.example.books.domain.service.UserService;
-import com.example.books.infrastructure.database.jpa.entity.User;
-import com.example.books.infrastructure.database.jpa.repository.UserRepository;
-import com.example.books.shared.security.SecurityUtils;
+import com.example.books.domain.User;
+import com.example.books.repository.UserRepository;
+import com.example.books.security.SecurityUtils;
+import com.example.books.service.MailService;
+import com.example.books.service.UserService;
+import com.example.books.service.dto.AdminUserDTO;
+import com.example.books.service.dto.PasswordChangeDTO;
 import jakarta.validation.Valid;
 import java.util.*;
 import org.apache.commons.lang3.StringUtils;

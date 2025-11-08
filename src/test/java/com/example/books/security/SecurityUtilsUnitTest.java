@@ -1,10 +1,8 @@
 package com.example.books.security;
 
-import static com.example.books.shared.security.SecurityUtils.USER_ID_CLAIM;
+import static com.example.books.security.SecurityUtils.USER_ID_CLAIM;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.example.books.shared.security.AuthoritiesConstants;
-import com.example.books.shared.security.SecurityUtils;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.Optional;

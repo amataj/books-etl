@@ -1,58 +1,72 @@
 package com.example.books.domain;
 
-import static com.example.books.domain.BookTestSamples.getBookRandomSampleGenerator;
-import static com.example.books.domain.BookTestSamples.getBookSample1;
-import static com.example.books.domain.BookTestSamples.getBookSample2;
+import static com.example.books.domain.BookFileTestSamples.*;
+import static com.example.books.domain.BookPageTextTestSamples.*;
+import static com.example.books.domain.BookTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.example.books.domain.DomainValidationException;
-import com.example.books.domain.core.book.Book;
+import com.example.books.adapter.web.rest.TestUtil;
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 class BookTest {
 
     @Test
-    void withIdReturnsNewInstanceWithCopiedState() {
-        Book original = getBookSample1();
-        Book rekeyed = original.withId(999L);
+    void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(Book.class);
+        Book book1 = getBookSample1();
+        Book book2 = new Book();
+        assertThat(book1).isNotEqualTo(book2);
 
-        assertThat(rekeyed.id()).isEqualTo(999L);
-        assertThat(rekeyed.documentId()).isEqualTo(original.documentId());
-        assertThat(rekeyed).isNotSameAs(original);
+        book2.setId(book1.getId());
+        assertThat(book1).isEqualTo(book2);
+
+        book2 = getBookSample2();
+        assertThat(book1).isNotEqualTo(book2);
     }
 
     @Test
-    void updateDetailsReplacesMutableFields() {
-        Book original = getBookSample1();
-        Book updated = original.updateDetails("New Title", "New Author", "es", 42);
-
-        assertThat(updated.documentId()).isEqualTo(original.documentId());
-        assertThat(updated.title()).isEqualTo("New Title");
-        assertThat(updated.author()).isEqualTo("New Author");
-        assertThat(updated.lang()).isEqualTo("es");
-        assertThat(updated.pages()).isEqualTo(42);
-    }
-
-    @Test
-    void sameIdentityMatchesByDocumentId() {
-        Book bookOne = getBookSample1();
-        Book bookTwo = new Book(bookOne.id(), bookOne.documentId(), "Changed", "Changed", "en", 300);
-        Book bookThree = getBookSample2();
-
-        assertThat(bookOne.sameIdentity(bookTwo)).isTrue();
-        assertThat(bookOne.sameIdentity(bookThree)).isFalse();
-    }
-
-    @Test
-    void documentIdMustRespectLengthConstraints() {
-        assertThatThrownBy(() -> new Book(1L, "short", "Title", "Author", "en", 10)).isInstanceOf(DomainValidationException.class);
-    }
-
-    @Test
-    void randomSampleAlwaysMeetsInvariants() {
+    void fileTest() {
         Book book = getBookRandomSampleGenerator();
-        assertThat(book.documentId()).hasSizeBetween(10, 64);
-        assertThat(book.pages()).isGreaterThanOrEqualTo(1);
+        BookFile bookFileBack = getBookFileRandomSampleGenerator();
+
+        book.addFile(bookFileBack);
+        assertThat(book.getFiles()).containsOnly(bookFileBack);
+        assertThat(bookFileBack.getBook()).isEqualTo(book);
+
+        book.removeFile(bookFileBack);
+        assertThat(book.getFiles()).doesNotContain(bookFileBack);
+        assertThat(bookFileBack.getBook()).isNull();
+
+        book.files(new HashSet<>(Set.of(bookFileBack)));
+        assertThat(book.getFiles()).containsOnly(bookFileBack);
+        assertThat(bookFileBack.getBook()).isEqualTo(book);
+
+        book.setFiles(new HashSet<>());
+        assertThat(book.getFiles()).doesNotContain(bookFileBack);
+        assertThat(bookFileBack.getBook()).isNull();
+    }
+
+    @Test
+    void pageTextTest() {
+        Book book = getBookRandomSampleGenerator();
+        BookPageText bookPageTextBack = getBookPageTextRandomSampleGenerator();
+
+        book.addPageText(bookPageTextBack);
+        assertThat(book.getPageTexts()).containsOnly(bookPageTextBack);
+        assertThat(bookPageTextBack.getBook()).isEqualTo(book);
+
+        book.removePageText(bookPageTextBack);
+        assertThat(book.getPageTexts()).doesNotContain(bookPageTextBack);
+        assertThat(bookPageTextBack.getBook()).isNull();
+
+        book.pageTexts(new HashSet<>(Set.of(bookPageTextBack)));
+        assertThat(book.getPageTexts()).containsOnly(bookPageTextBack);
+        assertThat(bookPageTextBack.getBook()).isEqualTo(book);
+
+        book.setPageTexts(new HashSet<>());
+        assertThat(book.getPageTexts()).doesNotContain(bookPageTextBack);
+        assertThat(bookPageTextBack.getBook()).isNull();
     }
 }

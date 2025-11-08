@@ -15,7 +15,7 @@ application {
     testFrameworks [cucumber]
     nativeLanguage en
     languages [en]
-    clientFramework react
+    clientFramework angular
     clientTheme none
     withAdminUi true
   }

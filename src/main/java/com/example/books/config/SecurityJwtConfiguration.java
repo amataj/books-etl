@@ -1,8 +1,8 @@
 package com.example.books.config;
 
-import static com.example.books.shared.security.SecurityUtils.JWT_ALGORITHM;
+import static com.example.books.security.SecurityUtils.JWT_ALGORITHM;
 
-import com.example.books.shared.management.SecurityMetersService;
+import com.example.books.management.SecurityMetersService;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import com.nimbusds.jose.util.Base64;
 import javax.crypto.SecretKey;

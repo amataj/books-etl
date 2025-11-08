@@ -3,7 +3,7 @@ package com.example.books.config;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 import com.example.books.adapter.web.filter.SpaWebFilter;
-import com.example.books.shared.security.AuthoritiesConstants;
+import com.example.books.security.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

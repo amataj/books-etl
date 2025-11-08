@@ -1,6 +1,6 @@
 package com.example.books.adapter.web.rest;
 
-import com.example.books.infrastructure.broker.KafkaConsumer;
+import com.example.books.broker.KafkaConsumer;
 import java.security.Principal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +27,6 @@ public class BooksEtlKafkaResource {
     public void publish(@RequestParam("message") String message) {
         LOG.debug("REST request the message : {} to send to Kafka topic ", message);
         streamBridge.send(PRODUCER_BINDING_NAME, message);
-        LOG.debug("Kafka producer sent message : {}", message);
     }
 
     @GetMapping("/register")

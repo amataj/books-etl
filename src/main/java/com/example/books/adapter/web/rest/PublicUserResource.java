@@ -1,7 +1,7 @@
 package com.example.books.adapter.web.rest;
 
-import com.example.books.adapter.web.rest.dto.UserDTO;
-import com.example.books.domain.service.UserService;
+import com.example.books.service.UserService;
+import com.example.books.service.dto.UserDTO;
 import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

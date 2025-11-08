@@ -1,8 +1,8 @@
 package com.example.books.security.jwt;
 
-import static com.example.books.shared.security.AuthoritiesConstants.ADMIN;
-import static com.example.books.shared.security.SecurityUtils.AUTHORITIES_CLAIM;
-import static com.example.books.shared.security.SecurityUtils.JWT_ALGORITHM;
+import static com.example.books.security.AuthoritiesConstants.ADMIN;
+import static com.example.books.security.SecurityUtils.AUTHORITIES_CLAIM;
+import static com.example.books.security.SecurityUtils.JWT_ALGORITHM;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import com.nimbusds.jose.util.Base64;

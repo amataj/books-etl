@@ -1,37 +1,37 @@
 package com.example.books.domain;
 
-import static com.example.books.domain.BookPageTextTestSamples.getBookPageTextRandomSampleGenerator;
-import static com.example.books.domain.BookPageTextTestSamples.getBookPageTextSample1;
+import static com.example.books.domain.BookPageTextTestSamples.*;
+import static com.example.books.domain.BookTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.example.books.domain.DomainValidationException;
-import com.example.books.domain.core.book.Book;
-import com.example.books.domain.core.bookpagetext.BookPageText;
+import com.example.books.adapter.web.rest.TestUtil;
 import org.junit.jupiter.api.Test;
 
 class BookPageTextTest {
 
     @Test
-    void withIdReusesOtherAttributes() {
-        BookPageText original = getBookPageTextSample1();
-        BookPageText updated = original.withId(111L);
+    void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(BookPageText.class);
+        BookPageText bookPageText1 = getBookPageTextSample1();
+        BookPageText bookPageText2 = new BookPageText();
+        assertThat(bookPageText1).isNotEqualTo(bookPageText2);
 
-        assertThat(updated.id()).isEqualTo(111L);
-        assertThat(updated.book()).isEqualTo(original.book());
-        assertThat(updated.pageNo()).isEqualTo(original.pageNo());
+        bookPageText2.setId(bookPageText1.getId());
+        assertThat(bookPageText1).isEqualTo(bookPageText2);
+
+        bookPageText2 = getBookPageTextSample2();
+        assertThat(bookPageText1).isNotEqualTo(bookPageText2);
     }
 
     @Test
-    void pageNumberMustBePositive() {
-        Book book = getBookPageTextSample1().book();
-        assertThatThrownBy(() -> new BookPageText(1L, book.documentId(), 0, "text", book)).isInstanceOf(DomainValidationException.class);
-    }
+    void bookTest() {
+        BookPageText bookPageText = getBookPageTextRandomSampleGenerator();
+        Book bookBack = getBookRandomSampleGenerator();
 
-    @Test
-    void randomSampleIncludesBookReference() {
-        BookPageText random = getBookPageTextRandomSampleGenerator();
-        assertThat(random.book()).isNotNull();
-        assertThat(random.documentId()).isEqualTo(random.book().documentId());
+        bookPageText.setBook(bookBack);
+        assertThat(bookPageText.getBook()).isEqualTo(bookBack);
+
+        bookPageText.book(null);
+        assertThat(bookPageText.getBook()).isNull();
     }
 }

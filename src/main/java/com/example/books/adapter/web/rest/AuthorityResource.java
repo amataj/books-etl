@@ -1,8 +1,8 @@
 package com.example.books.adapter.web.rest;
 
 import com.example.books.adapter.web.rest.errors.BadRequestAlertException;
-import com.example.books.infrastructure.database.jpa.entity.Authority;
-import com.example.books.infrastructure.database.jpa.repository.AuthorityRepository;
+import com.example.books.domain.Authority;
+import com.example.books.repository.AuthorityRepository;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,7 +19,7 @@ import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
- * REST controller for managing {@link com.example.books.infrastructure.database.jpa.entity.Authority}.
+ * REST controller for managing {@link com.example.books.domain.Authority}.
  */
 @RestController
 @RequestMapping("/api/authorities")

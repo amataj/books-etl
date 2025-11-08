@@ -2,7 +2,6 @@ package com.example.books.adapter.web.rest.errors;
 
 import static org.springframework.core.annotation.AnnotatedElementUtils.findMergedAnnotation;
 
-import com.example.books.domain.service.UsernameAlreadyUsedException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.Arrays;
@@ -87,13 +86,14 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
     }
 
     private ProblemDetailWithCause getProblemDetailWithCause(Throwable ex) {
-        if (ex instanceof UsernameAlreadyUsedException) return (ProblemDetailWithCause) new LoginAlreadyUsedException().getBody();
         if (
-            ex instanceof com.example.books.domain.service.EmailAlreadyUsedException
+            ex instanceof com.example.books.service.UsernameAlreadyUsedException
+        ) return (ProblemDetailWithCause) new LoginAlreadyUsedException().getBody();
+        if (
+            ex instanceof com.example.books.service.EmailAlreadyUsedException
         ) return (ProblemDetailWithCause) new EmailAlreadyUsedException().getBody();
-        if (
-            ex instanceof com.example.books.domain.service.InvalidPasswordException
-        ) return (ProblemDetailWithCause) new InvalidPasswordException().getBody();
+        if (ex instanceof com.example.books.service.InvalidPasswordException) return (ProblemDetailWithCause) new InvalidPasswordException()
+            .getBody();
 
         if (
             ex instanceof ErrorResponseException exp && exp.getBody() instanceof ProblemDetailWithCause problemDetailWithCause

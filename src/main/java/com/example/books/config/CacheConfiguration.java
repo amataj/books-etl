@@ -1,8 +1,5 @@
 package com.example.books.config;
 
-import com.example.books.infrastructure.database.jpa.entity.Authority;
-import com.example.books.infrastructure.database.jpa.entity.User;
-import com.example.books.infrastructure.database.jpa.repository.UserRepository;
 import com.github.benmanes.caffeine.jcache.configuration.CaffeineConfiguration;
 import java.util.OptionalLong;
 import java.util.concurrent.TimeUnit;
@@ -14,8 +11,7 @@ import org.springframework.boot.info.BuildProperties;
 import org.springframework.boot.info.GitProperties;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.KeyGenerator;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
 import tech.jhipster.config.JHipsterProperties;
 import tech.jhipster.config.cache.PrefixedKeyGenerator;
 
@@ -45,18 +41,18 @@ public class CacheConfiguration {
     @Bean
     public JCacheManagerCustomizer cacheManagerCustomizer() {
         return cm -> {
-            createCache(cm, UserRepository.USERS_BY_LOGIN_CACHE);
-            createCache(cm, UserRepository.USERS_BY_EMAIL_CACHE);
-            createCache(cm, User.class.getName());
-            createCache(cm, Authority.class.getName());
-            createCache(cm, User.class.getName() + ".authorities");
-            createCache(cm, com.example.books.infrastructure.database.jpa.entity.BookEntity.class.getName());
-            createCache(cm, com.example.books.infrastructure.database.jpa.entity.BookEntity.class.getName() + ".files");
-            createCache(cm, com.example.books.infrastructure.database.jpa.entity.BookEntity.class.getName() + ".pageTexts");
-            createCache(cm, com.example.books.infrastructure.database.jpa.entity.BookFileEntity.class.getName());
-            createCache(cm, com.example.books.infrastructure.database.jpa.entity.BookPageTextEntity.class.getName());
-            createCache(cm, com.example.books.infrastructure.database.jpa.entity.IngestRunEntity.class.getName());
-            createCache(cm, com.example.books.infrastructure.database.jpa.entity.IngestEventEntity.class.getName());
+            createCache(cm, com.example.books.repository.UserRepository.USERS_BY_LOGIN_CACHE);
+            createCache(cm, com.example.books.repository.UserRepository.USERS_BY_EMAIL_CACHE);
+            createCache(cm, com.example.books.domain.User.class.getName());
+            createCache(cm, com.example.books.domain.Authority.class.getName());
+            createCache(cm, com.example.books.domain.User.class.getName() + ".authorities");
+            createCache(cm, com.example.books.domain.Book.class.getName());
+            createCache(cm, com.example.books.domain.Book.class.getName() + ".files");
+            createCache(cm, com.example.books.domain.Book.class.getName() + ".pageTexts");
+            createCache(cm, com.example.books.domain.BookFile.class.getName());
+            createCache(cm, com.example.books.domain.BookPageText.class.getName());
+            createCache(cm, com.example.books.domain.IngestRun.class.getName());
+            createCache(cm, com.example.books.domain.IngestEvent.class.getName());
             // jhipster-needle-caffeine-add-entry
         };
     }

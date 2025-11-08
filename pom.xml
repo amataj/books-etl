@@ -1256,11 +1256,12 @@ fi
                                 <fileSet>
                                     <directory>${project.basedir}</directory>
                                     <includes>
-                                        <include>.postcss.config.js</include>
+                                        <include>angular.json</include>
                                         <include>package-lock.json</include>
                                         <include>package.json</include>
                                         <include>src/main/webapp/**/*.*</include>
                                         <include>target/classes/static/**/*.*</include>
+                                        <include>tsconfig.app.json</include>
                                         <include>tsconfig.json</include>
                                         <include>webpack/**/*.*</include>
                                     </includes>
