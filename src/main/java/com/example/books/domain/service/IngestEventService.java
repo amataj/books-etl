@@ -1,9 +1,9 @@
 package com.example.books.domain.service;
 
-import com.example.books.domain.core.IngestEventDTO;
-import com.example.books.domain.service.mapper.IngestEventMapper;
+import com.example.books.domain.core.IngestEvent;
 import com.example.books.infrastructure.database.jpa.entity.IngestEventEntity;
-import com.example.books.infrastructure.database.jpa.repository.IngestEventRepository;
+import com.example.books.infrastructure.database.jpa.mapper.IngestEventMapper;
+import com.example.books.infrastructure.database.jpa.repository.IngestEventJpaRepository;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -22,11 +22,11 @@ public class IngestEventService {
 
     private static final Logger LOG = LoggerFactory.getLogger(IngestEventService.class);
 
-    private final IngestEventRepository ingestEventRepository;
+    private final IngestEventJpaRepository ingestEventRepository;
 
     private final IngestEventMapper ingestEventMapper;
 
-    public IngestEventService(IngestEventRepository ingestEventRepository, IngestEventMapper ingestEventMapper) {
+    public IngestEventService(IngestEventJpaRepository ingestEventRepository, IngestEventMapper ingestEventMapper) {
         this.ingestEventRepository = ingestEventRepository;
         this.ingestEventMapper = ingestEventMapper;
     }
@@ -37,7 +37,7 @@ public class IngestEventService {
      * @param ingestEventDTO the entity to save.
      * @return the persisted entity.
      */
-    public IngestEventDTO save(IngestEventDTO ingestEventDTO) {
+    public IngestEvent save(IngestEvent ingestEventDTO) {
         LOG.debug("Request to save IngestEvent : {}", ingestEventDTO);
         IngestEventEntity ingestEvent = ingestEventMapper.toEntity(ingestEventDTO);
         ingestEvent = ingestEventRepository.save(ingestEvent);
@@ -50,7 +50,7 @@ public class IngestEventService {
      * @param ingestEventDTO the entity to save.
      * @return the persisted entity.
      */
-    public IngestEventDTO update(IngestEventDTO ingestEventDTO) {
+    public IngestEvent update(IngestEvent ingestEventDTO) {
         LOG.debug("Request to update IngestEvent : {}", ingestEventDTO);
         IngestEventEntity ingestEvent = ingestEventMapper.toEntity(ingestEventDTO);
         ingestEvent = ingestEventRepository.save(ingestEvent);
@@ -63,7 +63,7 @@ public class IngestEventService {
      * @param ingestEventDTO the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<IngestEventDTO> partialUpdate(IngestEventDTO ingestEventDTO) {
+    public Optional<IngestEvent> partialUpdate(IngestEvent ingestEventDTO) {
         LOG.debug("Request to partially update IngestEvent : {}", ingestEventDTO);
 
         return ingestEventRepository
@@ -83,7 +83,7 @@ public class IngestEventService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public List<IngestEventDTO> findAll() {
+    public List<IngestEvent> findAll() {
         LOG.debug("Request to get all IngestEvents");
         return ingestEventRepository.findAll().stream().map(ingestEventMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
     }
@@ -95,7 +95,7 @@ public class IngestEventService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<IngestEventDTO> findOne(Long id) {
+    public Optional<IngestEvent> findOne(Long id) {
         LOG.debug("Request to get IngestEvent : {}", id);
         return ingestEventRepository.findById(id).map(ingestEventMapper::toDto);
     }

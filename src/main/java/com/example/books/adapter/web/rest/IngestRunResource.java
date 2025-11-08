@@ -1,10 +1,10 @@
 package com.example.books.adapter.web.rest;
 
 import com.example.books.adapter.web.rest.errors.BadRequestAlertException;
-import com.example.books.domain.core.IngestRunDTO;
+import com.example.books.domain.core.IngestRun;
 import com.example.books.domain.service.IngestRunService;
 import com.example.books.infrastructure.database.jpa.entity.IngestRunEntity;
-import com.example.books.infrastructure.database.jpa.repository.IngestRunRepository;
+import com.example.books.infrastructure.database.jpa.repository.IngestRunJpaRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
@@ -36,9 +36,9 @@ public class IngestRunResource {
 
     private final IngestRunService ingestRunService;
 
-    private final IngestRunRepository ingestRunRepository;
+    private final IngestRunJpaRepository ingestRunRepository;
 
-    public IngestRunResource(IngestRunService ingestRunService, IngestRunRepository ingestRunRepository) {
+    public IngestRunResource(IngestRunService ingestRunService, IngestRunJpaRepository ingestRunRepository) {
         this.ingestRunService = ingestRunService;
         this.ingestRunRepository = ingestRunRepository;
     }
@@ -51,7 +51,7 @@ public class IngestRunResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<IngestRunDTO> createIngestRun(@Valid @RequestBody IngestRunDTO ingestRunDTO) throws URISyntaxException {
+    public ResponseEntity<IngestRun> createIngestRun(@Valid @RequestBody IngestRun ingestRunDTO) throws URISyntaxException {
         LOG.debug("REST request to save IngestRun : {}", ingestRunDTO);
         if (ingestRunDTO.getId() != null) {
             throw new BadRequestAlertException("A new ingestRun cannot already have an ID", ENTITY_NAME, "idexists");
@@ -73,9 +73,9 @@ public class IngestRunResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<IngestRunDTO> updateIngestRun(
+    public ResponseEntity<IngestRun> updateIngestRun(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody IngestRunDTO ingestRunDTO
+        @Valid @RequestBody IngestRun ingestRunDTO
     ) throws URISyntaxException {
         LOG.debug("REST request to update IngestRun : {}, {}", id, ingestRunDTO);
         if (ingestRunDTO.getId() == null) {
@@ -107,9 +107,9 @@ public class IngestRunResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<IngestRunDTO> partialUpdateIngestRun(
+    public ResponseEntity<IngestRun> partialUpdateIngestRun(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody IngestRunDTO ingestRunDTO
+        @NotNull @RequestBody IngestRun ingestRunDTO
     ) throws URISyntaxException {
         LOG.debug("REST request to partial update IngestRun partially : {}, {}", id, ingestRunDTO);
         if (ingestRunDTO.getId() == null) {
@@ -123,7 +123,7 @@ public class IngestRunResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<IngestRunDTO> result = ingestRunService.partialUpdate(ingestRunDTO);
+        Optional<IngestRun> result = ingestRunService.partialUpdate(ingestRunDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -137,7 +137,7 @@ public class IngestRunResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of ingestRuns in body.
      */
     @GetMapping("")
-    public List<IngestRunDTO> getAllIngestRuns() {
+    public List<IngestRun> getAllIngestRuns() {
         LOG.debug("REST request to get all IngestRuns");
         return ingestRunService.findAll();
     }
@@ -149,9 +149,9 @@ public class IngestRunResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the ingestRunDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<IngestRunDTO> getIngestRun(@PathVariable("id") Long id) {
+    public ResponseEntity<IngestRun> getIngestRun(@PathVariable("id") Long id) {
         LOG.debug("REST request to get IngestRun : {}", id);
-        Optional<IngestRunDTO> ingestRunDTO = ingestRunService.findOne(id);
+        Optional<IngestRun> ingestRunDTO = ingestRunService.findOne(id);
         return ResponseUtil.wrapOrNotFound(ingestRunDTO);
     }
 

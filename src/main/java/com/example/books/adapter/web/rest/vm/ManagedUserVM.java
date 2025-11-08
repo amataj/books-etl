@@ -1,12 +1,12 @@
 package com.example.books.adapter.web.rest.vm;
 
-import com.example.books.domain.core.AdminUserDTO;
+import com.example.books.domain.core.AdminUser;
 import jakarta.validation.constraints.Size;
 
 /**
  * View Model extending the AdminUserDTO, which is meant to be used in the user management UI.
  */
-public class ManagedUserVM extends AdminUserDTO {
+public class ManagedUserVM extends AdminUser {
 
     public static final int PASSWORD_MIN_LENGTH = 4;
 

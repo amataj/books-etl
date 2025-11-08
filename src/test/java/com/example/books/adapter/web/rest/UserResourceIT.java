@@ -6,11 +6,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.domain.core.AdminUserDTO;
+import com.example.books.domain.core.AdminUser;
 import com.example.books.domain.service.UserService;
-import com.example.books.domain.service.mapper.UserMapper;
 import com.example.books.infrastructure.database.jpa.entity.User;
-import com.example.books.infrastructure.database.jpa.repository.UserRepository;
+import com.example.books.infrastructure.database.jpa.mapper.UserMapper;
+import com.example.books.infrastructure.database.jpa.repository.UserJpaRepository;
 import com.example.books.shared.security.AuthoritiesConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
@@ -61,7 +61,7 @@ class UserResourceIT {
     private ObjectMapper om;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserJpaRepository userRepository;
 
     @Autowired
     private UserService userService;
@@ -141,7 +141,7 @@ class UserResourceIT {
     @Transactional
     void createUser() throws Exception {
         // Create the User
-        AdminUserDTO userDTO = new AdminUserDTO();
+        AdminUser userDTO = new AdminUser();
         userDTO.setLogin(DEFAULT_LOGIN);
         userDTO.setFirstName(DEFAULT_FIRSTNAME);
         userDTO.setLastName(DEFAULT_LASTNAME);
@@ -158,7 +158,7 @@ class UserResourceIT {
                 .andReturn()
                 .getResponse()
                 .getContentAsString(),
-            AdminUserDTO.class
+            AdminUser.class
         );
 
         User convertedUser = userMapper.userDTOToUser(returnedUserDTO);
@@ -176,7 +176,7 @@ class UserResourceIT {
     void createUserWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = userRepository.findAll().size();
 
-        AdminUserDTO userDTO = new AdminUserDTO();
+        AdminUser userDTO = new AdminUser();
         userDTO.setId(DEFAULT_ID);
         userDTO.setLogin(DEFAULT_LOGIN);
         userDTO.setFirstName(DEFAULT_FIRSTNAME);
@@ -203,7 +203,7 @@ class UserResourceIT {
         userRepository.saveAndFlush(user);
         int databaseSizeBeforeCreate = userRepository.findAll().size();
 
-        AdminUserDTO userDTO = new AdminUserDTO();
+        AdminUser userDTO = new AdminUser();
         userDTO.setLogin(DEFAULT_LOGIN); // this login should already be used
         userDTO.setFirstName(DEFAULT_FIRSTNAME);
         userDTO.setLastName(DEFAULT_LASTNAME);
@@ -229,7 +229,7 @@ class UserResourceIT {
         userRepository.saveAndFlush(user);
         int databaseSizeBeforeCreate = userRepository.findAll().size();
 
-        AdminUserDTO userDTO = new AdminUserDTO();
+        AdminUser userDTO = new AdminUser();
         userDTO.setLogin("anotherlogin");
         userDTO.setFirstName(DEFAULT_FIRSTNAME);
         userDTO.setLastName(DEFAULT_LASTNAME);
@@ -273,7 +273,7 @@ class UserResourceIT {
         // Initialize the database
         userRepository.saveAndFlush(user);
 
-        assertThat(cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).get(user.getLogin(), User.class)).isNull();
+        assertThat(cacheManager.getCache(UserJpaRepository.USERS_BY_LOGIN_CACHE).get(user.getLogin(), User.class)).isNull();
 
         // Get the user
         restUserMockMvc
@@ -287,7 +287,7 @@ class UserResourceIT {
             .andExpect(jsonPath("$.imageUrl").value(DEFAULT_IMAGEURL))
             .andExpect(jsonPath("$.langKey").value(DEFAULT_LANGKEY));
 
-        assertThat(cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).get(user.getLogin(), User.class)).isNotNull();
+        assertThat(cacheManager.getCache(UserJpaRepository.USERS_BY_LOGIN_CACHE).get(user.getLogin(), User.class)).isNotNull();
     }
 
     @Test
@@ -306,7 +306,7 @@ class UserResourceIT {
         // Update the user
         User updatedUser = userRepository.findById(user.getId()).orElseThrow();
 
-        AdminUserDTO userDTO = new AdminUserDTO();
+        AdminUser userDTO = new AdminUser();
         userDTO.setId(updatedUser.getId());
         userDTO.setLogin(updatedUser.getLogin());
         userDTO.setFirstName(UPDATED_FIRSTNAME);
@@ -347,7 +347,7 @@ class UserResourceIT {
         // Update the user
         User updatedUser = userRepository.findById(user.getId()).orElseThrow();
 
-        AdminUserDTO userDTO = new AdminUserDTO();
+        AdminUser userDTO = new AdminUser();
         userDTO.setId(updatedUser.getId());
         userDTO.setLogin(UPDATED_LOGIN);
         userDTO.setFirstName(UPDATED_FIRSTNAME);
@@ -399,7 +399,7 @@ class UserResourceIT {
         // Update the user
         User updatedUser = userRepository.findById(user.getId()).orElseThrow();
 
-        AdminUserDTO userDTO = new AdminUserDTO();
+        AdminUser userDTO = new AdminUser();
         userDTO.setId(updatedUser.getId());
         userDTO.setLogin(updatedUser.getLogin());
         userDTO.setFirstName(updatedUser.getFirstName());
@@ -439,7 +439,7 @@ class UserResourceIT {
         // Update the user
         User updatedUser = userRepository.findById(user.getId()).orElseThrow();
 
-        AdminUserDTO userDTO = new AdminUserDTO();
+        AdminUser userDTO = new AdminUser();
         userDTO.setId(updatedUser.getId());
         userDTO.setLogin("jhipster"); // this login should already be used by anotherUser
         userDTO.setFirstName(updatedUser.getFirstName());
@@ -471,7 +471,7 @@ class UserResourceIT {
             .perform(delete("/api/admin/users/{login}", user.getLogin()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
-        assertThat(cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).get(user.getLogin(), User.class)).isNull();
+        assertThat(cacheManager.getCache(UserJpaRepository.USERS_BY_LOGIN_CACHE).get(user.getLogin(), User.class)).isNull();
 
         // Validate the database is empty
         assertPersistedUsers(users -> assertThat(users).hasSize(databaseSizeBeforeDelete - 1));

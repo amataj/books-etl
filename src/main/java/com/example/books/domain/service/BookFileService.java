@@ -1,9 +1,9 @@
 package com.example.books.domain.service;
 
-import com.example.books.domain.core.BookFileDTO;
-import com.example.books.domain.service.mapper.BookFileMapper;
+import com.example.books.domain.core.BookFile;
 import com.example.books.infrastructure.database.jpa.entity.BookFileEntity;
-import com.example.books.infrastructure.database.jpa.repository.BookFileRepository;
+import com.example.books.infrastructure.database.jpa.mapper.BookFileMapper;
+import com.example.books.infrastructure.database.jpa.repository.BookFileJpaRepository;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +21,11 @@ public class BookFileService {
 
     private static final Logger LOG = LoggerFactory.getLogger(BookFileService.class);
 
-    private final BookFileRepository bookFileRepository;
+    private final BookFileJpaRepository bookFileRepository;
 
     private final BookFileMapper bookFileMapper;
 
-    public BookFileService(BookFileRepository bookFileRepository, BookFileMapper bookFileMapper) {
+    public BookFileService(BookFileJpaRepository bookFileRepository, BookFileMapper bookFileMapper) {
         this.bookFileRepository = bookFileRepository;
         this.bookFileMapper = bookFileMapper;
     }
@@ -36,7 +36,7 @@ public class BookFileService {
      * @param bookFileDTO the entity to save.
      * @return the persisted entity.
      */
-    public BookFileDTO save(BookFileDTO bookFileDTO) {
+    public BookFile save(BookFile bookFileDTO) {
         LOG.debug("Request to save BookFile : {}", bookFileDTO);
         BookFileEntity bookFile = bookFileMapper.toEntity(bookFileDTO);
         bookFile = bookFileRepository.save(bookFile);
@@ -49,7 +49,7 @@ public class BookFileService {
      * @param bookFileDTO the entity to save.
      * @return the persisted entity.
      */
-    public BookFileDTO update(BookFileDTO bookFileDTO) {
+    public BookFile update(BookFile bookFileDTO) {
         LOG.debug("Request to update BookFile : {}", bookFileDTO);
         BookFileEntity bookFile = bookFileMapper.toEntity(bookFileDTO);
         bookFile = bookFileRepository.save(bookFile);
@@ -62,7 +62,7 @@ public class BookFileService {
      * @param bookFileDTO the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<BookFileDTO> partialUpdate(BookFileDTO bookFileDTO) {
+    public Optional<BookFile> partialUpdate(BookFile bookFileDTO) {
         LOG.debug("Request to partially update BookFile : {}", bookFileDTO);
 
         return bookFileRepository
@@ -83,7 +83,7 @@ public class BookFileService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public Page<BookFileDTO> findAll(Pageable pageable) {
+    public Page<BookFile> findAll(Pageable pageable) {
         LOG.debug("Request to get all BookFiles");
         return bookFileRepository.findAll(pageable).map(bookFileMapper::toDto);
     }
@@ -93,7 +93,7 @@ public class BookFileService {
      *
      * @return the list of entities.
      */
-    public Page<BookFileDTO> findAllWithEagerRelationships(Pageable pageable) {
+    public Page<BookFile> findAllWithEagerRelationships(Pageable pageable) {
         return bookFileRepository.findAllWithEagerRelationships(pageable).map(bookFileMapper::toDto);
     }
 
@@ -104,7 +104,7 @@ public class BookFileService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<BookFileDTO> findOne(Long id) {
+    public Optional<BookFile> findOne(Long id) {
         LOG.debug("Request to get BookFile : {}", id);
         return bookFileRepository.findOneWithEagerRelationships(id).map(bookFileMapper::toDto);
     }

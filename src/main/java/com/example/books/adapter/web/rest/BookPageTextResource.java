@@ -1,10 +1,10 @@
 package com.example.books.adapter.web.rest;
 
 import com.example.books.adapter.web.rest.errors.BadRequestAlertException;
-import com.example.books.domain.core.BookPageTextDTO;
+import com.example.books.domain.core.BookPageText;
 import com.example.books.domain.service.BookPageTextService;
 import com.example.books.infrastructure.database.jpa.entity.BookPageTextEntity;
-import com.example.books.infrastructure.database.jpa.repository.BookPageTextRepository;
+import com.example.books.infrastructure.database.jpa.repository.BookPageTextJpaRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
@@ -41,9 +41,9 @@ public class BookPageTextResource {
 
     private final BookPageTextService bookPageTextService;
 
-    private final BookPageTextRepository bookPageTextRepository;
+    private final BookPageTextJpaRepository bookPageTextRepository;
 
-    public BookPageTextResource(BookPageTextService bookPageTextService, BookPageTextRepository bookPageTextRepository) {
+    public BookPageTextResource(BookPageTextService bookPageTextService, BookPageTextJpaRepository bookPageTextRepository) {
         this.bookPageTextService = bookPageTextService;
         this.bookPageTextRepository = bookPageTextRepository;
     }
@@ -56,8 +56,7 @@ public class BookPageTextResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<BookPageTextDTO> createBookPageText(@Valid @RequestBody BookPageTextDTO bookPageTextDTO)
-        throws URISyntaxException {
+    public ResponseEntity<BookPageText> createBookPageText(@Valid @RequestBody BookPageText bookPageTextDTO) throws URISyntaxException {
         LOG.debug("REST request to save BookPageText : {}", bookPageTextDTO);
         if (bookPageTextDTO.getId() != null) {
             throw new BadRequestAlertException("A new bookPageText cannot already have an ID", ENTITY_NAME, "idexists");
@@ -79,9 +78,9 @@ public class BookPageTextResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<BookPageTextDTO> updateBookPageText(
+    public ResponseEntity<BookPageText> updateBookPageText(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody BookPageTextDTO bookPageTextDTO
+        @Valid @RequestBody BookPageText bookPageTextDTO
     ) throws URISyntaxException {
         LOG.debug("REST request to update BookPageText : {}, {}", id, bookPageTextDTO);
         if (bookPageTextDTO.getId() == null) {
@@ -113,9 +112,9 @@ public class BookPageTextResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<BookPageTextDTO> partialUpdateBookPageText(
+    public ResponseEntity<BookPageText> partialUpdateBookPageText(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody BookPageTextDTO bookPageTextDTO
+        @NotNull @RequestBody BookPageText bookPageTextDTO
     ) throws URISyntaxException {
         LOG.debug("REST request to partial update BookPageText partially : {}, {}", id, bookPageTextDTO);
         if (bookPageTextDTO.getId() == null) {
@@ -129,7 +128,7 @@ public class BookPageTextResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<BookPageTextDTO> result = bookPageTextService.partialUpdate(bookPageTextDTO);
+        Optional<BookPageText> result = bookPageTextService.partialUpdate(bookPageTextDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -145,12 +144,12 @@ public class BookPageTextResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of bookPageTexts in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<BookPageTextDTO>> getAllBookPageTexts(
+    public ResponseEntity<List<BookPageText>> getAllBookPageTexts(
         @org.springdoc.core.annotations.ParameterObject Pageable pageable,
         @RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload
     ) {
         LOG.debug("REST request to get a page of BookPageTexts");
-        Page<BookPageTextDTO> page;
+        Page<BookPageText> page;
         if (eagerload) {
             page = bookPageTextService.findAllWithEagerRelationships(pageable);
         } else {
@@ -167,9 +166,9 @@ public class BookPageTextResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the bookPageTextDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<BookPageTextDTO> getBookPageText(@PathVariable("id") Long id) {
+    public ResponseEntity<BookPageText> getBookPageText(@PathVariable("id") Long id) {
         LOG.debug("REST request to get BookPageText : {}", id);
-        Optional<BookPageTextDTO> bookPageTextDTO = bookPageTextService.findOne(id);
+        Optional<BookPageText> bookPageTextDTO = bookPageTextService.findOne(id);
         return ResponseUtil.wrapOrNotFound(bookPageTextDTO);
     }
 

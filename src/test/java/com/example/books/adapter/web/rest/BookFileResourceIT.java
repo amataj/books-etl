@@ -10,12 +10,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.domain.core.BookFileDTO;
+import com.example.books.domain.core.BookFile;
 import com.example.books.domain.service.BookFileService;
-import com.example.books.domain.service.mapper.BookFileMapper;
 import com.example.books.infrastructure.database.jpa.entity.BookEntity;
 import com.example.books.infrastructure.database.jpa.entity.BookFileEntity;
-import com.example.books.infrastructure.database.jpa.repository.BookFileRepository;
+import com.example.books.infrastructure.database.jpa.mapper.BookFileMapper;
+import com.example.books.infrastructure.database.jpa.repository.BookFileJpaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
@@ -80,10 +80,10 @@ class BookFileResourceIT {
     private ObjectMapper om;
 
     @Autowired
-    private BookFileRepository bookFileRepository;
+    private BookFileJpaRepository bookFileRepository;
 
     @Mock
-    private BookFileRepository bookFileRepositoryMock;
+    private BookFileJpaRepository bookFileRepositoryMock;
 
     @Autowired
     private BookFileMapper bookFileMapper;
@@ -177,7 +177,7 @@ class BookFileResourceIT {
     void createBookFile() throws Exception {
         long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the BookFile
-        BookFileDTO bookFileDTO = bookFileMapper.toDto(bookFile);
+        BookFile bookFileDTO = bookFileMapper.toDto(bookFile);
         var returnedBookFileDTO = om.readValue(
             restBookFileMockMvc
                 .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(bookFileDTO)))
@@ -185,7 +185,7 @@ class BookFileResourceIT {
                 .andReturn()
                 .getResponse()
                 .getContentAsString(),
-            BookFileDTO.class
+            BookFile.class
         );
 
         // Validate the BookFile in the database
@@ -201,7 +201,7 @@ class BookFileResourceIT {
     void createBookFileWithExistingId() throws Exception {
         // Create the BookFile with an existing ID
         bookFile.setId(1L);
-        BookFileDTO bookFileDTO = bookFileMapper.toDto(bookFile);
+        BookFile bookFileDTO = bookFileMapper.toDto(bookFile);
 
         long databaseSizeBeforeCreate = getRepositoryCount();
 
@@ -222,7 +222,7 @@ class BookFileResourceIT {
         bookFile.setSha256(null);
 
         // Create the BookFile, which fails.
-        BookFileDTO bookFileDTO = bookFileMapper.toDto(bookFile);
+        BookFile bookFileDTO = bookFileMapper.toDto(bookFile);
 
         restBookFileMockMvc
             .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(bookFileDTO)))
@@ -317,7 +317,7 @@ class BookFileResourceIT {
             .storageUri(UPDATED_STORAGE_URI)
             .firstSeenAt(UPDATED_FIRST_SEEN_AT)
             .lastSeenAt(UPDATED_LAST_SEEN_AT);
-        BookFileDTO bookFileDTO = bookFileMapper.toDto(updatedBookFile);
+        BookFile bookFileDTO = bookFileMapper.toDto(updatedBookFile);
 
         restBookFileMockMvc
             .perform(
@@ -339,7 +339,7 @@ class BookFileResourceIT {
         bookFile.setId(longCount.incrementAndGet());
 
         // Create the BookFile
-        BookFileDTO bookFileDTO = bookFileMapper.toDto(bookFile);
+        BookFile bookFileDTO = bookFileMapper.toDto(bookFile);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restBookFileMockMvc
@@ -361,7 +361,7 @@ class BookFileResourceIT {
         bookFile.setId(longCount.incrementAndGet());
 
         // Create the BookFile
-        BookFileDTO bookFileDTO = bookFileMapper.toDto(bookFile);
+        BookFile bookFileDTO = bookFileMapper.toDto(bookFile);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBookFileMockMvc
@@ -383,7 +383,7 @@ class BookFileResourceIT {
         bookFile.setId(longCount.incrementAndGet());
 
         // Create the BookFile
-        BookFileDTO bookFileDTO = bookFileMapper.toDto(bookFile);
+        BookFile bookFileDTO = bookFileMapper.toDto(bookFile);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBookFileMockMvc
@@ -469,7 +469,7 @@ class BookFileResourceIT {
         bookFile.setId(longCount.incrementAndGet());
 
         // Create the BookFile
-        BookFileDTO bookFileDTO = bookFileMapper.toDto(bookFile);
+        BookFile bookFileDTO = bookFileMapper.toDto(bookFile);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restBookFileMockMvc
@@ -491,7 +491,7 @@ class BookFileResourceIT {
         bookFile.setId(longCount.incrementAndGet());
 
         // Create the BookFile
-        BookFileDTO bookFileDTO = bookFileMapper.toDto(bookFile);
+        BookFile bookFileDTO = bookFileMapper.toDto(bookFile);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBookFileMockMvc
@@ -513,7 +513,7 @@ class BookFileResourceIT {
         bookFile.setId(longCount.incrementAndGet());
 
         // Create the BookFile
-        BookFileDTO bookFileDTO = bookFileMapper.toDto(bookFile);
+        BookFile bookFileDTO = bookFileMapper.toDto(bookFile);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBookFileMockMvc

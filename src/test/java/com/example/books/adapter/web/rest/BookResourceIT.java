@@ -8,10 +8,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.domain.core.BookDTO;
-import com.example.books.domain.service.mapper.BookMapper;
+import com.example.books.domain.core.Book;
 import com.example.books.infrastructure.database.jpa.entity.BookEntity;
-import com.example.books.infrastructure.database.jpa.repository.BookRepository;
+import com.example.books.infrastructure.database.jpa.mapper.BookMapper;
+import com.example.books.infrastructure.database.jpa.repository.BookJpaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import java.util.Random;
@@ -59,7 +59,7 @@ class BookResourceIT {
     private ObjectMapper om;
 
     @Autowired
-    private BookRepository bookRepository;
+    private BookJpaRepository bookRepository;
 
     @Autowired
     private BookMapper bookMapper;
@@ -122,7 +122,7 @@ class BookResourceIT {
     void createBook() throws Exception {
         long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the Book
-        BookDTO bookDTO = bookMapper.toDto(book);
+        Book bookDTO = bookMapper.toDto(book);
         var returnedBookDTO = om.readValue(
             restBookMockMvc
                 .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(bookDTO)))
@@ -130,7 +130,7 @@ class BookResourceIT {
                 .andReturn()
                 .getResponse()
                 .getContentAsString(),
-            BookDTO.class
+            Book.class
         );
 
         // Validate the Book in the database
@@ -146,7 +146,7 @@ class BookResourceIT {
     void createBookWithExistingId() throws Exception {
         // Create the Book with an existing ID
         book.setId(1L);
-        BookDTO bookDTO = bookMapper.toDto(book);
+        Book bookDTO = bookMapper.toDto(book);
 
         long databaseSizeBeforeCreate = getRepositoryCount();
 
@@ -167,7 +167,7 @@ class BookResourceIT {
         book.setDocumentId(null);
 
         // Create the Book, which fails.
-        BookDTO bookDTO = bookMapper.toDto(book);
+        Book bookDTO = bookMapper.toDto(book);
 
         restBookMockMvc
             .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(bookDTO)))
@@ -234,7 +234,7 @@ class BookResourceIT {
         // Disconnect from session so that the updates on updatedBook are not directly saved in db
         em.detach(updatedBook);
         updatedBook.documentId(UPDATED_DOCUMENT_ID).title(UPDATED_TITLE).author(UPDATED_AUTHOR).lang(UPDATED_LANG).pages(UPDATED_PAGES);
-        BookDTO bookDTO = bookMapper.toDto(updatedBook);
+        Book bookDTO = bookMapper.toDto(updatedBook);
 
         restBookMockMvc
             .perform(put(ENTITY_API_URL_ID, bookDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(bookDTO)))
@@ -252,7 +252,7 @@ class BookResourceIT {
         book.setId(longCount.incrementAndGet());
 
         // Create the Book
-        BookDTO bookDTO = bookMapper.toDto(book);
+        Book bookDTO = bookMapper.toDto(book);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restBookMockMvc
@@ -270,7 +270,7 @@ class BookResourceIT {
         book.setId(longCount.incrementAndGet());
 
         // Create the Book
-        BookDTO bookDTO = bookMapper.toDto(book);
+        Book bookDTO = bookMapper.toDto(book);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBookMockMvc
@@ -292,7 +292,7 @@ class BookResourceIT {
         book.setId(longCount.incrementAndGet());
 
         // Create the Book
-        BookDTO bookDTO = bookMapper.toDto(book);
+        Book bookDTO = bookMapper.toDto(book);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBookMockMvc
@@ -371,7 +371,7 @@ class BookResourceIT {
         book.setId(longCount.incrementAndGet());
 
         // Create the Book
-        BookDTO bookDTO = bookMapper.toDto(book);
+        Book bookDTO = bookMapper.toDto(book);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restBookMockMvc
@@ -391,7 +391,7 @@ class BookResourceIT {
         book.setId(longCount.incrementAndGet());
 
         // Create the Book
-        BookDTO bookDTO = bookMapper.toDto(book);
+        Book bookDTO = bookMapper.toDto(book);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBookMockMvc
@@ -413,7 +413,7 @@ class BookResourceIT {
         book.setId(longCount.incrementAndGet());
 
         // Create the Book
-        BookDTO bookDTO = bookMapper.toDto(book);
+        Book bookDTO = bookMapper.toDto(book);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBookMockMvc

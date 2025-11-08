@@ -9,12 +9,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.domain.core.BookPageTextDTO;
+import com.example.books.domain.core.BookPageText;
 import com.example.books.domain.service.BookPageTextService;
-import com.example.books.domain.service.mapper.BookPageTextMapper;
 import com.example.books.infrastructure.database.jpa.entity.BookEntity;
 import com.example.books.infrastructure.database.jpa.entity.BookPageTextEntity;
-import com.example.books.infrastructure.database.jpa.repository.BookPageTextRepository;
+import com.example.books.infrastructure.database.jpa.mapper.BookPageTextMapper;
+import com.example.books.infrastructure.database.jpa.repository.BookPageTextJpaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import java.util.ArrayList;
@@ -64,10 +64,10 @@ class BookPageTextResourceIT {
     private ObjectMapper om;
 
     @Autowired
-    private BookPageTextRepository bookPageTextRepository;
+    private BookPageTextJpaRepository bookPageTextRepository;
 
     @Mock
-    private BookPageTextRepository bookPageTextRepositoryMock;
+    private BookPageTextJpaRepository bookPageTextRepositoryMock;
 
     @Autowired
     private BookPageTextMapper bookPageTextMapper;
@@ -145,7 +145,7 @@ class BookPageTextResourceIT {
     void createBookPageText() throws Exception {
         long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the BookPageText
-        BookPageTextDTO bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
+        BookPageText bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
         var returnedBookPageTextDTO = om.readValue(
             restBookPageTextMockMvc
                 .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(bookPageTextDTO)))
@@ -153,7 +153,7 @@ class BookPageTextResourceIT {
                 .andReturn()
                 .getResponse()
                 .getContentAsString(),
-            BookPageTextDTO.class
+            BookPageText.class
         );
 
         // Validate the BookPageText in the database
@@ -169,7 +169,7 @@ class BookPageTextResourceIT {
     void createBookPageTextWithExistingId() throws Exception {
         // Create the BookPageText with an existing ID
         bookPageText.setId(1L);
-        BookPageTextDTO bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
+        BookPageText bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
 
         long databaseSizeBeforeCreate = getRepositoryCount();
 
@@ -190,7 +190,7 @@ class BookPageTextResourceIT {
         bookPageText.setDocumentId(null);
 
         // Create the BookPageText, which fails.
-        BookPageTextDTO bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
+        BookPageText bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
 
         restBookPageTextMockMvc
             .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(bookPageTextDTO)))
@@ -207,7 +207,7 @@ class BookPageTextResourceIT {
         bookPageText.setPageNo(null);
 
         // Create the BookPageText, which fails.
-        BookPageTextDTO bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
+        BookPageText bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
 
         restBookPageTextMockMvc
             .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(bookPageTextDTO)))
@@ -287,7 +287,7 @@ class BookPageTextResourceIT {
         // Disconnect from session so that the updates on updatedBookPageText are not directly saved in db
         em.detach(updatedBookPageText);
         updatedBookPageText.documentId(UPDATED_DOCUMENT_ID).pageNo(UPDATED_PAGE_NO).text(UPDATED_TEXT);
-        BookPageTextDTO bookPageTextDTO = bookPageTextMapper.toDto(updatedBookPageText);
+        BookPageText bookPageTextDTO = bookPageTextMapper.toDto(updatedBookPageText);
 
         restBookPageTextMockMvc
             .perform(
@@ -309,7 +309,7 @@ class BookPageTextResourceIT {
         bookPageText.setId(longCount.incrementAndGet());
 
         // Create the BookPageText
-        BookPageTextDTO bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
+        BookPageText bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restBookPageTextMockMvc
@@ -331,7 +331,7 @@ class BookPageTextResourceIT {
         bookPageText.setId(longCount.incrementAndGet());
 
         // Create the BookPageText
-        BookPageTextDTO bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
+        BookPageText bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBookPageTextMockMvc
@@ -353,7 +353,7 @@ class BookPageTextResourceIT {
         bookPageText.setId(longCount.incrementAndGet());
 
         // Create the BookPageText
-        BookPageTextDTO bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
+        BookPageText bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBookPageTextMockMvc
@@ -430,7 +430,7 @@ class BookPageTextResourceIT {
         bookPageText.setId(longCount.incrementAndGet());
 
         // Create the BookPageText
-        BookPageTextDTO bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
+        BookPageText bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restBookPageTextMockMvc
@@ -452,7 +452,7 @@ class BookPageTextResourceIT {
         bookPageText.setId(longCount.incrementAndGet());
 
         // Create the BookPageText
-        BookPageTextDTO bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
+        BookPageText bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBookPageTextMockMvc
@@ -474,7 +474,7 @@ class BookPageTextResourceIT {
         bookPageText.setId(longCount.incrementAndGet());
 
         // Create the BookPageText
-        BookPageTextDTO bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
+        BookPageText bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBookPageTextMockMvc

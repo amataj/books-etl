@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.example.books.IntegrationTest;
 import com.example.books.domain.service.UserService;
 import com.example.books.infrastructure.database.jpa.entity.User;
-import com.example.books.infrastructure.database.jpa.repository.UserRepository;
+import com.example.books.infrastructure.database.jpa.repository.UserJpaRepository;
 import com.example.books.shared.security.AuthoritiesConstants;
 import java.util.Objects;
 import java.util.Set;
@@ -32,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 class PublicUserResourceIT {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserJpaRepository userRepository;
 
     @Autowired
     private UserService userService;

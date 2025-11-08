@@ -1,12 +1,11 @@
 package com.example.books.domain.service;
 
 import com.example.books.config.Constants;
-import com.example.books.domain.core.AdminUserDTO;
-import com.example.books.domain.core.UserDTO;
+import com.example.books.domain.core.AdminUser;
+import com.example.books.domain.core.User;
 import com.example.books.infrastructure.database.jpa.entity.Authority;
-import com.example.books.infrastructure.database.jpa.entity.User;
-import com.example.books.infrastructure.database.jpa.repository.AuthorityRepository;
-import com.example.books.infrastructure.database.jpa.repository.UserRepository;
+import com.example.books.infrastructure.database.jpa.repository.AuthorityJpaRepository;
+import com.example.books.infrastructure.database.jpa.repository.UserJpaRepository;
 import com.example.books.shared.security.AuthoritiesConstants;
 import com.example.books.shared.security.SecurityUtils;
 import java.time.Instant;
@@ -33,18 +32,18 @@ public class UserService {
 
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
-    private final UserRepository userRepository;
+    private final UserJpaRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
 
-    private final AuthorityRepository authorityRepository;
+    private final AuthorityJpaRepository authorityRepository;
 
     private final CacheManager cacheManager;
 
     public UserService(
-        UserRepository userRepository,
+        UserJpaRepository userRepository,
         PasswordEncoder passwordEncoder,
-        AuthorityRepository authorityRepository,
+        AuthorityJpaRepository authorityRepository,
         CacheManager cacheManager
     ) {
         this.userRepository = userRepository;
@@ -53,7 +52,7 @@ public class UserService {
         this.cacheManager = cacheManager;
     }
 
-    public Optional<User> activateRegistration(String key) {
+    public Optional<com.example.books.infrastructure.database.jpa.entity.User> activateRegistration(String key) {
         LOG.debug("Activating user for activation key {}", key);
         return userRepository
             .findOneByActivationKey(key)
@@ -67,7 +66,7 @@ public class UserService {
             });
     }
 
-    public Optional<User> completePasswordReset(String newPassword, String key) {
+    public Optional<com.example.books.infrastructure.database.jpa.entity.User> completePasswordReset(String newPassword, String key) {
         LOG.debug("Reset user password for reset key {}", key);
         return userRepository
             .findOneByResetKey(key)
@@ -81,10 +80,10 @@ public class UserService {
             });
     }
 
-    public Optional<User> requestPasswordReset(String mail) {
+    public Optional<com.example.books.infrastructure.database.jpa.entity.User> requestPasswordReset(String mail) {
         return userRepository
             .findOneByEmailIgnoreCase(mail)
-            .filter(User::isActivated)
+            .filter(com.example.books.infrastructure.database.jpa.entity.User::isActivated)
             .map(user -> {
                 user.setResetKey(RandomUtil.generateResetKey());
                 user.setResetDate(Instant.now());
@@ -93,7 +92,7 @@ public class UserService {
             });
     }
 
-    public User registerUser(AdminUserDTO userDTO, String password) {
+    public com.example.books.infrastructure.database.jpa.entity.User registerUser(AdminUser userDTO, String password) {
         userRepository
             .findOneByLogin(userDTO.getLogin().toLowerCase())
             .ifPresent(existingUser -> {
@@ -110,7 +109,7 @@ public class UserService {
                     throw new EmailAlreadyUsedException();
                 }
             });
-        User newUser = new User();
+        com.example.books.infrastructure.database.jpa.entity.User newUser = new com.example.books.infrastructure.database.jpa.entity.User();
         String encryptedPassword = passwordEncoder.encode(password);
         newUser.setLogin(userDTO.getLogin().toLowerCase());
         // new user gets initially a generated password
@@ -135,7 +134,7 @@ public class UserService {
         return newUser;
     }
 
-    private boolean removeNonActivatedUser(User existingUser) {
+    private boolean removeNonActivatedUser(com.example.books.infrastructure.database.jpa.entity.User existingUser) {
         if (existingUser.isActivated()) {
             return false;
         }
@@ -145,8 +144,8 @@ public class UserService {
         return true;
     }
 
-    public User createUser(AdminUserDTO userDTO) {
-        User user = new User();
+    public com.example.books.infrastructure.database.jpa.entity.User createUser(AdminUser userDTO) {
+        com.example.books.infrastructure.database.jpa.entity.User user = new com.example.books.infrastructure.database.jpa.entity.User();
         user.setLogin(userDTO.getLogin().toLowerCase());
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
@@ -186,7 +185,7 @@ public class UserService {
      * @param userDTO user to update.
      * @return updated user.
      */
-    public Optional<AdminUserDTO> updateUser(AdminUserDTO userDTO) {
+    public Optional<AdminUser> updateUser(AdminUser userDTO) {
         return Optional.of(userRepository.findById(userDTO.getId()))
             .filter(Optional::isPresent)
             .map(Optional::get)
@@ -215,7 +214,7 @@ public class UserService {
                 LOG.debug("Changed Information for User: {}", user);
                 return user;
             })
-            .map(AdminUserDTO::new);
+            .map(AdminUser::new);
     }
 
     public void deleteUser(String login) {
@@ -271,22 +270,22 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<AdminUserDTO> getAllManagedUsers(Pageable pageable) {
-        return userRepository.findAll(pageable).map(AdminUserDTO::new);
+    public Page<AdminUser> getAllManagedUsers(Pageable pageable) {
+        return userRepository.findAll(pageable).map(AdminUser::new);
     }
 
     @Transactional(readOnly = true)
-    public Page<UserDTO> getAllPublicUsers(Pageable pageable) {
-        return userRepository.findAllByIdNotNullAndActivatedIsTrue(pageable).map(UserDTO::new);
+    public Page<User> getAllPublicUsers(Pageable pageable) {
+        return userRepository.findAllByIdNotNullAndActivatedIsTrue(pageable).map(User::new);
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> getUserWithAuthoritiesByLogin(String login) {
+    public Optional<com.example.books.infrastructure.database.jpa.entity.User> getUserWithAuthoritiesByLogin(String login) {
         return userRepository.findOneWithAuthoritiesByLogin(login);
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> getUserWithAuthorities() {
+    public Optional<com.example.books.infrastructure.database.jpa.entity.User> getUserWithAuthorities() {
         return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithAuthoritiesByLogin);
     }
 
@@ -315,10 +314,10 @@ public class UserService {
         return authorityRepository.findAll().stream().map(Authority::getName).toList();
     }
 
-    private void clearUserCaches(User user) {
-        Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE)).evictIfPresent(user.getLogin());
+    private void clearUserCaches(com.example.books.infrastructure.database.jpa.entity.User user) {
+        Objects.requireNonNull(cacheManager.getCache(UserJpaRepository.USERS_BY_LOGIN_CACHE)).evictIfPresent(user.getLogin());
         if (user.getEmail() != null) {
-            Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE)).evictIfPresent(user.getEmail());
+            Objects.requireNonNull(cacheManager.getCache(UserJpaRepository.USERS_BY_EMAIL_CACHE)).evictIfPresent(user.getEmail());
         }
     }
 }

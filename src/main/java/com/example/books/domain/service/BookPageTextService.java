@@ -1,9 +1,9 @@
 package com.example.books.domain.service;
 
-import com.example.books.domain.core.BookPageTextDTO;
-import com.example.books.domain.service.mapper.BookPageTextMapper;
+import com.example.books.domain.core.BookPageText;
 import com.example.books.infrastructure.database.jpa.entity.BookPageTextEntity;
-import com.example.books.infrastructure.database.jpa.repository.BookPageTextRepository;
+import com.example.books.infrastructure.database.jpa.mapper.BookPageTextMapper;
+import com.example.books.infrastructure.database.jpa.repository.BookPageTextJpaRepository;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +21,11 @@ public class BookPageTextService {
 
     private static final Logger LOG = LoggerFactory.getLogger(BookPageTextService.class);
 
-    private final BookPageTextRepository bookPageTextRepository;
+    private final BookPageTextJpaRepository bookPageTextRepository;
 
     private final BookPageTextMapper bookPageTextMapper;
 
-    public BookPageTextService(BookPageTextRepository bookPageTextRepository, BookPageTextMapper bookPageTextMapper) {
+    public BookPageTextService(BookPageTextJpaRepository bookPageTextRepository, BookPageTextMapper bookPageTextMapper) {
         this.bookPageTextRepository = bookPageTextRepository;
         this.bookPageTextMapper = bookPageTextMapper;
     }
@@ -36,7 +36,7 @@ public class BookPageTextService {
      * @param bookPageTextDTO the entity to save.
      * @return the persisted entity.
      */
-    public BookPageTextDTO save(BookPageTextDTO bookPageTextDTO) {
+    public BookPageText save(BookPageText bookPageTextDTO) {
         LOG.debug("Request to save BookPageText : {}", bookPageTextDTO);
         BookPageTextEntity bookPageText = bookPageTextMapper.toEntity(bookPageTextDTO);
         bookPageText = bookPageTextRepository.save(bookPageText);
@@ -49,7 +49,7 @@ public class BookPageTextService {
      * @param bookPageTextDTO the entity to save.
      * @return the persisted entity.
      */
-    public BookPageTextDTO update(BookPageTextDTO bookPageTextDTO) {
+    public BookPageText update(BookPageText bookPageTextDTO) {
         LOG.debug("Request to update BookPageText : {}", bookPageTextDTO);
         BookPageTextEntity bookPageText = bookPageTextMapper.toEntity(bookPageTextDTO);
         bookPageText = bookPageTextRepository.save(bookPageText);
@@ -62,7 +62,7 @@ public class BookPageTextService {
      * @param bookPageTextDTO the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<BookPageTextDTO> partialUpdate(BookPageTextDTO bookPageTextDTO) {
+    public Optional<BookPageText> partialUpdate(BookPageText bookPageTextDTO) {
         LOG.debug("Request to partially update BookPageText : {}", bookPageTextDTO);
 
         return bookPageTextRepository
@@ -83,7 +83,7 @@ public class BookPageTextService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public Page<BookPageTextDTO> findAll(Pageable pageable) {
+    public Page<BookPageText> findAll(Pageable pageable) {
         LOG.debug("Request to get all BookPageTexts");
         return bookPageTextRepository.findAll(pageable).map(bookPageTextMapper::toDto);
     }
@@ -93,7 +93,7 @@ public class BookPageTextService {
      *
      * @return the list of entities.
      */
-    public Page<BookPageTextDTO> findAllWithEagerRelationships(Pageable pageable) {
+    public Page<BookPageText> findAllWithEagerRelationships(Pageable pageable) {
         return bookPageTextRepository.findAllWithEagerRelationships(pageable).map(bookPageTextMapper::toDto);
     }
 
@@ -104,7 +104,7 @@ public class BookPageTextService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<BookPageTextDTO> findOne(Long id) {
+    public Optional<BookPageText> findOne(Long id) {
         LOG.debug("Request to get BookPageText : {}", id);
         return bookPageTextRepository.findOneWithEagerRelationships(id).map(bookPageTextMapper::toDto);
     }

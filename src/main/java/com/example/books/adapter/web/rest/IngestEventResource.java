@@ -1,10 +1,10 @@
 package com.example.books.adapter.web.rest;
 
 import com.example.books.adapter.web.rest.errors.BadRequestAlertException;
-import com.example.books.domain.core.IngestEventDTO;
+import com.example.books.domain.core.IngestEvent;
 import com.example.books.domain.service.IngestEventService;
 import com.example.books.infrastructure.database.jpa.entity.IngestEventEntity;
-import com.example.books.infrastructure.database.jpa.repository.IngestEventRepository;
+import com.example.books.infrastructure.database.jpa.repository.IngestEventJpaRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
@@ -36,9 +36,9 @@ public class IngestEventResource {
 
     private final IngestEventService ingestEventService;
 
-    private final IngestEventRepository ingestEventRepository;
+    private final IngestEventJpaRepository ingestEventRepository;
 
-    public IngestEventResource(IngestEventService ingestEventService, IngestEventRepository ingestEventRepository) {
+    public IngestEventResource(IngestEventService ingestEventService, IngestEventJpaRepository ingestEventRepository) {
         this.ingestEventService = ingestEventService;
         this.ingestEventRepository = ingestEventRepository;
     }
@@ -51,7 +51,7 @@ public class IngestEventResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<IngestEventDTO> createIngestEvent(@Valid @RequestBody IngestEventDTO ingestEventDTO) throws URISyntaxException {
+    public ResponseEntity<IngestEvent> createIngestEvent(@Valid @RequestBody IngestEvent ingestEventDTO) throws URISyntaxException {
         LOG.debug("REST request to save IngestEvent : {}", ingestEventDTO);
         if (ingestEventDTO.getId() != null) {
             throw new BadRequestAlertException("A new ingestEvent cannot already have an ID", ENTITY_NAME, "idexists");
@@ -73,9 +73,9 @@ public class IngestEventResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<IngestEventDTO> updateIngestEvent(
+    public ResponseEntity<IngestEvent> updateIngestEvent(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody IngestEventDTO ingestEventDTO
+        @Valid @RequestBody IngestEvent ingestEventDTO
     ) throws URISyntaxException {
         LOG.debug("REST request to update IngestEvent : {}, {}", id, ingestEventDTO);
         if (ingestEventDTO.getId() == null) {
@@ -107,9 +107,9 @@ public class IngestEventResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<IngestEventDTO> partialUpdateIngestEvent(
+    public ResponseEntity<IngestEvent> partialUpdateIngestEvent(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody IngestEventDTO ingestEventDTO
+        @NotNull @RequestBody IngestEvent ingestEventDTO
     ) throws URISyntaxException {
         LOG.debug("REST request to partial update IngestEvent partially : {}, {}", id, ingestEventDTO);
         if (ingestEventDTO.getId() == null) {
@@ -123,7 +123,7 @@ public class IngestEventResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<IngestEventDTO> result = ingestEventService.partialUpdate(ingestEventDTO);
+        Optional<IngestEvent> result = ingestEventService.partialUpdate(ingestEventDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -137,7 +137,7 @@ public class IngestEventResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of ingestEvents in body.
      */
     @GetMapping("")
-    public List<IngestEventDTO> getAllIngestEvents() {
+    public List<IngestEvent> getAllIngestEvents() {
         LOG.debug("REST request to get all IngestEvents");
         return ingestEventService.findAll();
     }
@@ -149,9 +149,9 @@ public class IngestEventResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the ingestEventDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<IngestEventDTO> getIngestEvent(@PathVariable("id") Long id) {
+    public ResponseEntity<IngestEvent> getIngestEvent(@PathVariable("id") Long id) {
         LOG.debug("REST request to get IngestEvent : {}", id);
-        Optional<IngestEventDTO> ingestEventDTO = ingestEventService.findOne(id);
+        Optional<IngestEvent> ingestEventDTO = ingestEventService.findOne(id);
         return ResponseUtil.wrapOrNotFound(ingestEventDTO);
     }
 

@@ -1,10 +1,10 @@
 package com.example.books.adapter.web.rest;
 
 import com.example.books.adapter.web.rest.errors.BadRequestAlertException;
-import com.example.books.domain.core.BookFileDTO;
+import com.example.books.domain.core.BookFile;
 import com.example.books.domain.service.BookFileService;
 import com.example.books.infrastructure.database.jpa.entity.BookFileEntity;
-import com.example.books.infrastructure.database.jpa.repository.BookFileRepository;
+import com.example.books.infrastructure.database.jpa.repository.BookFileJpaRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
@@ -41,9 +41,9 @@ public class BookFileResource {
 
     private final BookFileService bookFileService;
 
-    private final BookFileRepository bookFileRepository;
+    private final BookFileJpaRepository bookFileRepository;
 
-    public BookFileResource(BookFileService bookFileService, BookFileRepository bookFileRepository) {
+    public BookFileResource(BookFileService bookFileService, BookFileJpaRepository bookFileRepository) {
         this.bookFileService = bookFileService;
         this.bookFileRepository = bookFileRepository;
     }
@@ -56,7 +56,7 @@ public class BookFileResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<BookFileDTO> createBookFile(@Valid @RequestBody BookFileDTO bookFileDTO) throws URISyntaxException {
+    public ResponseEntity<BookFile> createBookFile(@Valid @RequestBody BookFile bookFileDTO) throws URISyntaxException {
         LOG.debug("REST request to save BookFile : {}", bookFileDTO);
         if (bookFileDTO.getId() != null) {
             throw new BadRequestAlertException("A new bookFile cannot already have an ID", ENTITY_NAME, "idexists");
@@ -78,9 +78,9 @@ public class BookFileResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<BookFileDTO> updateBookFile(
+    public ResponseEntity<BookFile> updateBookFile(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody BookFileDTO bookFileDTO
+        @Valid @RequestBody BookFile bookFileDTO
     ) throws URISyntaxException {
         LOG.debug("REST request to update BookFile : {}, {}", id, bookFileDTO);
         if (bookFileDTO.getId() == null) {
@@ -112,9 +112,9 @@ public class BookFileResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<BookFileDTO> partialUpdateBookFile(
+    public ResponseEntity<BookFile> partialUpdateBookFile(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody BookFileDTO bookFileDTO
+        @NotNull @RequestBody BookFile bookFileDTO
     ) throws URISyntaxException {
         LOG.debug("REST request to partial update BookFile partially : {}, {}", id, bookFileDTO);
         if (bookFileDTO.getId() == null) {
@@ -128,7 +128,7 @@ public class BookFileResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<BookFileDTO> result = bookFileService.partialUpdate(bookFileDTO);
+        Optional<BookFile> result = bookFileService.partialUpdate(bookFileDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -144,12 +144,12 @@ public class BookFileResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of bookFiles in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<BookFileDTO>> getAllBookFiles(
+    public ResponseEntity<List<BookFile>> getAllBookFiles(
         @org.springdoc.core.annotations.ParameterObject Pageable pageable,
         @RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload
     ) {
         LOG.debug("REST request to get a page of BookFiles");
-        Page<BookFileDTO> page;
+        Page<BookFile> page;
         if (eagerload) {
             page = bookFileService.findAllWithEagerRelationships(pageable);
         } else {
@@ -166,9 +166,9 @@ public class BookFileResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the bookFileDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<BookFileDTO> getBookFile(@PathVariable("id") Long id) {
+    public ResponseEntity<BookFile> getBookFile(@PathVariable("id") Long id) {
         LOG.debug("REST request to get BookFile : {}", id);
-        Optional<BookFileDTO> bookFileDTO = bookFileService.findOne(id);
+        Optional<BookFile> bookFileDTO = bookFileService.findOne(id);
         return ResponseUtil.wrapOrNotFound(bookFileDTO);
     }
 

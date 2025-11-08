@@ -9,10 +9,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.domain.core.IngestRunDTO;
-import com.example.books.domain.service.mapper.IngestRunMapper;
+import com.example.books.domain.core.IngestRun;
 import com.example.books.infrastructure.database.jpa.entity.IngestRunEntity;
-import com.example.books.infrastructure.database.jpa.repository.IngestRunRepository;
+import com.example.books.infrastructure.database.jpa.mapper.IngestRunMapper;
+import com.example.books.infrastructure.database.jpa.repository.IngestRunJpaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
@@ -67,7 +67,7 @@ class IngestRunResourceIT {
     private ObjectMapper om;
 
     @Autowired
-    private IngestRunRepository ingestRunRepository;
+    private IngestRunJpaRepository ingestRunRepository;
 
     @Autowired
     private IngestRunMapper ingestRunMapper;
@@ -132,7 +132,7 @@ class IngestRunResourceIT {
     void createIngestRun() throws Exception {
         long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the IngestRun
-        IngestRunDTO ingestRunDTO = ingestRunMapper.toDto(ingestRun);
+        IngestRun ingestRunDTO = ingestRunMapper.toDto(ingestRun);
         var returnedIngestRunDTO = om.readValue(
             restIngestRunMockMvc
                 .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ingestRunDTO)))
@@ -140,7 +140,7 @@ class IngestRunResourceIT {
                 .andReturn()
                 .getResponse()
                 .getContentAsString(),
-            IngestRunDTO.class
+            IngestRun.class
         );
 
         // Validate the IngestRun in the database
@@ -156,7 +156,7 @@ class IngestRunResourceIT {
     void createIngestRunWithExistingId() throws Exception {
         // Create the IngestRun with an existing ID
         ingestRun.setId(1L);
-        IngestRunDTO ingestRunDTO = ingestRunMapper.toDto(ingestRun);
+        IngestRun ingestRunDTO = ingestRunMapper.toDto(ingestRun);
 
         long databaseSizeBeforeCreate = getRepositoryCount();
 
@@ -177,7 +177,7 @@ class IngestRunResourceIT {
         ingestRun.setStatus(null);
 
         // Create the IngestRun, which fails.
-        IngestRunDTO ingestRunDTO = ingestRunMapper.toDto(ingestRun);
+        IngestRun ingestRunDTO = ingestRunMapper.toDto(ingestRun);
 
         restIngestRunMockMvc
             .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ingestRunDTO)))
@@ -252,7 +252,7 @@ class IngestRunResourceIT {
             .filesSeen(UPDATED_FILES_SEEN)
             .filesParsed(UPDATED_FILES_PARSED)
             .filesFailed(UPDATED_FILES_FAILED);
-        IngestRunDTO ingestRunDTO = ingestRunMapper.toDto(updatedIngestRun);
+        IngestRun ingestRunDTO = ingestRunMapper.toDto(updatedIngestRun);
 
         restIngestRunMockMvc
             .perform(
@@ -274,7 +274,7 @@ class IngestRunResourceIT {
         ingestRun.setId(longCount.incrementAndGet());
 
         // Create the IngestRun
-        IngestRunDTO ingestRunDTO = ingestRunMapper.toDto(ingestRun);
+        IngestRun ingestRunDTO = ingestRunMapper.toDto(ingestRun);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restIngestRunMockMvc
@@ -296,7 +296,7 @@ class IngestRunResourceIT {
         ingestRun.setId(longCount.incrementAndGet());
 
         // Create the IngestRun
-        IngestRunDTO ingestRunDTO = ingestRunMapper.toDto(ingestRun);
+        IngestRun ingestRunDTO = ingestRunMapper.toDto(ingestRun);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restIngestRunMockMvc
@@ -318,7 +318,7 @@ class IngestRunResourceIT {
         ingestRun.setId(longCount.incrementAndGet());
 
         // Create the IngestRun
-        IngestRunDTO ingestRunDTO = ingestRunMapper.toDto(ingestRun);
+        IngestRun ingestRunDTO = ingestRunMapper.toDto(ingestRun);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restIngestRunMockMvc
@@ -401,7 +401,7 @@ class IngestRunResourceIT {
         ingestRun.setId(longCount.incrementAndGet());
 
         // Create the IngestRun
-        IngestRunDTO ingestRunDTO = ingestRunMapper.toDto(ingestRun);
+        IngestRun ingestRunDTO = ingestRunMapper.toDto(ingestRun);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restIngestRunMockMvc
@@ -423,7 +423,7 @@ class IngestRunResourceIT {
         ingestRun.setId(longCount.incrementAndGet());
 
         // Create the IngestRun
-        IngestRunDTO ingestRunDTO = ingestRunMapper.toDto(ingestRun);
+        IngestRun ingestRunDTO = ingestRunMapper.toDto(ingestRun);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restIngestRunMockMvc
@@ -445,7 +445,7 @@ class IngestRunResourceIT {
         ingestRun.setId(longCount.incrementAndGet());
 
         // Create the IngestRun
-        IngestRunDTO ingestRunDTO = ingestRunMapper.toDto(ingestRun);
+        IngestRun ingestRunDTO = ingestRunMapper.toDto(ingestRun);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restIngestRunMockMvc

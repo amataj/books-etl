@@ -5,11 +5,11 @@ import com.example.books.adapter.web.rest.errors.InvalidPasswordException;
 import com.example.books.adapter.web.rest.errors.LoginAlreadyUsedException;
 import com.example.books.adapter.web.rest.vm.KeyAndPasswordVM;
 import com.example.books.adapter.web.rest.vm.ManagedUserVM;
-import com.example.books.domain.core.AdminUserDTO;
-import com.example.books.domain.core.PasswordChangeDTO;
+import com.example.books.domain.core.AdminUser;
+import com.example.books.domain.core.PasswordChange;
 import com.example.books.domain.service.UserService;
 import com.example.books.infrastructure.database.jpa.entity.User;
-import com.example.books.infrastructure.database.jpa.repository.UserRepository;
+import com.example.books.infrastructure.database.jpa.repository.UserJpaRepository;
 import com.example.books.infrastructure.mail.MailService;
 import com.example.books.shared.security.SecurityUtils;
 import jakarta.validation.Valid;
@@ -36,13 +36,13 @@ public class AccountResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccountResource.class);
 
-    private final UserRepository userRepository;
+    private final UserJpaRepository userRepository;
 
     private final UserService userService;
 
     private final MailService mailService;
 
-    public AccountResource(UserRepository userRepository, UserService userService, MailService mailService) {
+    public AccountResource(UserJpaRepository userRepository, UserService userService, MailService mailService) {
         this.userRepository = userRepository;
         this.userService = userService;
         this.mailService = mailService;
@@ -87,10 +87,10 @@ public class AccountResource {
      * @throws RuntimeException {@code 500 (Internal Server Error)} if the user couldn't be returned.
      */
     @GetMapping("/account")
-    public AdminUserDTO getAccount() {
+    public AdminUser getAccount() {
         return userService
             .getUserWithAuthorities()
-            .map(AdminUserDTO::new)
+            .map(AdminUser::new)
             .orElseThrow(() -> new AccountResourceException("User could not be found"));
     }
 
@@ -102,7 +102,7 @@ public class AccountResource {
      * @throws RuntimeException {@code 500 (Internal Server Error)} if the user login wasn't found.
      */
     @PostMapping("/account")
-    public void saveAccount(@Valid @RequestBody AdminUserDTO userDTO) {
+    public void saveAccount(@Valid @RequestBody AdminUser userDTO) {
         String userLogin = SecurityUtils.getCurrentUserLogin()
             .orElseThrow(() -> new AccountResourceException("Current user login not found"));
         Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
@@ -129,7 +129,7 @@ public class AccountResource {
      * @throws InvalidPasswordException {@code 400 (Bad Request)} if the new password is incorrect.
      */
     @PostMapping(path = "/account/change-password")
-    public void changePassword(@RequestBody PasswordChangeDTO passwordChangeDto) {
+    public void changePassword(@RequestBody PasswordChange passwordChangeDto) {
         if (isPasswordLengthInvalid(passwordChangeDto.getNewPassword())) {
             throw new InvalidPasswordException();
         }

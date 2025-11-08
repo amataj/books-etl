@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.example.books.IntegrationTest;
 import com.example.books.infrastructure.database.jpa.entity.Authority;
-import com.example.books.infrastructure.database.jpa.repository.AuthorityRepository;
+import com.example.books.infrastructure.database.jpa.repository.AuthorityJpaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import java.util.UUID;
@@ -37,7 +37,7 @@ class AuthorityResourceIT {
     private ObjectMapper om;
 
     @Autowired
-    private AuthorityRepository authorityRepository;
+    private AuthorityJpaRepository authorityRepository;
 
     @Autowired
     private EntityManager em;

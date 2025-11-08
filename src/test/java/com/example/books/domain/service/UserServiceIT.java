@@ -5,7 +5,7 @@ import static org.mockito.Mockito.when;
 
 import com.example.books.IntegrationTest;
 import com.example.books.infrastructure.database.jpa.entity.User;
-import com.example.books.infrastructure.database.jpa.repository.UserRepository;
+import com.example.books.infrastructure.database.jpa.repository.UserJpaRepository;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -48,7 +48,7 @@ class UserServiceIT {
     private static final String DEFAULT_LANGKEY = "dummy";
 
     @Autowired
-    private UserRepository userRepository;
+    private UserJpaRepository userRepository;
 
     @Autowired
     private UserService userService;

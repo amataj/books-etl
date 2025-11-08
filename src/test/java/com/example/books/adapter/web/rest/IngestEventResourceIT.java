@@ -9,10 +9,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.domain.core.IngestEventDTO;
-import com.example.books.domain.service.mapper.IngestEventMapper;
+import com.example.books.domain.core.IngestEvent;
 import com.example.books.infrastructure.database.jpa.entity.IngestEventEntity;
-import com.example.books.infrastructure.database.jpa.repository.IngestEventRepository;
+import com.example.books.infrastructure.database.jpa.mapper.IngestEventMapper;
+import com.example.books.infrastructure.database.jpa.repository.IngestEventJpaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
@@ -65,7 +65,7 @@ class IngestEventResourceIT {
     private ObjectMapper om;
 
     @Autowired
-    private IngestEventRepository ingestEventRepository;
+    private IngestEventJpaRepository ingestEventRepository;
 
     @Autowired
     private IngestEventMapper ingestEventMapper;
@@ -128,7 +128,7 @@ class IngestEventResourceIT {
     void createIngestEvent() throws Exception {
         long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the IngestEvent
-        IngestEventDTO ingestEventDTO = ingestEventMapper.toDto(ingestEvent);
+        IngestEvent ingestEventDTO = ingestEventMapper.toDto(ingestEvent);
         var returnedIngestEventDTO = om.readValue(
             restIngestEventMockMvc
                 .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ingestEventDTO)))
@@ -136,7 +136,7 @@ class IngestEventResourceIT {
                 .andReturn()
                 .getResponse()
                 .getContentAsString(),
-            IngestEventDTO.class
+            IngestEvent.class
         );
 
         // Validate the IngestEvent in the database
@@ -152,7 +152,7 @@ class IngestEventResourceIT {
     void createIngestEventWithExistingId() throws Exception {
         // Create the IngestEvent with an existing ID
         ingestEvent.setId(1L);
-        IngestEventDTO ingestEventDTO = ingestEventMapper.toDto(ingestEvent);
+        IngestEvent ingestEventDTO = ingestEventMapper.toDto(ingestEvent);
 
         long databaseSizeBeforeCreate = getRepositoryCount();
 
@@ -173,7 +173,7 @@ class IngestEventResourceIT {
         ingestEvent.setTopic(null);
 
         // Create the IngestEvent, which fails.
-        IngestEventDTO ingestEventDTO = ingestEventMapper.toDto(ingestEvent);
+        IngestEvent ingestEventDTO = ingestEventMapper.toDto(ingestEvent);
 
         restIngestEventMockMvc
             .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ingestEventDTO)))
@@ -245,7 +245,7 @@ class IngestEventResourceIT {
             .topic(UPDATED_TOPIC)
             .payload(UPDATED_PAYLOAD)
             .createdAt(UPDATED_CREATED_AT);
-        IngestEventDTO ingestEventDTO = ingestEventMapper.toDto(updatedIngestEvent);
+        IngestEvent ingestEventDTO = ingestEventMapper.toDto(updatedIngestEvent);
 
         restIngestEventMockMvc
             .perform(
@@ -267,7 +267,7 @@ class IngestEventResourceIT {
         ingestEvent.setId(longCount.incrementAndGet());
 
         // Create the IngestEvent
-        IngestEventDTO ingestEventDTO = ingestEventMapper.toDto(ingestEvent);
+        IngestEvent ingestEventDTO = ingestEventMapper.toDto(ingestEvent);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restIngestEventMockMvc
@@ -289,7 +289,7 @@ class IngestEventResourceIT {
         ingestEvent.setId(longCount.incrementAndGet());
 
         // Create the IngestEvent
-        IngestEventDTO ingestEventDTO = ingestEventMapper.toDto(ingestEvent);
+        IngestEvent ingestEventDTO = ingestEventMapper.toDto(ingestEvent);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restIngestEventMockMvc
@@ -311,7 +311,7 @@ class IngestEventResourceIT {
         ingestEvent.setId(longCount.incrementAndGet());
 
         // Create the IngestEvent
-        IngestEventDTO ingestEventDTO = ingestEventMapper.toDto(ingestEvent);
+        IngestEvent ingestEventDTO = ingestEventMapper.toDto(ingestEvent);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restIngestEventMockMvc
@@ -393,7 +393,7 @@ class IngestEventResourceIT {
         ingestEvent.setId(longCount.incrementAndGet());
 
         // Create the IngestEvent
-        IngestEventDTO ingestEventDTO = ingestEventMapper.toDto(ingestEvent);
+        IngestEvent ingestEventDTO = ingestEventMapper.toDto(ingestEvent);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restIngestEventMockMvc
@@ -415,7 +415,7 @@ class IngestEventResourceIT {
         ingestEvent.setId(longCount.incrementAndGet());
 
         // Create the IngestEvent
-        IngestEventDTO ingestEventDTO = ingestEventMapper.toDto(ingestEvent);
+        IngestEvent ingestEventDTO = ingestEventMapper.toDto(ingestEvent);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restIngestEventMockMvc
@@ -437,7 +437,7 @@ class IngestEventResourceIT {
         ingestEvent.setId(longCount.incrementAndGet());
 
         // Create the IngestEvent
-        IngestEventDTO ingestEventDTO = ingestEventMapper.toDto(ingestEvent);
+        IngestEvent ingestEventDTO = ingestEventMapper.toDto(ingestEvent);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restIngestEventMockMvc

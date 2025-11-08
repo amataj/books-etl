@@ -8,12 +8,12 @@ import com.example.books.IntegrationTest;
 import com.example.books.adapter.web.rest.vm.KeyAndPasswordVM;
 import com.example.books.adapter.web.rest.vm.ManagedUserVM;
 import com.example.books.config.Constants;
-import com.example.books.domain.core.AdminUserDTO;
-import com.example.books.domain.core.PasswordChangeDTO;
+import com.example.books.domain.core.AdminUser;
+import com.example.books.domain.core.PasswordChange;
 import com.example.books.domain.service.UserService;
 import com.example.books.infrastructure.database.jpa.entity.User;
-import com.example.books.infrastructure.database.jpa.repository.AuthorityRepository;
-import com.example.books.infrastructure.database.jpa.repository.UserRepository;
+import com.example.books.infrastructure.database.jpa.repository.AuthorityJpaRepository;
+import com.example.books.infrastructure.database.jpa.repository.UserJpaRepository;
 import com.example.books.shared.security.AuthoritiesConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;
@@ -46,10 +46,10 @@ class AccountResourceIT {
     private ObjectMapper om;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserJpaRepository userRepository;
 
     @Autowired
-    private AuthorityRepository authorityRepository;
+    private AuthorityJpaRepository authorityRepository;
 
     @Autowired
     private UserService userService;
@@ -91,7 +91,7 @@ class AccountResourceIT {
         Set<String> authorities = new HashSet<>();
         authorities.add(AuthoritiesConstants.ADMIN);
 
-        AdminUserDTO user = new AdminUserDTO();
+        AdminUser user = new AdminUser();
         user.setLogin(TEST_USER_LOGIN);
         user.setFirstName("john");
         user.setLastName("doe");
@@ -325,7 +325,7 @@ class AccountResourceIT {
         assertThat(testUser4.orElseThrow().getEmail()).isEqualTo("test-register-duplicate-email@example.com");
 
         testUser4.orElseThrow().setActivated(true);
-        userService.updateUser((new AdminUserDTO(testUser4.orElseThrow())));
+        userService.updateUser((new AdminUser(testUser4.orElseThrow())));
 
         // Register 4th (already activated) user
         restAccountMockMvc
@@ -400,7 +400,7 @@ class AccountResourceIT {
         user.setActivated(true);
         userRepository.saveAndFlush(user);
 
-        AdminUserDTO userDTO = new AdminUserDTO();
+        AdminUser userDTO = new AdminUser();
         userDTO.setLogin("not-used");
         userDTO.setFirstName("firstname");
         userDTO.setLastName("lastname");
@@ -439,7 +439,7 @@ class AccountResourceIT {
 
         userRepository.saveAndFlush(user);
 
-        AdminUserDTO userDTO = new AdminUserDTO();
+        AdminUser userDTO = new AdminUser();
         userDTO.setLogin("not-used");
         userDTO.setFirstName("firstname");
         userDTO.setLastName("lastname");
@@ -477,7 +477,7 @@ class AccountResourceIT {
 
         userRepository.saveAndFlush(anotherUser);
 
-        AdminUserDTO userDTO = new AdminUserDTO();
+        AdminUser userDTO = new AdminUser();
         userDTO.setLogin("not-used");
         userDTO.setFirstName("firstname");
         userDTO.setLastName("lastname");
@@ -509,7 +509,7 @@ class AccountResourceIT {
         user.setActivated(true);
         userRepository.saveAndFlush(user);
 
-        AdminUserDTO userDTO = new AdminUserDTO();
+        AdminUser userDTO = new AdminUser();
         userDTO.setLogin("not-used");
         userDTO.setFirstName("firstname");
         userDTO.setLastName("lastname");
@@ -544,7 +544,7 @@ class AccountResourceIT {
             .perform(
                 post("/api/account/change-password")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(new PasswordChangeDTO("1" + currentPassword, "new password")))
+                    .content(om.writeValueAsBytes(new PasswordChange("1" + currentPassword, "new password")))
             )
             .andExpect(status().isBadRequest());
 
@@ -570,7 +570,7 @@ class AccountResourceIT {
             .perform(
                 post("/api/account/change-password")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(new PasswordChangeDTO(currentPassword, "new password")))
+                    .content(om.writeValueAsBytes(new PasswordChange(currentPassword, "new password")))
             )
             .andExpect(status().isOk());
 
@@ -597,7 +597,7 @@ class AccountResourceIT {
             .perform(
                 post("/api/account/change-password")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(new PasswordChangeDTO(currentPassword, newPassword)))
+                    .content(om.writeValueAsBytes(new PasswordChange(currentPassword, newPassword)))
             )
             .andExpect(status().isBadRequest());
 
@@ -624,7 +624,7 @@ class AccountResourceIT {
             .perform(
                 post("/api/account/change-password")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(new PasswordChangeDTO(currentPassword, newPassword)))
+                    .content(om.writeValueAsBytes(new PasswordChange(currentPassword, newPassword)))
             )
             .andExpect(status().isBadRequest());
 
@@ -649,7 +649,7 @@ class AccountResourceIT {
             .perform(
                 post("/api/account/change-password")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(new PasswordChangeDTO(currentPassword, "")))
+                    .content(om.writeValueAsBytes(new PasswordChange(currentPassword, "")))
             )
             .andExpect(status().isBadRequest());
 
