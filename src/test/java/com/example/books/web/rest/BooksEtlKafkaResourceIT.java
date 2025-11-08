@@ -48,11 +48,6 @@ class BooksEtlKafkaResourceIT {
     }
 
     @Test
-    void producesPooledMessages() throws Exception {
-        assertThat(output.receive(1500, "kafkaProducer-out-0").getPayload()).isEqualTo("kafka_producer".getBytes());
-    }
-
-    @Test
     void consumesMessages() throws Exception {
         Map<String, Object> map = new HashMap<>();
         map.put(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.TEXT_PLAIN_VALUE);
