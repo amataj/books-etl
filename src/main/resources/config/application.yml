@@ -106,6 +106,7 @@ spring:
           brokers: localhost:9092
       bindings:
         binding-out-0:
+          destination: sse-topic
           content-type: text/plain
           group: books-etl
         kafkaConsumer-in-0:
