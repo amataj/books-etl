@@ -7,8 +7,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.domain.Authority;
-import com.example.books.repository.AuthorityRepository;
+import com.example.books.adapter.web.rest.AuthorityResource;
+import com.example.books.infrastructure.database.jpa.entity.Authority;
+import com.example.books.infrastructure.database.jpa.repository.AuthorityRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import java.util.UUID;

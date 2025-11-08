@@ -1,24 +1,42 @@
 package com.example.books.domain;
 
-import static com.example.books.domain.IngestRunTestSamples.*;
+import static com.example.books.domain.IngestRunTestSamples.getIngestRunRandomSampleGenerator;
+import static com.example.books.domain.IngestRunTestSamples.getIngestRunSample1;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.example.books.web.rest.TestUtil;
+import com.example.books.domain.DomainValidationException;
+import com.example.books.domain.core.ingestrun.IngestRun;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import org.junit.jupiter.api.Test;
 
 class IngestRunTest {
 
     @Test
-    void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(IngestRun.class);
-        IngestRun ingestRun1 = getIngestRunSample1();
-        IngestRun ingestRun2 = new IngestRun();
-        assertThat(ingestRun1).isNotEqualTo(ingestRun2);
+    void withIdReturnsNewValueWithoutMutatingOriginal() {
+        IngestRun original = getIngestRunSample1();
+        IngestRun rekeyed = original.withId(321L);
 
-        ingestRun2.setId(ingestRun1.getId());
-        assertThat(ingestRun1).isEqualTo(ingestRun2);
+        assertThat(rekeyed.id()).isEqualTo(321L);
+        assertThat(rekeyed).isNotSameAs(original);
+        assertThat(rekeyed.status()).isEqualTo(original.status());
+    }
 
-        ingestRun2 = getIngestRunSample2();
-        assertThat(ingestRun1).isNotEqualTo(ingestRun2);
+    @Test
+    void statusAndCountersAreValidated() {
+        ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
+
+        assertThatThrownBy(() -> new IngestRun(1L, now, now, "", 0, 0, 0)).isInstanceOf(DomainValidationException.class);
+
+        assertThatThrownBy(() -> new IngestRun(1L, now, now, "OK", -1, 0, 0)).isInstanceOf(DomainValidationException.class);
+    }
+
+    @Test
+    void randomSampleMaintainsInvariants() {
+        IngestRun run = getIngestRunRandomSampleGenerator();
+        assertThat(run.filesSeen()).isGreaterThanOrEqualTo(0);
+        assertThat(run.filesParsed()).isGreaterThanOrEqualTo(0);
+        assertThat(run.filesFailed()).isGreaterThanOrEqualTo(0);
     }
 }

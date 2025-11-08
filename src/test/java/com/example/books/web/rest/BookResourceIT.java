@@ -8,10 +8,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.domain.Book;
-import com.example.books.repository.BookRepository;
-import com.example.books.service.dto.BookDTO;
-import com.example.books.service.mapper.BookMapper;
+import com.example.books.adapter.web.rest.dto.BookDTO;
+import com.example.books.adapter.web.rest.mapper.BookRestMapper;
+import com.example.books.domain.core.book.Book;
+import com.example.books.infrastructure.database.jpa.entity.BookEntity;
+import com.example.books.infrastructure.database.jpa.mapper.BookEntityMapper;
+import com.example.books.infrastructure.database.jpa.repository.BookJpaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import java.util.Random;
@@ -59,10 +61,13 @@ class BookResourceIT {
     private ObjectMapper om;
 
     @Autowired
-    private BookRepository bookRepository;
+    private BookJpaRepository bookJpaRepository;
 
     @Autowired
-    private BookMapper bookMapper;
+    private BookEntityMapper bookEntityMapper;
+
+    @Autowired
+    private BookRestMapper bookRestMapper;
 
     @Autowired
     private EntityManager em;
@@ -70,9 +75,9 @@ class BookResourceIT {
     @Autowired
     private MockMvc restBookMockMvc;
 
-    private Book book;
+    private BookEntity book;
 
-    private Book insertedBook;
+    private BookEntity insertedBook;
 
     /**
      * Create an entity for this test.
@@ -80,8 +85,8 @@ class BookResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Book createEntity() {
-        return new Book()
+    public static BookEntity createEntity() {
+        return new BookEntity()
             .documentId(DEFAULT_DOCUMENT_ID)
             .title(DEFAULT_TITLE)
             .author(DEFAULT_AUTHOR)
@@ -95,8 +100,8 @@ class BookResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Book createUpdatedEntity() {
-        return new Book()
+    public static BookEntity createUpdatedEntity() {
+        return new BookEntity()
             .documentId(UPDATED_DOCUMENT_ID)
             .title(UPDATED_TITLE)
             .author(UPDATED_AUTHOR)
@@ -112,7 +117,7 @@ class BookResourceIT {
     @AfterEach
     void cleanup() {
         if (insertedBook != null) {
-            bookRepository.delete(insertedBook);
+            bookJpaRepository.delete(insertedBook);
             insertedBook = null;
         }
     }
@@ -122,7 +127,7 @@ class BookResourceIT {
     void createBook() throws Exception {
         long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the Book
-        BookDTO bookDTO = bookMapper.toDto(book);
+        BookDTO bookDTO = toDto(book);
         var returnedBookDTO = om.readValue(
             restBookMockMvc
                 .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(bookDTO)))
@@ -135,10 +140,10 @@ class BookResourceIT {
 
         // Validate the Book in the database
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
-        var returnedBook = bookMapper.toEntity(returnedBookDTO);
-        assertBookUpdatableFieldsEquals(returnedBook, getPersistedBook(returnedBook));
+        var returnedBook = bookRestMapper.toDomain(returnedBookDTO);
+        assertBookUpdatableFieldsEquals(returnedBook, getPersistedBook(returnedBook.id()));
 
-        insertedBook = returnedBook;
+        insertedBook = bookJpaRepository.findById(returnedBook.id()).orElseThrow();
     }
 
     @Test
@@ -146,7 +151,7 @@ class BookResourceIT {
     void createBookWithExistingId() throws Exception {
         // Create the Book with an existing ID
         book.setId(1L);
-        BookDTO bookDTO = bookMapper.toDto(book);
+        BookDTO bookDTO = toDto(book);
 
         long databaseSizeBeforeCreate = getRepositoryCount();
 
@@ -167,7 +172,7 @@ class BookResourceIT {
         book.setDocumentId(null);
 
         // Create the Book, which fails.
-        BookDTO bookDTO = bookMapper.toDto(book);
+        BookDTO bookDTO = toDto(book);
 
         restBookMockMvc
             .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(bookDTO)))
@@ -180,7 +185,7 @@ class BookResourceIT {
     @Transactional
     void getAllBooks() throws Exception {
         // Initialize the database
-        insertedBook = bookRepository.saveAndFlush(book);
+        insertedBook = bookJpaRepository.saveAndFlush(book);
 
         // Get all the bookList
         restBookMockMvc
@@ -199,7 +204,7 @@ class BookResourceIT {
     @Transactional
     void getBook() throws Exception {
         // Initialize the database
-        insertedBook = bookRepository.saveAndFlush(book);
+        insertedBook = bookJpaRepository.saveAndFlush(book);
 
         // Get the book
         restBookMockMvc
@@ -225,16 +230,16 @@ class BookResourceIT {
     @Transactional
     void putExistingBook() throws Exception {
         // Initialize the database
-        insertedBook = bookRepository.saveAndFlush(book);
+        insertedBook = bookJpaRepository.saveAndFlush(book);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the book
-        Book updatedBook = bookRepository.findById(book.getId()).orElseThrow();
+        BookEntity updatedBook = bookJpaRepository.findById(book.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedBook are not directly saved in db
         em.detach(updatedBook);
         updatedBook.documentId(UPDATED_DOCUMENT_ID).title(UPDATED_TITLE).author(UPDATED_AUTHOR).lang(UPDATED_LANG).pages(UPDATED_PAGES);
-        BookDTO bookDTO = bookMapper.toDto(updatedBook);
+        BookDTO bookDTO = toDto(updatedBook);
 
         restBookMockMvc
             .perform(put(ENTITY_API_URL_ID, bookDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(bookDTO)))
@@ -252,7 +257,7 @@ class BookResourceIT {
         book.setId(longCount.incrementAndGet());
 
         // Create the Book
-        BookDTO bookDTO = bookMapper.toDto(book);
+        BookDTO bookDTO = toDto(book);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restBookMockMvc
@@ -270,7 +275,7 @@ class BookResourceIT {
         book.setId(longCount.incrementAndGet());
 
         // Create the Book
-        BookDTO bookDTO = bookMapper.toDto(book);
+        BookDTO bookDTO = toDto(book);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBookMockMvc
@@ -292,7 +297,7 @@ class BookResourceIT {
         book.setId(longCount.incrementAndGet());
 
         // Create the Book
-        BookDTO bookDTO = bookMapper.toDto(book);
+        BookDTO bookDTO = toDto(book);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBookMockMvc
@@ -307,12 +312,12 @@ class BookResourceIT {
     @Transactional
     void partialUpdateBookWithPatch() throws Exception {
         // Initialize the database
-        insertedBook = bookRepository.saveAndFlush(book);
+        insertedBook = bookJpaRepository.saveAndFlush(book);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the book using partial update
-        Book partialUpdatedBook = new Book();
+        BookEntity partialUpdatedBook = new BookEntity();
         partialUpdatedBook.setId(book.getId());
 
         partialUpdatedBook.documentId(UPDATED_DOCUMENT_ID).title(UPDATED_TITLE);
@@ -328,19 +333,19 @@ class BookResourceIT {
         // Validate the Book in the database
 
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
-        assertBookUpdatableFieldsEquals(createUpdateProxyForBean(partialUpdatedBook, book), getPersistedBook(book));
+        assertBookUpdatableFieldsEquals(toDomain(createUpdateProxyForBean(partialUpdatedBook, book)), getPersistedBook(book.getId()));
     }
 
     @Test
     @Transactional
     void fullUpdateBookWithPatch() throws Exception {
         // Initialize the database
-        insertedBook = bookRepository.saveAndFlush(book);
+        insertedBook = bookJpaRepository.saveAndFlush(book);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the book using partial update
-        Book partialUpdatedBook = new Book();
+        BookEntity partialUpdatedBook = new BookEntity();
         partialUpdatedBook.setId(book.getId());
 
         partialUpdatedBook
@@ -361,7 +366,7 @@ class BookResourceIT {
         // Validate the Book in the database
 
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
-        assertBookUpdatableFieldsEquals(partialUpdatedBook, getPersistedBook(partialUpdatedBook));
+        assertBookUpdatableFieldsEquals(toDomain(partialUpdatedBook), getPersistedBook(partialUpdatedBook.getId()));
     }
 
     @Test
@@ -371,7 +376,7 @@ class BookResourceIT {
         book.setId(longCount.incrementAndGet());
 
         // Create the Book
-        BookDTO bookDTO = bookMapper.toDto(book);
+        BookDTO bookDTO = toDto(book);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restBookMockMvc
@@ -391,7 +396,7 @@ class BookResourceIT {
         book.setId(longCount.incrementAndGet());
 
         // Create the Book
-        BookDTO bookDTO = bookMapper.toDto(book);
+        BookDTO bookDTO = toDto(book);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBookMockMvc
@@ -413,7 +418,7 @@ class BookResourceIT {
         book.setId(longCount.incrementAndGet());
 
         // Create the Book
-        BookDTO bookDTO = bookMapper.toDto(book);
+        BookDTO bookDTO = toDto(book);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBookMockMvc
@@ -428,7 +433,7 @@ class BookResourceIT {
     @Transactional
     void deleteBook() throws Exception {
         // Initialize the database
-        insertedBook = bookRepository.saveAndFlush(book);
+        insertedBook = bookJpaRepository.saveAndFlush(book);
 
         long databaseSizeBeforeDelete = getRepositoryCount();
 
@@ -442,7 +447,7 @@ class BookResourceIT {
     }
 
     protected long getRepositoryCount() {
-        return bookRepository.count();
+        return bookJpaRepository.count();
     }
 
     protected void assertIncrementedRepositoryCount(long countBefore) {
@@ -457,15 +462,23 @@ class BookResourceIT {
         assertThat(countBefore).isEqualTo(getRepositoryCount());
     }
 
-    protected Book getPersistedBook(Book book) {
-        return bookRepository.findById(book.getId()).orElseThrow();
+    private BookDTO toDto(BookEntity entity) {
+        return bookRestMapper.toDto(bookEntityMapper.toDomain(entity));
     }
 
-    protected void assertPersistedBookToMatchAllProperties(Book expectedBook) {
-        assertBookAllPropertiesEquals(expectedBook, getPersistedBook(expectedBook));
+    protected Book getPersistedBook(Long id) {
+        return bookEntityMapper.toDomain(bookJpaRepository.findById(id).orElseThrow());
     }
 
-    protected void assertPersistedBookToMatchUpdatableProperties(Book expectedBook) {
-        assertBookAllUpdatablePropertiesEquals(expectedBook, getPersistedBook(expectedBook));
+    protected void assertPersistedBookToMatchAllProperties(BookEntity expectedBook) {
+        assertBookAllPropertiesEquals(toDomain(expectedBook), getPersistedBook(expectedBook.getId()));
+    }
+
+    protected void assertPersistedBookToMatchUpdatableProperties(BookEntity expectedBook) {
+        assertBookAllUpdatablePropertiesEquals(toDomain(expectedBook), getPersistedBook(expectedBook.getId()));
+    }
+
+    private Book toDomain(BookEntity entity) {
+        return bookEntityMapper.toDomain(entity);
     }
 }

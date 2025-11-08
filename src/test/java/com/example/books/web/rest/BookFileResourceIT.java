@@ -5,35 +5,31 @@ import static com.example.books.web.rest.TestUtil.createUpdateProxyForBean;
 import static com.example.books.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.domain.BookFile;
-import com.example.books.repository.BookFileRepository;
-import com.example.books.service.BookFileService;
-import com.example.books.service.dto.BookFileDTO;
-import com.example.books.service.mapper.BookFileMapper;
+import com.example.books.adapter.web.rest.dto.BookFileDTO;
+import com.example.books.adapter.web.rest.mapper.BookFileRestMapper;
+import com.example.books.domain.core.bookfile.BookFile;
+import com.example.books.infrastructure.database.jpa.entity.BookEntity;
+import com.example.books.infrastructure.database.jpa.entity.BookFileEntity;
+import com.example.books.infrastructure.database.jpa.mapper.BookFileEntityMapper;
+import com.example.books.infrastructure.database.jpa.repository.BookFileJpaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -43,7 +39,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link BookFileResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class BookFileResourceIT {
@@ -72,23 +67,20 @@ class BookFileResourceIT {
     private static final String ENTITY_API_URL = "/api/book-files";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
-    private static Random random = new Random();
-    private static AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+    private static final Random random = new Random();
+    private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     @Autowired
     private ObjectMapper om;
 
     @Autowired
-    private BookFileRepository bookFileRepository;
-
-    @Mock
-    private BookFileRepository bookFileRepositoryMock;
+    private BookFileJpaRepository bookFileJpaRepository;
 
     @Autowired
-    private BookFileMapper bookFileMapper;
+    private BookFileEntityMapper bookFileEntityMapper;
 
-    @Mock
-    private BookFileService bookFileServiceMock;
+    @Autowired
+    private BookFileRestMapper bookFileRestMapper;
 
     @Autowired
     private EntityManager em;
@@ -96,18 +88,12 @@ class BookFileResourceIT {
     @Autowired
     private MockMvc restBookFileMockMvc;
 
-    private BookFile bookFile;
+    private BookFileEntity bookFile;
 
-    private BookFile insertedBookFile;
+    private BookFileEntity insertedBookFile;
 
-    /**
-     * Create an entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
-     */
-    public static BookFile createEntity() {
-        return new BookFile()
+    public static BookFileEntity createEntity(EntityManager em) {
+        BookFileEntity bookFile = new BookFileEntity()
             .pathNorm(DEFAULT_PATH_NORM)
             .sha256(DEFAULT_SHA_256)
             .sizeBytes(DEFAULT_SIZE_BYTES)
@@ -115,16 +101,12 @@ class BookFileResourceIT {
             .storageUri(DEFAULT_STORAGE_URI)
             .firstSeenAt(DEFAULT_FIRST_SEEN_AT)
             .lastSeenAt(DEFAULT_LAST_SEEN_AT);
+        bookFile.setBook(getOrCreateBook(em));
+        return bookFile;
     }
 
-    /**
-     * Create an updated entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
-     */
-    public static BookFile createUpdatedEntity() {
-        return new BookFile()
+    public static BookFileEntity createUpdatedEntity(EntityManager em) {
+        BookFileEntity bookFile = new BookFileEntity()
             .pathNorm(UPDATED_PATH_NORM)
             .sha256(UPDATED_SHA_256)
             .sizeBytes(UPDATED_SIZE_BYTES)
@@ -132,17 +114,30 @@ class BookFileResourceIT {
             .storageUri(UPDATED_STORAGE_URI)
             .firstSeenAt(UPDATED_FIRST_SEEN_AT)
             .lastSeenAt(UPDATED_LAST_SEEN_AT);
+        bookFile.setBook(getOrCreateBook(em));
+        return bookFile;
+    }
+
+    private static BookEntity getOrCreateBook(EntityManager em) {
+        List<BookEntity> books = TestUtil.findAll(em, BookEntity.class);
+        if (books.isEmpty()) {
+            BookEntity book = BookResourceIT.createEntity();
+            em.persist(book);
+            em.flush();
+            return book;
+        }
+        return books.get(0);
     }
 
     @BeforeEach
     void initTest() {
-        bookFile = createEntity();
+        bookFile = createEntity(em);
     }
 
     @AfterEach
     void cleanup() {
         if (insertedBookFile != null) {
-            bookFileRepository.delete(insertedBookFile);
+            bookFileJpaRepository.delete(insertedBookFile);
             insertedBookFile = null;
         }
     }
@@ -151,9 +146,8 @@ class BookFileResourceIT {
     @Transactional
     void createBookFile() throws Exception {
         long databaseSizeBeforeCreate = getRepositoryCount();
-        // Create the BookFile
-        BookFileDTO bookFileDTO = bookFileMapper.toDto(bookFile);
-        var returnedBookFileDTO = om.readValue(
+        BookFileDTO bookFileDTO = toDto(bookFile);
+        BookFileDTO returnedBookFileDTO = om.readValue(
             restBookFileMockMvc
                 .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(bookFileDTO)))
                 .andExpect(status().isCreated())
@@ -163,29 +157,24 @@ class BookFileResourceIT {
             BookFileDTO.class
         );
 
-        // Validate the BookFile in the database
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
-        var returnedBookFile = bookFileMapper.toEntity(returnedBookFileDTO);
-        assertBookFileUpdatableFieldsEquals(returnedBookFile, getPersistedBookFile(returnedBookFile));
-
-        insertedBookFile = returnedBookFile;
+        BookFile returnedBookFile = bookFileRestMapper.toDomain(returnedBookFileDTO);
+        assertBookFileUpdatableFieldsEquals(returnedBookFile, getPersistedBookFile(returnedBookFile.id()));
+        insertedBookFile = bookFileJpaRepository.findById(returnedBookFile.id()).orElseThrow();
     }
 
     @Test
     @Transactional
     void createBookFileWithExistingId() throws Exception {
-        // Create the BookFile with an existing ID
         bookFile.setId(1L);
-        BookFileDTO bookFileDTO = bookFileMapper.toDto(bookFile);
+        BookFileDTO bookFileDTO = toDto(bookFile);
 
         long databaseSizeBeforeCreate = getRepositoryCount();
 
-        // An entity with an existing ID cannot be created, so this API call must fail
         restBookFileMockMvc
             .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(bookFileDTO)))
             .andExpect(status().isBadRequest());
 
-        // Validate the BookFile in the database
         assertSameRepositoryCount(databaseSizeBeforeCreate);
     }
 
@@ -193,11 +182,8 @@ class BookFileResourceIT {
     @Transactional
     void checkSha256IsRequired() throws Exception {
         long databaseSizeBeforeTest = getRepositoryCount();
-        // set the field null
         bookFile.setSha256(null);
-
-        // Create the BookFile, which fails.
-        BookFileDTO bookFileDTO = bookFileMapper.toDto(bookFile);
+        BookFileDTO bookFileDTO = toDto(bookFile);
 
         restBookFileMockMvc
             .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(bookFileDTO)))
@@ -209,10 +195,8 @@ class BookFileResourceIT {
     @Test
     @Transactional
     void getAllBookFiles() throws Exception {
-        // Initialize the database
-        insertedBookFile = bookFileRepository.saveAndFlush(bookFile);
+        insertedBookFile = bookFileJpaRepository.saveAndFlush(bookFile);
 
-        // Get all the bookFileList
         restBookFileMockMvc
             .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
@@ -227,30 +211,11 @@ class BookFileResourceIT {
             .andExpect(jsonPath("$.[*].lastSeenAt").value(hasItem(sameInstant(DEFAULT_LAST_SEEN_AT))));
     }
 
-    @SuppressWarnings({ "unchecked" })
-    void getAllBookFilesWithEagerRelationshipsIsEnabled() throws Exception {
-        when(bookFileServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restBookFileMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(bookFileServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllBookFilesWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(bookFileServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restBookFileMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
-        verify(bookFileRepositoryMock, times(1)).findAll(any(Pageable.class));
-    }
-
     @Test
     @Transactional
     void getBookFile() throws Exception {
-        // Initialize the database
-        insertedBookFile = bookFileRepository.saveAndFlush(bookFile);
+        insertedBookFile = bookFileJpaRepository.saveAndFlush(bookFile);
 
-        // Get the bookFile
         restBookFileMockMvc
             .perform(get(ENTITY_API_URL_ID, bookFile.getId()))
             .andExpect(status().isOk())
@@ -268,21 +233,17 @@ class BookFileResourceIT {
     @Test
     @Transactional
     void getNonExistingBookFile() throws Exception {
-        // Get the bookFile
         restBookFileMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
     void putExistingBookFile() throws Exception {
-        // Initialize the database
-        insertedBookFile = bookFileRepository.saveAndFlush(bookFile);
+        insertedBookFile = bookFileJpaRepository.saveAndFlush(bookFile);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
-        // Update the bookFile
-        BookFile updatedBookFile = bookFileRepository.findById(bookFile.getId()).orElseThrow();
-        // Disconnect from session so that the updates on updatedBookFile are not directly saved in db
+        BookFileEntity updatedBookFile = bookFileJpaRepository.findById(bookFile.getId()).orElseThrow();
         em.detach(updatedBookFile);
         updatedBookFile
             .pathNorm(UPDATED_PATH_NORM)
@@ -292,7 +253,7 @@ class BookFileResourceIT {
             .storageUri(UPDATED_STORAGE_URI)
             .firstSeenAt(UPDATED_FIRST_SEEN_AT)
             .lastSeenAt(UPDATED_LAST_SEEN_AT);
-        BookFileDTO bookFileDTO = bookFileMapper.toDto(updatedBookFile);
+        BookFileDTO bookFileDTO = toDto(updatedBookFile);
 
         restBookFileMockMvc
             .perform(
@@ -302,7 +263,6 @@ class BookFileResourceIT {
             )
             .andExpect(status().isOk());
 
-        // Validate the BookFile in the database
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
         assertPersistedBookFileToMatchAllProperties(updatedBookFile);
     }
@@ -312,11 +272,8 @@ class BookFileResourceIT {
     void putNonExistingBookFile() throws Exception {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         bookFile.setId(longCount.incrementAndGet());
+        BookFileDTO bookFileDTO = toDto(bookFile);
 
-        // Create the BookFile
-        BookFileDTO bookFileDTO = bookFileMapper.toDto(bookFile);
-
-        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restBookFileMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, bookFileDTO.getId())
@@ -325,7 +282,6 @@ class BookFileResourceIT {
             )
             .andExpect(status().isBadRequest());
 
-        // Validate the BookFile in the database
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
@@ -334,11 +290,8 @@ class BookFileResourceIT {
     void putWithIdMismatchBookFile() throws Exception {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         bookFile.setId(longCount.incrementAndGet());
+        BookFileDTO bookFileDTO = toDto(bookFile);
 
-        // Create the BookFile
-        BookFileDTO bookFileDTO = bookFileMapper.toDto(bookFile);
-
-        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBookFileMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
@@ -347,7 +300,6 @@ class BookFileResourceIT {
             )
             .andExpect(status().isBadRequest());
 
-        // Validate the BookFile in the database
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
@@ -356,36 +308,25 @@ class BookFileResourceIT {
     void putWithMissingIdPathParamBookFile() throws Exception {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         bookFile.setId(longCount.incrementAndGet());
+        BookFileDTO bookFileDTO = toDto(bookFile);
 
-        // Create the BookFile
-        BookFileDTO bookFileDTO = bookFileMapper.toDto(bookFile);
-
-        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBookFileMockMvc
             .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(bookFileDTO)))
             .andExpect(status().isMethodNotAllowed());
 
-        // Validate the BookFile in the database
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void partialUpdateBookFileWithPatch() throws Exception {
-        // Initialize the database
-        insertedBookFile = bookFileRepository.saveAndFlush(bookFile);
+        insertedBookFile = bookFileJpaRepository.saveAndFlush(bookFile);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
-        // Update the bookFile using partial update
-        BookFile partialUpdatedBookFile = new BookFile();
+        BookFileEntity partialUpdatedBookFile = new BookFileEntity();
         partialUpdatedBookFile.setId(bookFile.getId());
-
-        partialUpdatedBookFile
-            .pathNorm(UPDATED_PATH_NORM)
-            .sha256(UPDATED_SHA_256)
-            .storageUri(UPDATED_STORAGE_URI)
-            .firstSeenAt(UPDATED_FIRST_SEEN_AT);
+        partialUpdatedBookFile.sha256(UPDATED_SHA_256).storageUri(UPDATED_STORAGE_URI).lastSeenAt(UPDATED_LAST_SEEN_AT);
 
         restBookFileMockMvc
             .perform(
@@ -395,24 +336,22 @@ class BookFileResourceIT {
             )
             .andExpect(status().isOk());
 
-        // Validate the BookFile in the database
-
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
-        assertBookFileUpdatableFieldsEquals(createUpdateProxyForBean(partialUpdatedBookFile, bookFile), getPersistedBookFile(bookFile));
+        assertBookFileUpdatableFieldsEquals(
+            toDomain(createUpdateProxyForBean(partialUpdatedBookFile, bookFile)),
+            getPersistedBookFile(bookFile.getId())
+        );
     }
 
     @Test
     @Transactional
     void fullUpdateBookFileWithPatch() throws Exception {
-        // Initialize the database
-        insertedBookFile = bookFileRepository.saveAndFlush(bookFile);
+        insertedBookFile = bookFileJpaRepository.saveAndFlush(bookFile);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
-        // Update the bookFile using partial update
-        BookFile partialUpdatedBookFile = new BookFile();
+        BookFileEntity partialUpdatedBookFile = new BookFileEntity();
         partialUpdatedBookFile.setId(bookFile.getId());
-
         partialUpdatedBookFile
             .pathNorm(UPDATED_PATH_NORM)
             .sha256(UPDATED_SHA_256)
@@ -430,10 +369,8 @@ class BookFileResourceIT {
             )
             .andExpect(status().isOk());
 
-        // Validate the BookFile in the database
-
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
-        assertBookFileUpdatableFieldsEquals(partialUpdatedBookFile, getPersistedBookFile(partialUpdatedBookFile));
+        assertBookFileUpdatableFieldsEquals(toDomain(partialUpdatedBookFile), getPersistedBookFile(partialUpdatedBookFile.getId()));
     }
 
     @Test
@@ -441,11 +378,8 @@ class BookFileResourceIT {
     void patchNonExistingBookFile() throws Exception {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         bookFile.setId(longCount.incrementAndGet());
+        BookFileDTO bookFileDTO = toDto(bookFile);
 
-        // Create the BookFile
-        BookFileDTO bookFileDTO = bookFileMapper.toDto(bookFile);
-
-        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restBookFileMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, bookFileDTO.getId())
@@ -454,7 +388,6 @@ class BookFileResourceIT {
             )
             .andExpect(status().isBadRequest());
 
-        // Validate the BookFile in the database
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
@@ -463,11 +396,8 @@ class BookFileResourceIT {
     void patchWithIdMismatchBookFile() throws Exception {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         bookFile.setId(longCount.incrementAndGet());
+        BookFileDTO bookFileDTO = toDto(bookFile);
 
-        // Create the BookFile
-        BookFileDTO bookFileDTO = bookFileMapper.toDto(bookFile);
-
-        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBookFileMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
@@ -476,7 +406,6 @@ class BookFileResourceIT {
             )
             .andExpect(status().isBadRequest());
 
-        // Validate the BookFile in the database
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
@@ -485,61 +414,62 @@ class BookFileResourceIT {
     void patchWithMissingIdPathParamBookFile() throws Exception {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         bookFile.setId(longCount.incrementAndGet());
+        BookFileDTO bookFileDTO = toDto(bookFile);
 
-        // Create the BookFile
-        BookFileDTO bookFileDTO = bookFileMapper.toDto(bookFile);
-
-        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBookFileMockMvc
             .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(bookFileDTO)))
             .andExpect(status().isMethodNotAllowed());
 
-        // Validate the BookFile in the database
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void deleteBookFile() throws Exception {
-        // Initialize the database
-        insertedBookFile = bookFileRepository.saveAndFlush(bookFile);
+        insertedBookFile = bookFileJpaRepository.saveAndFlush(bookFile);
 
         long databaseSizeBeforeDelete = getRepositoryCount();
 
-        // Delete the bookFile
         restBookFileMockMvc
             .perform(delete(ENTITY_API_URL_ID, bookFile.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
-        // Validate the database contains one less item
         assertDecrementedRepositoryCount(databaseSizeBeforeDelete);
     }
 
     protected long getRepositoryCount() {
-        return bookFileRepository.count();
+        return bookFileJpaRepository.count();
     }
 
     protected void assertIncrementedRepositoryCount(long countBefore) {
-        assertThat(countBefore + 1).isEqualTo(getRepositoryCount());
+        assertThat(getRepositoryCount()).isEqualTo(countBefore + 1);
     }
 
     protected void assertDecrementedRepositoryCount(long countBefore) {
-        assertThat(countBefore - 1).isEqualTo(getRepositoryCount());
+        assertThat(getRepositoryCount()).isEqualTo(countBefore - 1);
     }
 
     protected void assertSameRepositoryCount(long countBefore) {
-        assertThat(countBefore).isEqualTo(getRepositoryCount());
+        assertThat(getRepositoryCount()).isEqualTo(countBefore);
     }
 
-    protected BookFile getPersistedBookFile(BookFile bookFile) {
-        return bookFileRepository.findById(bookFile.getId()).orElseThrow();
+    protected BookFile getPersistedBookFile(Long id) {
+        return bookFileEntityMapper.toDomain(bookFileJpaRepository.findById(id).orElseThrow());
     }
 
-    protected void assertPersistedBookFileToMatchAllProperties(BookFile expectedBookFile) {
-        assertBookFileAllPropertiesEquals(expectedBookFile, getPersistedBookFile(expectedBookFile));
+    protected void assertPersistedBookFileToMatchAllProperties(BookFileEntity expectedBookFile) {
+        assertBookFileAllPropertiesEquals(toDomain(expectedBookFile), getPersistedBookFile(expectedBookFile.getId()));
     }
 
-    protected void assertPersistedBookFileToMatchUpdatableProperties(BookFile expectedBookFile) {
-        assertBookFileAllUpdatablePropertiesEquals(expectedBookFile, getPersistedBookFile(expectedBookFile));
+    protected void assertPersistedBookFileToMatchUpdatableProperties(BookFileEntity expectedBookFile) {
+        assertBookFileAllUpdatablePropertiesEquals(toDomain(expectedBookFile), getPersistedBookFile(expectedBookFile.getId()));
+    }
+
+    private BookFileDTO toDto(BookFileEntity entity) {
+        return bookFileRestMapper.toDto(bookFileEntityMapper.toDomain(entity));
+    }
+
+    private BookFile toDomain(BookFileEntity entity) {
+        return bookFileEntityMapper.toDomain(entity);
     }
 }

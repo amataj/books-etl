@@ -2,6 +2,7 @@ package com.example.books.management;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.example.books.shared.management.SecurityMetersService;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;

@@ -4,8 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import com.example.books.IntegrationTest;
-import com.example.books.domain.User;
-import com.example.books.repository.UserRepository;
+import com.example.books.domain.service.UserService;
+import com.example.books.infrastructure.database.jpa.entity.User;
+import com.example.books.infrastructure.database.jpa.repository.UserRepository;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;

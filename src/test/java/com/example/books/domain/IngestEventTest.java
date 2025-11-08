@@ -1,37 +1,47 @@
 package com.example.books.domain;
 
-import static com.example.books.domain.IngestEventTestSamples.*;
-import static com.example.books.domain.IngestRunTestSamples.*;
+import static com.example.books.domain.IngestEventTestSamples.getIngestEventRandomSampleGenerator;
+import static com.example.books.domain.IngestEventTestSamples.getIngestEventSample1;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.example.books.web.rest.TestUtil;
+import com.example.books.domain.DomainValidationException;
+import com.example.books.domain.core.ingestevent.IngestEvent;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 class IngestEventTest {
 
     @Test
-    void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(IngestEvent.class);
-        IngestEvent ingestEvent1 = getIngestEventSample1();
-        IngestEvent ingestEvent2 = new IngestEvent();
-        assertThat(ingestEvent1).isNotEqualTo(ingestEvent2);
+    void withIdReturnsNewInstance() {
+        IngestEvent original = getIngestEventSample1();
+        IngestEvent rekeyed = original.withId(77L);
 
-        ingestEvent2.setId(ingestEvent1.getId());
-        assertThat(ingestEvent1).isEqualTo(ingestEvent2);
-
-        ingestEvent2 = getIngestEventSample2();
-        assertThat(ingestEvent1).isNotEqualTo(ingestEvent2);
+        assertThat(rekeyed.id()).isEqualTo(77L);
+        assertThat(rekeyed.runId()).isEqualTo(original.runId());
+        assertThat(rekeyed).isNotSameAs(original);
     }
 
     @Test
-    void ingestRunTest() {
-        IngestEvent ingestEvent = getIngestEventRandomSampleGenerator();
-        IngestRun ingestRunBack = getIngestRunRandomSampleGenerator();
+    void topicAndPayloadMustBeProvided() {
+        ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
+        UUID runId = UUID.randomUUID();
 
-        ingestEvent.setIngestRun(ingestRunBack);
-        assertThat(ingestEvent.getIngestRun()).isEqualTo(ingestRunBack);
+        assertThatThrownBy(() -> new IngestEvent(1L, runId, "document-1", "", "payload", now, 1L)).isInstanceOf(
+            DomainValidationException.class
+        );
 
-        ingestEvent.ingestRun(null);
-        assertThat(ingestEvent.getIngestRun()).isNull();
+        assertThatThrownBy(() -> new IngestEvent(1L, runId, "document-1", "topic", "", now, 1L)).isInstanceOf(
+            DomainValidationException.class
+        );
+    }
+
+    @Test
+    void randomSampleContainsRunAndIngestIds() {
+        IngestEvent sample = getIngestEventRandomSampleGenerator();
+        assertThat(sample.runId()).isNotNull();
+        assertThat(sample.ingestRunId()).isNotNull();
     }
 }

@@ -1,5 +1,6 @@
 package com.example.books.domain;
 
+import com.example.books.infrastructure.database.jpa.entity.Authority;
 import java.util.UUID;
 
 public class AuthorityTestSamples {

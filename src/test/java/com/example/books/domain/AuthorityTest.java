@@ -3,6 +3,7 @@ package com.example.books.domain;
 import static com.example.books.domain.AuthorityTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.example.books.infrastructure.database.jpa.entity.Authority;
 import com.example.books.web.rest.TestUtil;
 import org.junit.jupiter.api.Test;
 

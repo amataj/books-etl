@@ -4,31 +4,27 @@ import static com.example.books.domain.BookPageTextAsserts.*;
 import static com.example.books.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.domain.BookPageText;
-import com.example.books.repository.BookPageTextRepository;
-import com.example.books.service.BookPageTextService;
-import com.example.books.service.dto.BookPageTextDTO;
-import com.example.books.service.mapper.BookPageTextMapper;
+import com.example.books.adapter.web.rest.dto.BookPageTextDTO;
+import com.example.books.adapter.web.rest.mapper.BookPageTextRestMapper;
+import com.example.books.domain.core.bookpagetext.BookPageText;
+import com.example.books.infrastructure.database.jpa.entity.BookEntity;
+import com.example.books.infrastructure.database.jpa.entity.BookPageTextEntity;
+import com.example.books.infrastructure.database.jpa.mapper.BookPageTextEntityMapper;
+import com.example.books.infrastructure.database.jpa.repository.BookPageTextJpaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -38,7 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link BookPageTextResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class BookPageTextResourceIT {
@@ -55,23 +50,20 @@ class BookPageTextResourceIT {
     private static final String ENTITY_API_URL = "/api/book-page-texts";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
-    private static Random random = new Random();
-    private static AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+    private static final Random random = new Random();
+    private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     @Autowired
     private ObjectMapper om;
 
     @Autowired
-    private BookPageTextRepository bookPageTextRepository;
-
-    @Mock
-    private BookPageTextRepository bookPageTextRepositoryMock;
+    private BookPageTextJpaRepository bookPageTextJpaRepository;
 
     @Autowired
-    private BookPageTextMapper bookPageTextMapper;
+    private BookPageTextEntityMapper bookPageTextEntityMapper;
 
-    @Mock
-    private BookPageTextService bookPageTextServiceMock;
+    @Autowired
+    private BookPageTextRestMapper bookPageTextRestMapper;
 
     @Autowired
     private EntityManager em;
@@ -79,39 +71,48 @@ class BookPageTextResourceIT {
     @Autowired
     private MockMvc restBookPageTextMockMvc;
 
-    private BookPageText bookPageText;
+    private BookPageTextEntity bookPageText;
 
-    private BookPageText insertedBookPageText;
+    private BookPageTextEntity insertedBookPageText;
 
-    /**
-     * Create an entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
-     */
-    public static BookPageText createEntity() {
-        return new BookPageText().documentId(DEFAULT_DOCUMENT_ID).pageNo(DEFAULT_PAGE_NO).text(DEFAULT_TEXT);
+    public static BookPageTextEntity createEntity(EntityManager em) {
+        BookPageTextEntity bookPageText = new BookPageTextEntity()
+            .documentId(DEFAULT_DOCUMENT_ID)
+            .pageNo(DEFAULT_PAGE_NO)
+            .text(DEFAULT_TEXT);
+        bookPageText.setBook(getOrCreateBook(em));
+        return bookPageText;
     }
 
-    /**
-     * Create an updated entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
-     */
-    public static BookPageText createUpdatedEntity() {
-        return new BookPageText().documentId(UPDATED_DOCUMENT_ID).pageNo(UPDATED_PAGE_NO).text(UPDATED_TEXT);
+    public static BookPageTextEntity createUpdatedEntity(EntityManager em) {
+        BookPageTextEntity bookPageText = new BookPageTextEntity()
+            .documentId(UPDATED_DOCUMENT_ID)
+            .pageNo(UPDATED_PAGE_NO)
+            .text(UPDATED_TEXT);
+        bookPageText.setBook(getOrCreateBook(em));
+        return bookPageText;
+    }
+
+    private static BookEntity getOrCreateBook(EntityManager em) {
+        List<BookEntity> books = TestUtil.findAll(em, BookEntity.class);
+        if (books.isEmpty()) {
+            BookEntity book = BookResourceIT.createEntity();
+            em.persist(book);
+            em.flush();
+            return book;
+        }
+        return books.get(0);
     }
 
     @BeforeEach
     void initTest() {
-        bookPageText = createEntity();
+        bookPageText = createEntity(em);
     }
 
     @AfterEach
     void cleanup() {
         if (insertedBookPageText != null) {
-            bookPageTextRepository.delete(insertedBookPageText);
+            bookPageTextJpaRepository.delete(insertedBookPageText);
             insertedBookPageText = null;
         }
     }
@@ -120,9 +121,8 @@ class BookPageTextResourceIT {
     @Transactional
     void createBookPageText() throws Exception {
         long databaseSizeBeforeCreate = getRepositoryCount();
-        // Create the BookPageText
-        BookPageTextDTO bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
-        var returnedBookPageTextDTO = om.readValue(
+        BookPageTextDTO bookPageTextDTO = toDto(bookPageText);
+        BookPageTextDTO returnedBookPageTextDTO = om.readValue(
             restBookPageTextMockMvc
                 .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(bookPageTextDTO)))
                 .andExpect(status().isCreated())
@@ -132,29 +132,24 @@ class BookPageTextResourceIT {
             BookPageTextDTO.class
         );
 
-        // Validate the BookPageText in the database
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
-        var returnedBookPageText = bookPageTextMapper.toEntity(returnedBookPageTextDTO);
-        assertBookPageTextUpdatableFieldsEquals(returnedBookPageText, getPersistedBookPageText(returnedBookPageText));
-
-        insertedBookPageText = returnedBookPageText;
+        BookPageText returnedBookPageText = bookPageTextRestMapper.toDomain(returnedBookPageTextDTO);
+        assertBookPageTextUpdatableFieldsEquals(returnedBookPageText, getPersistedBookPageText(returnedBookPageText.id()));
+        insertedBookPageText = bookPageTextJpaRepository.findById(returnedBookPageText.id()).orElseThrow();
     }
 
     @Test
     @Transactional
     void createBookPageTextWithExistingId() throws Exception {
-        // Create the BookPageText with an existing ID
         bookPageText.setId(1L);
-        BookPageTextDTO bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
+        BookPageTextDTO bookPageTextDTO = toDto(bookPageText);
 
         long databaseSizeBeforeCreate = getRepositoryCount();
 
-        // An entity with an existing ID cannot be created, so this API call must fail
         restBookPageTextMockMvc
             .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(bookPageTextDTO)))
             .andExpect(status().isBadRequest());
 
-        // Validate the BookPageText in the database
         assertSameRepositoryCount(databaseSizeBeforeCreate);
     }
 
@@ -162,11 +157,9 @@ class BookPageTextResourceIT {
     @Transactional
     void checkDocumentIdIsRequired() throws Exception {
         long databaseSizeBeforeTest = getRepositoryCount();
-        // set the field null
         bookPageText.setDocumentId(null);
 
-        // Create the BookPageText, which fails.
-        BookPageTextDTO bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
+        BookPageTextDTO bookPageTextDTO = toDto(bookPageText);
 
         restBookPageTextMockMvc
             .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(bookPageTextDTO)))
@@ -179,11 +172,8 @@ class BookPageTextResourceIT {
     @Transactional
     void checkPageNoIsRequired() throws Exception {
         long databaseSizeBeforeTest = getRepositoryCount();
-        // set the field null
         bookPageText.setPageNo(null);
-
-        // Create the BookPageText, which fails.
-        BookPageTextDTO bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
+        BookPageTextDTO bookPageTextDTO = toDto(bookPageText);
 
         restBookPageTextMockMvc
             .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(bookPageTextDTO)))
@@ -195,10 +185,8 @@ class BookPageTextResourceIT {
     @Test
     @Transactional
     void getAllBookPageTexts() throws Exception {
-        // Initialize the database
-        insertedBookPageText = bookPageTextRepository.saveAndFlush(bookPageText);
+        insertedBookPageText = bookPageTextJpaRepository.saveAndFlush(bookPageText);
 
-        // Get all the bookPageTextList
         restBookPageTextMockMvc
             .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
@@ -209,30 +197,11 @@ class BookPageTextResourceIT {
             .andExpect(jsonPath("$.[*].text").value(hasItem(DEFAULT_TEXT)));
     }
 
-    @SuppressWarnings({ "unchecked" })
-    void getAllBookPageTextsWithEagerRelationshipsIsEnabled() throws Exception {
-        when(bookPageTextServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restBookPageTextMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(bookPageTextServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllBookPageTextsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(bookPageTextServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restBookPageTextMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
-        verify(bookPageTextRepositoryMock, times(1)).findAll(any(Pageable.class));
-    }
-
     @Test
     @Transactional
     void getBookPageText() throws Exception {
-        // Initialize the database
-        insertedBookPageText = bookPageTextRepository.saveAndFlush(bookPageText);
+        insertedBookPageText = bookPageTextJpaRepository.saveAndFlush(bookPageText);
 
-        // Get the bookPageText
         restBookPageTextMockMvc
             .perform(get(ENTITY_API_URL_ID, bookPageText.getId()))
             .andExpect(status().isOk())
@@ -246,24 +215,20 @@ class BookPageTextResourceIT {
     @Test
     @Transactional
     void getNonExistingBookPageText() throws Exception {
-        // Get the bookPageText
         restBookPageTextMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
     void putExistingBookPageText() throws Exception {
-        // Initialize the database
-        insertedBookPageText = bookPageTextRepository.saveAndFlush(bookPageText);
+        insertedBookPageText = bookPageTextJpaRepository.saveAndFlush(bookPageText);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
-        // Update the bookPageText
-        BookPageText updatedBookPageText = bookPageTextRepository.findById(bookPageText.getId()).orElseThrow();
-        // Disconnect from session so that the updates on updatedBookPageText are not directly saved in db
+        BookPageTextEntity updatedBookPageText = bookPageTextJpaRepository.findById(bookPageText.getId()).orElseThrow();
         em.detach(updatedBookPageText);
         updatedBookPageText.documentId(UPDATED_DOCUMENT_ID).pageNo(UPDATED_PAGE_NO).text(UPDATED_TEXT);
-        BookPageTextDTO bookPageTextDTO = bookPageTextMapper.toDto(updatedBookPageText);
+        BookPageTextDTO bookPageTextDTO = toDto(updatedBookPageText);
 
         restBookPageTextMockMvc
             .perform(
@@ -273,7 +238,6 @@ class BookPageTextResourceIT {
             )
             .andExpect(status().isOk());
 
-        // Validate the BookPageText in the database
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
         assertPersistedBookPageTextToMatchAllProperties(updatedBookPageText);
     }
@@ -283,11 +247,8 @@ class BookPageTextResourceIT {
     void putNonExistingBookPageText() throws Exception {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         bookPageText.setId(longCount.incrementAndGet());
+        BookPageTextDTO bookPageTextDTO = toDto(bookPageText);
 
-        // Create the BookPageText
-        BookPageTextDTO bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
-
-        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restBookPageTextMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, bookPageTextDTO.getId())
@@ -296,7 +257,6 @@ class BookPageTextResourceIT {
             )
             .andExpect(status().isBadRequest());
 
-        // Validate the BookPageText in the database
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
@@ -305,11 +265,8 @@ class BookPageTextResourceIT {
     void putWithIdMismatchBookPageText() throws Exception {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         bookPageText.setId(longCount.incrementAndGet());
+        BookPageTextDTO bookPageTextDTO = toDto(bookPageText);
 
-        // Create the BookPageText
-        BookPageTextDTO bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
-
-        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBookPageTextMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
@@ -318,7 +275,6 @@ class BookPageTextResourceIT {
             )
             .andExpect(status().isBadRequest());
 
-        // Validate the BookPageText in the database
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
@@ -327,31 +283,24 @@ class BookPageTextResourceIT {
     void putWithMissingIdPathParamBookPageText() throws Exception {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         bookPageText.setId(longCount.incrementAndGet());
+        BookPageTextDTO bookPageTextDTO = toDto(bookPageText);
 
-        // Create the BookPageText
-        BookPageTextDTO bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
-
-        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBookPageTextMockMvc
             .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(bookPageTextDTO)))
             .andExpect(status().isMethodNotAllowed());
 
-        // Validate the BookPageText in the database
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void partialUpdateBookPageTextWithPatch() throws Exception {
-        // Initialize the database
-        insertedBookPageText = bookPageTextRepository.saveAndFlush(bookPageText);
+        insertedBookPageText = bookPageTextJpaRepository.saveAndFlush(bookPageText);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
-        // Update the bookPageText using partial update
-        BookPageText partialUpdatedBookPageText = new BookPageText();
+        BookPageTextEntity partialUpdatedBookPageText = new BookPageTextEntity();
         partialUpdatedBookPageText.setId(bookPageText.getId());
-
         partialUpdatedBookPageText.pageNo(UPDATED_PAGE_NO);
 
         restBookPageTextMockMvc
@@ -362,27 +311,22 @@ class BookPageTextResourceIT {
             )
             .andExpect(status().isOk());
 
-        // Validate the BookPageText in the database
-
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
         assertBookPageTextUpdatableFieldsEquals(
-            createUpdateProxyForBean(partialUpdatedBookPageText, bookPageText),
-            getPersistedBookPageText(bookPageText)
+            toDomain(createUpdateProxyForBean(partialUpdatedBookPageText, bookPageText)),
+            getPersistedBookPageText(bookPageText.getId())
         );
     }
 
     @Test
     @Transactional
     void fullUpdateBookPageTextWithPatch() throws Exception {
-        // Initialize the database
-        insertedBookPageText = bookPageTextRepository.saveAndFlush(bookPageText);
+        insertedBookPageText = bookPageTextJpaRepository.saveAndFlush(bookPageText);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
-        // Update the bookPageText using partial update
-        BookPageText partialUpdatedBookPageText = new BookPageText();
+        BookPageTextEntity partialUpdatedBookPageText = new BookPageTextEntity();
         partialUpdatedBookPageText.setId(bookPageText.getId());
-
         partialUpdatedBookPageText.documentId(UPDATED_DOCUMENT_ID).pageNo(UPDATED_PAGE_NO).text(UPDATED_TEXT);
 
         restBookPageTextMockMvc
@@ -393,10 +337,11 @@ class BookPageTextResourceIT {
             )
             .andExpect(status().isOk());
 
-        // Validate the BookPageText in the database
-
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
-        assertBookPageTextUpdatableFieldsEquals(partialUpdatedBookPageText, getPersistedBookPageText(partialUpdatedBookPageText));
+        assertBookPageTextUpdatableFieldsEquals(
+            toDomain(partialUpdatedBookPageText),
+            getPersistedBookPageText(partialUpdatedBookPageText.getId())
+        );
     }
 
     @Test
@@ -404,11 +349,8 @@ class BookPageTextResourceIT {
     void patchNonExistingBookPageText() throws Exception {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         bookPageText.setId(longCount.incrementAndGet());
+        BookPageTextDTO bookPageTextDTO = toDto(bookPageText);
 
-        // Create the BookPageText
-        BookPageTextDTO bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
-
-        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restBookPageTextMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, bookPageTextDTO.getId())
@@ -417,7 +359,6 @@ class BookPageTextResourceIT {
             )
             .andExpect(status().isBadRequest());
 
-        // Validate the BookPageText in the database
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
@@ -426,11 +367,8 @@ class BookPageTextResourceIT {
     void patchWithIdMismatchBookPageText() throws Exception {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         bookPageText.setId(longCount.incrementAndGet());
+        BookPageTextDTO bookPageTextDTO = toDto(bookPageText);
 
-        // Create the BookPageText
-        BookPageTextDTO bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
-
-        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBookPageTextMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
@@ -439,7 +377,6 @@ class BookPageTextResourceIT {
             )
             .andExpect(status().isBadRequest());
 
-        // Validate the BookPageText in the database
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
@@ -448,61 +385,65 @@ class BookPageTextResourceIT {
     void patchWithMissingIdPathParamBookPageText() throws Exception {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         bookPageText.setId(longCount.incrementAndGet());
+        BookPageTextDTO bookPageTextDTO = toDto(bookPageText);
 
-        // Create the BookPageText
-        BookPageTextDTO bookPageTextDTO = bookPageTextMapper.toDto(bookPageText);
-
-        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBookPageTextMockMvc
             .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(bookPageTextDTO)))
             .andExpect(status().isMethodNotAllowed());
 
-        // Validate the BookPageText in the database
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void deleteBookPageText() throws Exception {
-        // Initialize the database
-        insertedBookPageText = bookPageTextRepository.saveAndFlush(bookPageText);
+        insertedBookPageText = bookPageTextJpaRepository.saveAndFlush(bookPageText);
 
         long databaseSizeBeforeDelete = getRepositoryCount();
 
-        // Delete the bookPageText
         restBookPageTextMockMvc
             .perform(delete(ENTITY_API_URL_ID, bookPageText.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
-        // Validate the database contains one less item
         assertDecrementedRepositoryCount(databaseSizeBeforeDelete);
     }
 
     protected long getRepositoryCount() {
-        return bookPageTextRepository.count();
+        return bookPageTextJpaRepository.count();
     }
 
     protected void assertIncrementedRepositoryCount(long countBefore) {
-        assertThat(countBefore + 1).isEqualTo(getRepositoryCount());
+        assertThat(getRepositoryCount()).isEqualTo(countBefore + 1);
     }
 
     protected void assertDecrementedRepositoryCount(long countBefore) {
-        assertThat(countBefore - 1).isEqualTo(getRepositoryCount());
+        assertThat(getRepositoryCount()).isEqualTo(countBefore - 1);
     }
 
     protected void assertSameRepositoryCount(long countBefore) {
-        assertThat(countBefore).isEqualTo(getRepositoryCount());
+        assertThat(getRepositoryCount()).isEqualTo(countBefore);
     }
 
-    protected BookPageText getPersistedBookPageText(BookPageText bookPageText) {
-        return bookPageTextRepository.findById(bookPageText.getId()).orElseThrow();
+    protected BookPageText getPersistedBookPageText(Long id) {
+        return bookPageTextEntityMapper.toDomain(bookPageTextJpaRepository.findById(id).orElseThrow());
     }
 
-    protected void assertPersistedBookPageTextToMatchAllProperties(BookPageText expectedBookPageText) {
-        assertBookPageTextAllPropertiesEquals(expectedBookPageText, getPersistedBookPageText(expectedBookPageText));
+    protected void assertPersistedBookPageTextToMatchAllProperties(BookPageTextEntity expectedBookPageText) {
+        assertBookPageTextAllPropertiesEquals(toDomain(expectedBookPageText), getPersistedBookPageText(expectedBookPageText.getId()));
     }
 
-    protected void assertPersistedBookPageTextToMatchUpdatableProperties(BookPageText expectedBookPageText) {
-        assertBookPageTextAllUpdatablePropertiesEquals(expectedBookPageText, getPersistedBookPageText(expectedBookPageText));
+    protected void assertPersistedBookPageTextToMatchUpdatableProperties(BookPageTextEntity expectedBookPageText) {
+        assertBookPageTextAllUpdatablePropertiesEquals(
+            toDomain(expectedBookPageText),
+            getPersistedBookPageText(expectedBookPageText.getId())
+        );
+    }
+
+    private BookPageTextDTO toDto(BookPageTextEntity entity) {
+        return bookPageTextRestMapper.toDto(bookPageTextEntityMapper.toDomain(entity));
+    }
+
+    private BookPageText toDomain(BookPageTextEntity entity) {
+        return bookPageTextEntityMapper.toDomain(entity);
     }
 }

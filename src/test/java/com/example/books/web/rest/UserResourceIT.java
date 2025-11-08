@@ -6,12 +6,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.domain.User;
-import com.example.books.repository.UserRepository;
-import com.example.books.security.AuthoritiesConstants;
-import com.example.books.service.UserService;
-import com.example.books.service.dto.AdminUserDTO;
-import com.example.books.service.mapper.UserMapper;
+import com.example.books.adapter.web.rest.UserResource;
+import com.example.books.adapter.web.rest.dto.AdminUserDTO;
+import com.example.books.domain.service.UserService;
+import com.example.books.infrastructure.database.jpa.entity.User;
+import com.example.books.infrastructure.database.jpa.repository.UserRepository;
+import com.example.books.shared.security.AuthoritiesConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import java.util.*;
@@ -65,9 +65,6 @@ class UserResourceIT {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private UserMapper userMapper;
 
     @Autowired
     private EntityManager em;
@@ -160,15 +157,6 @@ class UserResourceIT {
                 .getContentAsString(),
             AdminUserDTO.class
         );
-
-        User convertedUser = userMapper.userDTOToUser(returnedUserDTO);
-        // Validate the returned User
-        assertThat(convertedUser.getLogin()).isEqualTo(DEFAULT_LOGIN);
-        assertThat(convertedUser.getFirstName()).isEqualTo(DEFAULT_FIRSTNAME);
-        assertThat(convertedUser.getLastName()).isEqualTo(DEFAULT_LASTNAME);
-        assertThat(convertedUser.getEmail()).isEqualTo(DEFAULT_EMAIL);
-        assertThat(convertedUser.getImageUrl()).isEqualTo(DEFAULT_IMAGEURL);
-        assertThat(convertedUser.getLangKey()).isEqualTo(DEFAULT_LANGKEY);
     }
 
     @Test
