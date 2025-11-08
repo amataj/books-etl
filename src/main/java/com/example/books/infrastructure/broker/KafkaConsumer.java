@@ -68,7 +68,7 @@ public class KafkaConsumer implements Consumer<String> {
 
     @Override
     public void accept(String input) {
-        LOG.debug("Got message from kafka stream: {}", input);
+        LOG.info("Received message from kafka stream: {}", input);
         emitters
             .entrySet()
             .forEach(entry -> {
