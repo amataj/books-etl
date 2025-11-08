@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
+import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookEntity;
 import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookPageTextEntity;
 import com.example.books.infrastructure.infrastructure.database.jpa.repository.BookPageTextRepository;
 import com.example.books.service.BookPageTextService;
@@ -17,6 +18,7 @@ import com.example.books.service.mapper.BookPageTextMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.AfterEach;
@@ -89,8 +91,12 @@ class BookPageTextResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static BookPageTextEntity createEntity() {
-        return new BookPageTextEntity().documentId(DEFAULT_DOCUMENT_ID).pageNo(DEFAULT_PAGE_NO).text(DEFAULT_TEXT);
+    public static BookPageTextEntity createEntity(EntityManager em) {
+        return new BookPageTextEntity()
+            .documentId(DEFAULT_DOCUMENT_ID)
+            .pageNo(DEFAULT_PAGE_NO)
+            .text(DEFAULT_TEXT)
+            .book(getOrCreateBook(em, DEFAULT_DOCUMENT_ID));
     }
 
     /**
@@ -99,13 +105,17 @@ class BookPageTextResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static BookPageTextEntity createUpdatedEntity() {
-        return new BookPageTextEntity().documentId(UPDATED_DOCUMENT_ID).pageNo(UPDATED_PAGE_NO).text(UPDATED_TEXT);
+    public static BookPageTextEntity createUpdatedEntity(EntityManager em) {
+        return new BookPageTextEntity()
+            .documentId(UPDATED_DOCUMENT_ID)
+            .pageNo(UPDATED_PAGE_NO)
+            .text(UPDATED_TEXT)
+            .book(getOrCreateBook(em, UPDATED_DOCUMENT_ID));
     }
 
     @BeforeEach
     void initTest() {
-        bookPageText = createEntity();
+        bookPageText = createEntity(em);
     }
 
     @AfterEach
@@ -114,6 +124,20 @@ class BookPageTextResourceIT {
             bookPageTextRepository.delete(insertedBookPageText);
             insertedBookPageText = null;
         }
+    }
+
+    private static BookEntity getOrCreateBook(EntityManager em, String documentId) {
+        List<BookEntity> books = TestUtil.findAll(em, BookEntity.class);
+        return books
+            .stream()
+            .filter(existing -> documentId.equals(existing.getDocumentId()))
+            .findFirst()
+            .orElseGet(() -> {
+                BookEntity book = new BookEntity().documentId(documentId);
+                em.persist(book);
+                em.flush();
+                return book;
+            });
     }
 
     @Test
