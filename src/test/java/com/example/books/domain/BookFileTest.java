@@ -43,4 +43,19 @@ class BookFileTest {
         assertThat(sample.book()).isNotNull();
         assertThat(sample.sha256()).hasSizeBetween(10, 64);
     }
+
+    @Test
+    void constructorValidatesPathAndStorageUriLengths() {
+        Book book = getBookSample1();
+        ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC).withNano(0);
+        String longPath = "a".repeat(4_097);
+        assertThatThrownBy(() -> new BookFile(1L, longPath, "1234567890", 10L, now, "s3://bucket/book.pdf", now, now, book)).isInstanceOf(
+            DomainValidationException.class
+        );
+
+        String longStorageUri = "b".repeat(2_049);
+        assertThatThrownBy(() -> new BookFile(1L, "/tmp/book.pdf", "1234567890", 10L, now, longStorageUri, now, now, book)).isInstanceOf(
+            DomainValidationException.class
+        );
+    }
 }

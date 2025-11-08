@@ -22,8 +22,14 @@ public record BookFile(
         if (pathNorm == null || pathNorm.isBlank()) {
             throw new DomainValidationException("pathNorm is required");
         }
+        if (pathNorm.length() > 4096) {
+            throw new DomainValidationException("pathNorm exceeds 4096 characters");
+        }
         if (sha256 == null || sha256.length() < 10 || sha256.length() > 64) {
             throw new DomainValidationException("sha256 must be between 10 and 64 characters");
+        }
+        if (storageUri != null && storageUri.length() > 2048) {
+            throw new DomainValidationException("storageUri exceeds 2048 characters");
         }
         if (book == null) {
             throw new DomainValidationException("book reference is required");
