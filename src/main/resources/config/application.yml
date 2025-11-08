@@ -97,26 +97,15 @@ spring:
     name: booksEtl
   kafka:
     bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
-  cloud:
-    function:
-      definition: kafkaConsumer;kafkaProducer
-    stream:
-      kafka:
-        binder:
-          replicationFactor: 1
-          auto-create-topics: true
-          brokers: localhost:9092
-      bindings:
-        binding-out-0:
-          content-type: text/plain
-          group: books-etl
-        kafkaConsumer-in-0:
-          destination: sse-topic
-          content-type: text/plain
-          group: books-etl
-        kafkaProducer-out-0:
-          content-type: text/plain
-          group: books-etl
+    consumer:
+      group-id: books-etl-app
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    template:
+      default-topic: pdf.ingest.raw
   docker:
     compose:
       enabled: false
@@ -196,6 +185,12 @@ server:
     session:
       cookie:
         http-only: true
+
+books:
+  root: /Volumes/Books
+  exclude:
+    - '**/.trash/**'
+    - '**/*.tmp'
 
 springdoc:
   show-actuator: true
