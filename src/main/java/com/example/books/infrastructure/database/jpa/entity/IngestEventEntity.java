@@ -38,8 +38,7 @@ public class IngestEventEntity implements Serializable {
     @Column(name = "topic", length = 64, nullable = false)
     private String topic;
 
-    @Lob
-    @Column(name = "payload", nullable = false)
+    @Column(name = "payload", nullable = false, columnDefinition = "text")
     private String payload;
 
     @Column(name = "created_at")
