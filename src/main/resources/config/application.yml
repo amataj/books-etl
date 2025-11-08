@@ -97,7 +97,7 @@ spring:
     name: booksEtl
   cloud:
     function:
-      definition: kafkaConsumer
+      definition: kafkaConsumer;kafkaProducer
     stream:
       kafka:
         binder:
@@ -106,11 +106,13 @@ spring:
           brokers: localhost:9092
       bindings:
         binding-out-0:
-          destination: sse-topic
           content-type: text/plain
           group: books-etl
         kafkaConsumer-in-0:
           destination: sse-topic
+          content-type: text/plain
+          group: books-etl
+        kafkaProducer-out-0:
           content-type: text/plain
           group: books-etl
   docker:

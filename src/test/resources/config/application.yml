@@ -18,7 +18,7 @@ spring:
     name: booksEtl
   cloud:
     function:
-      definition: kafkaConsumer
+      definition: kafkaConsumer;kafkaProducer
     stream:
       kafka:
         binder:
@@ -26,11 +26,13 @@ spring:
           auto-create-topics: true
       bindings:
         binding-out-0:
-          destination: sse-topic
           content-type: text/plain
           group: books-etl
         kafkaConsumer-in-0:
           destination: sse-topic
+          content-type: text/plain
+          group: books-etl
+        kafkaProducer-out-0:
           content-type: text/plain
           group: books-etl
   # Replace by 'prod, faker' to add the faker context and have sample data loaded in production

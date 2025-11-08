@@ -6,8 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.example.books.IntegrationTest;
-import com.example.books.config.EmbeddedKafka;
+import com.example.books.MockKafkaIntegrationTest;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -25,10 +24,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.MimeTypeUtils;
 
-@IntegrationTest
+@MockKafkaIntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-@EmbeddedKafka
 @ImportAutoConfiguration(TestChannelBinderConfiguration.class)
 class BooksEtlKafkaResourceIT {
 
