@@ -1,8 +1,8 @@
 package com.example.books.shared.security;
 
-import com.example.books.infrastructure.infrastructure.database.jpa.entity.Authority;
-import com.example.books.infrastructure.infrastructure.database.jpa.entity.User;
-import com.example.books.infrastructure.infrastructure.database.jpa.repository.UserRepository;
+import com.example.books.infrastructure.database.jpa.entity.Authority;
+import com.example.books.infrastructure.database.jpa.entity.User;
+import com.example.books.infrastructure.database.jpa.repository.UserRepository;
 import java.util.*;
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 import org.slf4j.Logger;

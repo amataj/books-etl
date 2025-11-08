@@ -6,11 +6,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.infrastructure.infrastructure.database.jpa.entity.User;
-import com.example.books.infrastructure.infrastructure.database.jpa.repository.UserRepository;
-import com.example.books.service.UserService;
-import com.example.books.service.dto.AdminUserDTO;
-import com.example.books.service.mapper.UserMapper;
+import com.example.books.domain.core.AdminUserDTO;
+import com.example.books.domain.service.UserService;
+import com.example.books.domain.service.mapper.UserMapper;
+import com.example.books.infrastructure.database.jpa.entity.User;
+import com.example.books.infrastructure.database.jpa.repository.UserRepository;
 import com.example.books.shared.security.AuthoritiesConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;

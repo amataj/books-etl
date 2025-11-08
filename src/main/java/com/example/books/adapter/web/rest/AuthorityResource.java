@@ -1,8 +1,8 @@
 package com.example.books.adapter.web.rest;
 
 import com.example.books.adapter.web.rest.errors.BadRequestAlertException;
-import com.example.books.infrastructure.infrastructure.database.jpa.entity.Authority;
-import com.example.books.infrastructure.infrastructure.database.jpa.repository.AuthorityRepository;
+import com.example.books.infrastructure.database.jpa.entity.Authority;
+import com.example.books.infrastructure.database.jpa.repository.AuthorityRepository;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;

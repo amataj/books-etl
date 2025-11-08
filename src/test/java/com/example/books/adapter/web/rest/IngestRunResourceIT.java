@@ -2,17 +2,17 @@ package com.example.books.adapter.web.rest;
 
 import static com.example.books.adapter.web.rest.TestUtil.createUpdateProxyForBean;
 import static com.example.books.adapter.web.rest.TestUtil.sameInstant;
-import static com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestRunAsserts.*;
+import static com.example.books.infrastructure.database.jpa.entity.IngestRunAsserts.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.infrastructure.infrastructure.database.jpa.entity.IngestRunEntity;
-import com.example.books.infrastructure.infrastructure.database.jpa.repository.IngestRunRepository;
-import com.example.books.service.dto.IngestRunDTO;
-import com.example.books.service.mapper.IngestRunMapper;
+import com.example.books.domain.core.IngestRunDTO;
+import com.example.books.domain.service.mapper.IngestRunMapper;
+import com.example.books.infrastructure.database.jpa.entity.IngestRunEntity;
+import com.example.books.infrastructure.database.jpa.repository.IngestRunRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;

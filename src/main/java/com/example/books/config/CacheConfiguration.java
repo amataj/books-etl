@@ -1,7 +1,7 @@
 package com.example.books.config;
 
-import com.example.books.infrastructure.infrastructure.database.jpa.entity.*;
-import com.example.books.infrastructure.infrastructure.database.jpa.repository.UserRepository;
+import com.example.books.infrastructure.database.jpa.entity.*;
+import com.example.books.infrastructure.database.jpa.repository.UserRepository;
 import com.github.benmanes.caffeine.jcache.configuration.CaffeineConfiguration;
 import java.util.OptionalLong;
 import java.util.concurrent.TimeUnit;

@@ -1,17 +1,17 @@
 package com.example.books.adapter.web.rest;
 
 import static com.example.books.adapter.web.rest.TestUtil.createUpdateProxyForBean;
-import static com.example.books.infrastructure.infrastructure.database.jpa.entity.BookAsserts.*;
+import static com.example.books.infrastructure.database.jpa.entity.BookAsserts.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookEntity;
-import com.example.books.infrastructure.infrastructure.database.jpa.repository.BookRepository;
-import com.example.books.service.dto.BookDTO;
-import com.example.books.service.mapper.BookMapper;
+import com.example.books.domain.core.BookDTO;
+import com.example.books.domain.service.mapper.BookMapper;
+import com.example.books.infrastructure.database.jpa.entity.BookEntity;
+import com.example.books.infrastructure.database.jpa.repository.BookRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import java.util.Random;

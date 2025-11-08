@@ -1,7 +1,7 @@
 package com.example.books.adapter.web.rest;
 
 import static com.example.books.adapter.web.rest.TestUtil.createUpdateProxyForBean;
-import static com.example.books.infrastructure.infrastructure.database.jpa.entity.BookPageTextAsserts.*;
+import static com.example.books.infrastructure.database.jpa.entity.BookPageTextAsserts.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.Mockito.*;
@@ -9,12 +9,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookEntity;
-import com.example.books.infrastructure.infrastructure.database.jpa.entity.BookPageTextEntity;
-import com.example.books.infrastructure.infrastructure.database.jpa.repository.BookPageTextRepository;
-import com.example.books.service.BookPageTextService;
-import com.example.books.service.dto.BookPageTextDTO;
-import com.example.books.service.mapper.BookPageTextMapper;
+import com.example.books.domain.core.BookPageTextDTO;
+import com.example.books.domain.service.BookPageTextService;
+import com.example.books.domain.service.mapper.BookPageTextMapper;
+import com.example.books.infrastructure.database.jpa.entity.BookEntity;
+import com.example.books.infrastructure.database.jpa.entity.BookPageTextEntity;
+import com.example.books.infrastructure.database.jpa.repository.BookPageTextRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import java.util.ArrayList;
