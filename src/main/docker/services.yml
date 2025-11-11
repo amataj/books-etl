@@ -9,3 +9,7 @@ services:
     extends:
       file: ./kafka.yml
       service: kafka
+  tesseract:
+    extends:
+      file: ./tesseract.yml
+      service: tesseract
