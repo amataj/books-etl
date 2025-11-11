@@ -5,6 +5,7 @@ import com.example.books.domain.bookfile.BookFile;
 import com.example.books.domain.bookfile.BookFileService;
 import com.example.books.infrastructure.database.jpa.entity.BookFileEntity;
 import com.example.books.infrastructure.database.jpa.repository.BookFileJpaRepository;
+import com.example.books.usecase.bookfile.BookFileUseCase;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
@@ -39,11 +40,11 @@ public class BookFileResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final BookFileService bookFileService;
+    private final BookFileUseCase bookFileService;
 
     private final BookFileJpaRepository bookFileRepository;
 
-    public BookFileResource(BookFileService bookFileService, BookFileJpaRepository bookFileRepository) {
+    public BookFileResource(BookFileUseCase bookFileService, BookFileJpaRepository bookFileRepository) {
         this.bookFileService = bookFileService;
         this.bookFileRepository = bookFileRepository;
     }

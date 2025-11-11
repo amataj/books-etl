@@ -5,6 +5,7 @@ import com.example.books.domain.ingestevent.IngestEventService;
 import com.example.books.domain.ingestrun.IngestEvent;
 import com.example.books.infrastructure.database.jpa.entity.IngestEventEntity;
 import com.example.books.infrastructure.database.jpa.repository.IngestEventJpaRepository;
+import com.example.books.usecase.ingestevent.IngestEventUseCase;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
@@ -34,11 +35,11 @@ public class IngestEventResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final IngestEventService ingestEventService;
+    private final IngestEventUseCase ingestEventService;
 
     private final IngestEventJpaRepository ingestEventRepository;
 
-    public IngestEventResource(IngestEventService ingestEventService, IngestEventJpaRepository ingestEventRepository) {
+    public IngestEventResource(IngestEventUseCase ingestEventService, IngestEventJpaRepository ingestEventRepository) {
         this.ingestEventService = ingestEventService;
         this.ingestEventRepository = ingestEventRepository;
     }

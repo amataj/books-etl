@@ -5,6 +5,7 @@ import com.example.books.domain.bookpage.BookPageText;
 import com.example.books.domain.bookpage.BookPageTextService;
 import com.example.books.infrastructure.database.jpa.entity.BookPageTextEntity;
 import com.example.books.infrastructure.database.jpa.repository.BookPageTextJpaRepository;
+import com.example.books.usecase.bookpagetext.BookPageTextUseCase;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
@@ -39,11 +40,11 @@ public class BookPageTextResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final BookPageTextService bookPageTextService;
+    private final BookPageTextUseCase bookPageTextService;
 
     private final BookPageTextJpaRepository bookPageTextRepository;
 
-    public BookPageTextResource(BookPageTextService bookPageTextService, BookPageTextJpaRepository bookPageTextRepository) {
+    public BookPageTextResource(BookPageTextUseCase bookPageTextService, BookPageTextJpaRepository bookPageTextRepository) {
         this.bookPageTextService = bookPageTextService;
         this.bookPageTextRepository = bookPageTextRepository;
     }

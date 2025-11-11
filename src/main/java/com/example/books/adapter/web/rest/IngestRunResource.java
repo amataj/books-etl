@@ -5,6 +5,7 @@ import com.example.books.domain.ingestrun.IngestRun;
 import com.example.books.domain.ingestrun.IngestRunService;
 import com.example.books.infrastructure.database.jpa.entity.IngestRunEntity;
 import com.example.books.infrastructure.database.jpa.repository.IngestRunJpaRepository;
+import com.example.books.usecase.ingestrun.IngestRunUseCase;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
@@ -34,11 +35,11 @@ public class IngestRunResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final IngestRunService ingestRunService;
+    private final IngestRunUseCase ingestRunService;
 
     private final IngestRunJpaRepository ingestRunRepository;
 
-    public IngestRunResource(IngestRunService ingestRunService, IngestRunJpaRepository ingestRunRepository) {
+    public IngestRunResource(IngestRunUseCase ingestRunService, IngestRunJpaRepository ingestRunRepository) {
         this.ingestRunService = ingestRunService;
         this.ingestRunRepository = ingestRunRepository;
     }
