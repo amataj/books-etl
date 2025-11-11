@@ -256,3 +256,11 @@ application:
       parsed: pdf.ingest.parsed
       indexed: pdf.ingest.indexed
       dlq: pdf.ingest.dlq
+  ocr:
+    enabled: false
+    # Update to the directory containing tessdata if the default lookup fails
+    # data-path: /usr/share/tesseract-ocr/5/tessdata
+    language: eng
+    # page-seg-mode: 3
+    # ocr-engine-mode: 1
+    tess-variables: {}

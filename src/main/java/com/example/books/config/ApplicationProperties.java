@@ -1,7 +1,9 @@
 package com.example.books.config;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -16,6 +18,7 @@ public class ApplicationProperties {
     private final Liquibase liquibase = new Liquibase();
     private final Books books = new Books();
     private final Kafka kafka = new Kafka();
+    private final Ocr ocr = new Ocr();
 
     // jhipster-needle-application-properties-property
 
@@ -29,6 +32,10 @@ public class ApplicationProperties {
 
     public Kafka getKafka() {
         return kafka;
+    }
+
+    public Ocr getOcr() {
+        return ocr;
     }
 
     // jhipster-needle-application-properties-property-getter
@@ -114,6 +121,60 @@ public class ApplicationProperties {
             public void setDlq(String dlq) {
                 this.dlq = dlq;
             }
+        }
+    }
+
+    public static class Ocr {
+
+        private boolean enabled;
+        private String dataPath;
+        private String language = "eng";
+        private Integer pageSegMode;
+        private Integer ocrEngineMode;
+        private final Map<String, String> tessVariables = new LinkedHashMap<>();
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public String getDataPath() {
+            return dataPath;
+        }
+
+        public void setDataPath(String dataPath) {
+            this.dataPath = dataPath;
+        }
+
+        public String getLanguage() {
+            return language;
+        }
+
+        public void setLanguage(String language) {
+            this.language = language;
+        }
+
+        public Integer getPageSegMode() {
+            return pageSegMode;
+        }
+
+        public void setPageSegMode(Integer pageSegMode) {
+            this.pageSegMode = pageSegMode;
+        }
+
+        public Integer getOcrEngineMode() {
+            return ocrEngineMode;
+        }
+
+        public void setOcrEngineMode(Integer ocrEngineMode) {
+            this.ocrEngineMode = ocrEngineMode;
+        }
+
+        public Map<String, String> getTessVariables() {
+            return tessVariables;
         }
     }
     // jhipster-needle-application-properties-property-class
