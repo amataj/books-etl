@@ -186,12 +186,6 @@ server:
       cookie:
         http-only: true
 
-books:
-  root: /Volumes/Books
-  exclude:
-    - '**/.trash/**'
-    - '**/*.tmp'
-
 springdoc:
   show-actuator: true
 
@@ -246,6 +240,11 @@ jhipster:
 # ===================================================================
 
 application:
+  books:
+    root: /Volumes/Books
+    exclude:
+      - '**/.trash/**'
+      - '**/*.tmp'
   kafka:
     topics:
       raw: pdf.ingest.raw

@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 /**
  * Properties describing how the ETL pipeline interacts with the local book repository.
  */
-@ConfigurationProperties(prefix = "books", ignoreUnknownFields = false)
+@ConfigurationProperties(prefix = "application.books", ignoreUnknownFields = false)
 public class BooksProperties {
 
     private String root = Paths.get(System.getProperty("user.home"), "books").toString();
