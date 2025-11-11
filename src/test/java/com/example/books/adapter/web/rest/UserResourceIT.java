@@ -6,8 +6,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.domain.core.AdminUser;
-import com.example.books.domain.service.UserService;
+import com.example.books.domain.user.AdminUser;
+import com.example.books.domain.user.UserService;
 import com.example.books.infrastructure.database.jpa.entity.User;
 import com.example.books.infrastructure.database.jpa.mapper.UserMapper;
 import com.example.books.infrastructure.database.jpa.repository.UserJpaRepository;

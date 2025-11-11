@@ -1,7 +1,7 @@
 package com.example.books.infrastructure.database.jpa.mapper;
 
-import com.example.books.domain.core.Book;
-import com.example.books.domain.core.BookPageText;
+import com.example.books.domain.book.Book;
+import com.example.books.domain.bookpage.BookPageText;
 import com.example.books.infrastructure.database.jpa.entity.BookEntity;
 import com.example.books.infrastructure.database.jpa.entity.BookPageTextEntity;
 import org.mapstruct.*;

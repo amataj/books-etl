@@ -1,8 +1,8 @@
 package com.example.books.adapter.web.rest;
 
 import com.example.books.adapter.web.rest.errors.BadRequestAlertException;
-import com.example.books.domain.core.Book;
-import com.example.books.domain.service.BookService;
+import com.example.books.domain.book.Book;
+import com.example.books.domain.book.BookService;
 import com.example.books.infrastructure.database.jpa.entity.BookEntity;
 import com.example.books.infrastructure.database.jpa.repository.BookJpaRepository;
 import jakarta.validation.Valid;

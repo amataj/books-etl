@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.domain.core.IngestEvent;
+import com.example.books.domain.ingestrun.IngestEvent;
 import com.example.books.infrastructure.database.jpa.entity.IngestEventEntity;
 import com.example.books.infrastructure.database.jpa.mapper.IngestEventMapper;
 import com.example.books.infrastructure.database.jpa.repository.IngestEventJpaRepository;

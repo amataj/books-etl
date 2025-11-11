@@ -3,6 +3,7 @@ package com.example.books.domain.core;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.books.adapter.web.rest.TestUtil;
+import com.example.books.domain.bookfile.BookFile;
 import org.junit.jupiter.api.Test;
 
 class BookFileTest {

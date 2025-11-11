@@ -1,7 +1,7 @@
 package com.example.books.adapter.web.rest;
 
-import com.example.books.domain.core.User;
-import com.example.books.domain.service.UserService;
+import com.example.books.domain.user.User;
+import com.example.books.domain.user.UserService;
 import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

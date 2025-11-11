@@ -9,8 +9,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.domain.core.BookPageText;
-import com.example.books.domain.service.BookPageTextService;
+import com.example.books.domain.bookpage.BookPageText;
+import com.example.books.domain.bookpage.BookPageTextService;
 import com.example.books.infrastructure.database.jpa.entity.BookEntity;
 import com.example.books.infrastructure.database.jpa.entity.BookPageTextEntity;
 import com.example.books.infrastructure.database.jpa.mapper.BookPageTextMapper;

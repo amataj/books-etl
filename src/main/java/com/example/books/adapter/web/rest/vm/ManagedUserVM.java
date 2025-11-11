@@ -1,6 +1,6 @@
 package com.example.books.adapter.web.rest.vm;
 
-import com.example.books.domain.core.AdminUser;
+import com.example.books.domain.user.AdminUser;
 import jakarta.validation.constraints.Size;
 
 /**

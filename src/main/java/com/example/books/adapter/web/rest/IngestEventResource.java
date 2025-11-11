@@ -1,8 +1,8 @@
 package com.example.books.adapter.web.rest;
 
 import com.example.books.adapter.web.rest.errors.BadRequestAlertException;
-import com.example.books.domain.core.IngestEvent;
-import com.example.books.domain.service.IngestEventService;
+import com.example.books.domain.ingestevent.IngestEventService;
+import com.example.books.domain.ingestrun.IngestEvent;
 import com.example.books.infrastructure.database.jpa.entity.IngestEventEntity;
 import com.example.books.infrastructure.database.jpa.repository.IngestEventJpaRepository;
 import jakarta.validation.Valid;

@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.domain.core.IngestRun;
+import com.example.books.domain.ingestrun.IngestRun;
 import com.example.books.infrastructure.database.jpa.entity.IngestRunEntity;
 import com.example.books.infrastructure.database.jpa.mapper.IngestRunMapper;
 import com.example.books.infrastructure.database.jpa.repository.IngestRunJpaRepository;

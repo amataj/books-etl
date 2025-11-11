@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.example.books.IntegrationTest;
-import com.example.books.domain.service.UserService;
+import com.example.books.domain.user.UserService;
 import com.example.books.infrastructure.database.jpa.entity.User;
 import com.example.books.infrastructure.database.jpa.repository.UserJpaRepository;
 import java.util.Locale;

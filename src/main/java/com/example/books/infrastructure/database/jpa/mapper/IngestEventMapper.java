@@ -1,7 +1,7 @@
 package com.example.books.infrastructure.database.jpa.mapper;
 
-import com.example.books.domain.core.IngestEvent;
-import com.example.books.domain.core.IngestRun;
+import com.example.books.domain.ingestrun.IngestEvent;
+import com.example.books.domain.ingestrun.IngestRun;
 import com.example.books.infrastructure.database.jpa.entity.IngestEventEntity;
 import com.example.books.infrastructure.database.jpa.entity.IngestRunEntity;
 import org.mapstruct.*;

@@ -10,8 +10,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.domain.core.BookFile;
-import com.example.books.domain.service.BookFileService;
+import com.example.books.domain.bookfile.BookFile;
+import com.example.books.domain.bookfile.BookFileService;
 import com.example.books.infrastructure.database.jpa.entity.BookEntity;
 import com.example.books.infrastructure.database.jpa.entity.BookFileEntity;
 import com.example.books.infrastructure.database.jpa.mapper.BookFileMapper;

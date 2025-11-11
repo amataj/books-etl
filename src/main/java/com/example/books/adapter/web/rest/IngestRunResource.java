@@ -1,8 +1,8 @@
 package com.example.books.adapter.web.rest;
 
 import com.example.books.adapter.web.rest.errors.BadRequestAlertException;
-import com.example.books.domain.core.IngestRun;
-import com.example.books.domain.service.IngestRunService;
+import com.example.books.domain.ingestrun.IngestRun;
+import com.example.books.domain.ingestrun.IngestRunService;
 import com.example.books.infrastructure.database.jpa.entity.IngestRunEntity;
 import com.example.books.infrastructure.database.jpa.repository.IngestRunJpaRepository;
 import jakarta.validation.Valid;

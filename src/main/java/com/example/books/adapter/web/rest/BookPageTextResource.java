@@ -1,8 +1,8 @@
 package com.example.books.adapter.web.rest;
 
 import com.example.books.adapter.web.rest.errors.BadRequestAlertException;
-import com.example.books.domain.core.BookPageText;
-import com.example.books.domain.service.BookPageTextService;
+import com.example.books.domain.bookpage.BookPageText;
+import com.example.books.domain.bookpage.BookPageTextService;
 import com.example.books.infrastructure.database.jpa.entity.BookPageTextEntity;
 import com.example.books.infrastructure.database.jpa.repository.BookPageTextJpaRepository;
 import jakarta.validation.Valid;

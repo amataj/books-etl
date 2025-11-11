@@ -2,8 +2,8 @@ package com.example.books.infrastructure.database.jpa.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.example.books.domain.core.AdminUser;
-import com.example.books.domain.core.User;
+import com.example.books.domain.user.AdminUser;
+import com.example.books.domain.user.User;
 import com.example.books.infrastructure.database.jpa.entity.Authority;
 import com.example.books.shared.security.AuthoritiesConstants;
 import java.time.Instant;
