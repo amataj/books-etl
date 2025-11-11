@@ -1,6 +1,6 @@
 package com.example.books.adapter.fs;
 
-import com.example.books.config.BooksProperties;
+import com.example.books.config.ApplicationProperties;
 import com.example.books.infrastructure.broker.KafkaProducer;
 import com.example.books.shared.ingest.FileChangeNotification;
 import com.example.books.shared.ingest.FileChangeType;
@@ -45,15 +45,15 @@ public class FileSystemWatcher implements SmartLifecycle {
     private final WatchService watchService;
     private final Set<Path> registeredDirectories = ConcurrentHashMap.newKeySet();
 
-    public FileSystemWatcher(BooksProperties properties, FileChecksumCalculator checksumCalculator, KafkaProducer kafkaProducer)
+    public FileSystemWatcher(ApplicationProperties properties, FileChecksumCalculator checksumCalculator, KafkaProducer kafkaProducer)
         throws IOException {
-        this.root = properties.getRoot();
+        this.root = Path.of(properties.getBooks().getRoot());
         this.checksumCalculator = checksumCalculator;
         this.kafkaProducer = kafkaProducer;
         ThreadFactory threadFactory = new CustomizableThreadFactory("books-fs-watcher-");
         this.executor = Executors.newSingleThreadExecutor(threadFactory);
         this.watchService = FileSystems.getDefault().newWatchService();
-        properties.getExclude().stream().filter(Objects::nonNull).forEach(pattern -> excludeMatchers.add(glob(pattern)));
+        properties.getBooks().getExclude().stream().filter(Objects::nonNull).forEach(pattern -> excludeMatchers.add(glob(pattern)));
     }
 
     @Override

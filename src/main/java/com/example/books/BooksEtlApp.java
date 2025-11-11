@@ -1,7 +1,6 @@
 package com.example.books;
 
 import com.example.books.config.ApplicationProperties;
-import com.example.books.config.BooksProperties;
 import com.example.books.config.CRLFLogConverter;
 import com.example.books.config.KafkaTopicProperties;
 import jakarta.annotation.PostConstruct;
@@ -22,9 +21,7 @@ import tech.jhipster.config.DefaultProfileUtil;
 import tech.jhipster.config.JHipsterConstants;
 
 @SpringBootApplication
-@EnableConfigurationProperties(
-    { LiquibaseProperties.class, ApplicationProperties.class, BooksProperties.class, KafkaTopicProperties.class }
-)
+@EnableConfigurationProperties({ LiquibaseProperties.class, ApplicationProperties.class, KafkaTopicProperties.class })
 public class BooksEtlApp {
 
     private static final Logger LOG = LoggerFactory.getLogger(BooksEtlApp.class);
