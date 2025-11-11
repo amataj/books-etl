@@ -36,7 +36,7 @@ public class PdfboxPdfParser implements PdfParser {
         this.tesseract = tesseractProvider.getIfAvailable();
         this.ocrEnabled = this.tesseract != null;
         if (!ocrEnabled) {
-            LOG.warn("Tesseract not available on classpath - OCR fallback disabled");
+            LOG.info("Tesseract not available on classpath - OCR fallback disabled");
         }
     }
 

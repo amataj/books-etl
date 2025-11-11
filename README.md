@@ -22,6 +22,44 @@ In the project root, JHipster generates configuration files for tools like git, 
 
 ## Development
 
+### Enabling OCR with Tesseract
+
+The PDF parser can fall back to Optical Character Recognition (OCR) when native
+text extraction yields blank pages. OCR is disabled by default so local
+development is not blocked when Tesseract is missing. Follow the steps below to
+enable it on your workstation.
+
+1. **Install the native Tesseract binaries**
+   - macOS: `brew install tesseract`
+   - Debian/Ubuntu: `sudo apt-get install tesseract-ocr`
+   - Windows: download and run the installer from the
+     [UB Mannheim builds](https://github.com/UB-Mannheim/tesseract/wiki). Make
+     sure the `tesseract.exe` directory is added to your `PATH`.
+2. **Locate the `tessdata` directory** that ships with the installation. On
+   Linux it is usually `/usr/share/tesseract-ocr/5/tessdata`, while Homebrew
+   installs it under `/opt/homebrew/share/tessdata`.
+3. **Enable OCR in Spring Boot** by setting `application.ocr.enabled=true`.
+   The easiest approach is to override the property in your profile-specific
+   configuration (for example `src/main/resources/config/application-dev.yml`)
+   or via the environment:
+
+   ```bash
+   export APPLICATION_OCR_ENABLED=true
+   export APPLICATION_OCR_DATA_PATH=/usr/share/tesseract-ocr/5/tessdata
+   export APPLICATION_OCR_LANGUAGE=eng
+   ```
+
+   You can also supply the values with `--application.ocr.*` command line
+   arguments when launching the application.
+
+4. **Restart the application**. When it starts you should see an `INFO` log
+   confirming that Tesseract is on the classpath and OCR is enabled. The parser
+   will automatically run OCR on blank PDF pages.
+
+Optional tuning parameters include `application.ocr.page-seg-mode`,
+`application.ocr.ocr-engine-mode`, and `application.ocr.tess-variables` for
+custom Tesseract settings.
+
 ### Doing API-First development using openapi-generator-cli
 
 [OpenAPI-Generator]() is configured for this application. You can generate API code from the `src/main/resources/swagger/api.yml` definition file by running:
