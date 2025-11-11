@@ -1,0 +1,47 @@
+package com.example.books.infrastructure.database.jpa.adapter;
+
+import com.example.books.domain.bookfile.BookFile;
+import com.example.books.domain.bookfile.BookFileDataAccessRepository;
+import com.example.books.infrastructure.database.jpa.mapper.BookFileMapper;
+import com.example.books.infrastructure.database.jpa.repository.BookFileJpaRepository;
+import com.example.books.shared.pagination.PageCriteria;
+import com.example.books.shared.pagination.PageResult;
+import java.util.Optional;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Repository;
+
+/**
+ * JPA-backed implementation of {@link BookFileDataAccessRepository}.
+ */
+@Repository
+public class BookFileJpaAdapter implements BookFileDataAccessRepository {
+
+    private final BookFileJpaRepository bookFileJpaRepository;
+    private final BookFileMapper bookFileMapper;
+
+    public BookFileJpaAdapter(BookFileJpaRepository bookFileJpaRepository, BookFileMapper bookFileMapper) {
+        this.bookFileJpaRepository = bookFileJpaRepository;
+        this.bookFileMapper = bookFileMapper;
+    }
+
+    @Override
+    public Optional<BookFile> findById(Long id) {
+        return findById(id, false);
+    }
+
+    @Override
+    public Optional<BookFile> findById(Long id, boolean eagerRelationships) {
+        var entity = eagerRelationships ? bookFileJpaRepository.findOneWithEagerRelationships(id) : bookFileJpaRepository.findById(id);
+        return entity.map(bookFileMapper::toDto);
+    }
+
+    @Override
+    public PageResult<BookFile> findAll(PageCriteria criteria, boolean eagerRelationships) {
+        var pageable = PageRequest.of(criteria.page(), criteria.size());
+        var page = eagerRelationships
+            ? bookFileJpaRepository.findAllWithEagerRelationships(pageable)
+            : bookFileJpaRepository.findAll(pageable);
+        var content = page.stream().map(bookFileMapper::toDto).toList();
+        return new PageResult<>(content, page.getTotalElements(), page.getNumber(), page.getSize());
+    }
+}
