@@ -3,6 +3,6 @@ services:
   tesseract:
     image: jitesoft/tesseract-ocr
     volumes:
-      - ./data:/data
+      - ./tesseract/data:/data
     working_dir: /data
     command: ['tesseract']
