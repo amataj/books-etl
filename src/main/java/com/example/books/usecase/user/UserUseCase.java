@@ -1,7 +1,7 @@
 package com.example.books.usecase.user;
 
-import com.example.books.domain.core.AdminUser;
-import com.example.books.domain.core.User;
+import com.example.books.domain.user.AdminUser;
+import com.example.books.domain.user.User;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;

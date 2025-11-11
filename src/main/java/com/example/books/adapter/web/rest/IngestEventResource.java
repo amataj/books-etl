@@ -1,7 +1,6 @@
 package com.example.books.adapter.web.rest;
 
 import com.example.books.adapter.web.rest.errors.BadRequestAlertException;
-import com.example.books.domain.ingestevent.IngestEventService;
 import com.example.books.domain.ingestrun.IngestEvent;
 import com.example.books.infrastructure.database.jpa.entity.IngestEventEntity;
 import com.example.books.infrastructure.database.jpa.repository.IngestEventJpaRepository;
@@ -57,7 +56,7 @@ public class IngestEventResource {
         if (ingestEventDTO.getId() != null) {
             throw new BadRequestAlertException("A new ingestEvent cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        ingestEventDTO = ingestEventService.save(ingestEventDTO);
+        ingestEventDTO = ingestEventService.create(ingestEventDTO);
         return ResponseEntity.created(new URI("/api/ingest-events/" + ingestEventDTO.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, ingestEventDTO.getId().toString()))
             .body(ingestEventDTO);

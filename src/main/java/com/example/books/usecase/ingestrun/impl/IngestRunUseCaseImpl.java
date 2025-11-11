@@ -1,7 +1,7 @@
 package com.example.books.usecase.ingestrun.impl;
 
-import com.example.books.domain.core.IngestRun;
-import com.example.books.domain.service.IngestRunService;
+import com.example.books.domain.ingestrun.IngestRun;
+import com.example.books.domain.ingestrun.IngestRunService;
 import com.example.books.usecase.ingestrun.IngestRunUseCase;
 import java.util.List;
 import java.util.Optional;

@@ -1,8 +1,8 @@
 package com.example.books.usecase.user.impl;
 
-import com.example.books.domain.core.AdminUser;
-import com.example.books.domain.core.User;
-import com.example.books.domain.service.UserService;
+import com.example.books.domain.user.AdminUser;
+import com.example.books.domain.user.User;
+import com.example.books.domain.user.UserService;
 import com.example.books.usecase.user.UserUseCase;
 import java.util.List;
 import java.util.Optional;

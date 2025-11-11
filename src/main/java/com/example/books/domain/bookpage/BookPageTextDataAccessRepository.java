@@ -8,6 +8,8 @@ import java.util.Optional;
  * Read-only port for BookPageText aggregates.
  */
 public interface BookPageTextDataAccessRepository {
+    Optional<BookPageText> findById(Long id);
+
     Optional<BookPageText> findById(Long id, boolean eagerRelationships);
 
     PageResult<BookPageText> findAll(PageCriteria criteria, boolean eagerRelationships);

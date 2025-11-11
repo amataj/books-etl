@@ -287,6 +287,16 @@ public class UserService {
         return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithAuthoritiesByLogin);
     }
 
+    @Transactional(readOnly = true)
+    public Optional<com.example.books.infrastructure.database.jpa.entity.User> findOneByEmailIgnoreCase(String email) {
+        return userRepository.findOneByEmailIgnoreCase(email);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<com.example.books.infrastructure.database.jpa.entity.User> findOneByLogin(String login) {
+        return userRepository.findOneByLogin(login);
+    }
+
     /**
      * Not activated users should be automatically deleted after 3 days.
      * <p>

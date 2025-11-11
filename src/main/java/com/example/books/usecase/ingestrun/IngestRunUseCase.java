@@ -1,6 +1,6 @@
 package com.example.books.usecase.ingestrun;
 
-import com.example.books.domain.core.IngestRun;
+import com.example.books.domain.ingestrun.IngestRun;
 import java.util.List;
 import java.util.Optional;
 

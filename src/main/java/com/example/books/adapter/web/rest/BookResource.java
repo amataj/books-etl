@@ -2,10 +2,9 @@ package com.example.books.adapter.web.rest;
 
 import com.example.books.adapter.web.rest.errors.BadRequestAlertException;
 import com.example.books.domain.book.Book;
-import com.example.books.domain.book.BookService;
 import com.example.books.infrastructure.database.jpa.entity.BookEntity;
 import com.example.books.infrastructure.database.jpa.repository.BookJpaRepository;
-import com.example.books.usecase.bookfile.BookFileUseCase;
+import com.example.books.usecase.book.BookUseCase;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
@@ -40,12 +39,12 @@ public class BookResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final BookFileUseCase bookService;
+    private final BookUseCase bookUseCase;
 
     private final BookJpaRepository bookRepository;
 
-    public BookResource(BookFileUseCase bookService, BookJpaRepository bookRepository) {
-        this.bookService = bookService;
+    public BookResource(BookUseCase bookUseCase, BookJpaRepository bookRepository) {
+        this.bookUseCase = bookUseCase;
         this.bookRepository = bookRepository;
     }
 
@@ -62,7 +61,7 @@ public class BookResource {
         if (bookDTO.getId() != null) {
             throw new BadRequestAlertException("A new book cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        bookDTO = bookService.save(bookDTO);
+        bookDTO = bookUseCase.create(bookDTO);
         return ResponseEntity.created(new URI("/api/books/" + bookDTO.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, bookDTO.getId().toString()))
             .body(bookDTO);
@@ -93,7 +92,7 @@ public class BookResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        bookDTO = bookService.update(bookDTO);
+        bookDTO = bookUseCase.update(bookDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, bookDTO.getId().toString()))
             .body(bookDTO);
@@ -127,7 +126,7 @@ public class BookResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<Book> result = bookService.partialUpdate(bookDTO);
+        Optional<Book> result = bookUseCase.partialUpdate(bookDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -144,7 +143,7 @@ public class BookResource {
     @GetMapping("")
     public ResponseEntity<List<Book>> getAllBooks(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
         LOG.debug("REST request to get a page of Books");
-        Page<Book> page = bookService.findAll(pageable);
+        Page<Book> page = bookUseCase.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -158,7 +157,7 @@ public class BookResource {
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBook(@PathVariable("id") Long id) {
         LOG.debug("REST request to get Book : {}", id);
-        Optional<Book> bookDTO = bookService.findOne(id);
+        Optional<Book> bookDTO = bookUseCase.findOne(id);
         return ResponseUtil.wrapOrNotFound(bookDTO);
     }
 
@@ -171,7 +170,7 @@ public class BookResource {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBook(@PathVariable("id") Long id) {
         LOG.debug("REST request to delete Book : {}", id);
-        bookService.delete(id);
+        bookUseCase.delete(id);
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();

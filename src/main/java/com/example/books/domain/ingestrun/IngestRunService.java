@@ -100,6 +100,17 @@ public class IngestRunService {
     }
 
     /**
+     * Check if the ingestRun exists by id.
+     *
+     * @param id the id of the entity.
+     * @return true if the ingestRun exists.
+     */
+    @Transactional(readOnly = true)
+    public boolean exists(Long id) {
+        return ingestRunRepository.existsById(id);
+    }
+
+    /**
      * Delete the ingestRun by id.
      *
      * @param id the id of the entity.

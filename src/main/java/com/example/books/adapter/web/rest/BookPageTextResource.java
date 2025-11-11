@@ -2,7 +2,6 @@ package com.example.books.adapter.web.rest;
 
 import com.example.books.adapter.web.rest.errors.BadRequestAlertException;
 import com.example.books.domain.bookpage.BookPageText;
-import com.example.books.domain.bookpage.BookPageTextService;
 import com.example.books.infrastructure.database.jpa.entity.BookPageTextEntity;
 import com.example.books.infrastructure.database.jpa.repository.BookPageTextJpaRepository;
 import com.example.books.usecase.bookpagetext.BookPageTextUseCase;
@@ -62,7 +61,7 @@ public class BookPageTextResource {
         if (bookPageTextDTO.getId() != null) {
             throw new BadRequestAlertException("A new bookPageText cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        bookPageTextDTO = bookPageTextService.save(bookPageTextDTO);
+        bookPageTextDTO = bookPageTextService.create(bookPageTextDTO);
         return ResponseEntity.created(new URI("/api/book-page-texts/" + bookPageTextDTO.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, bookPageTextDTO.getId().toString()))
             .body(bookPageTextDTO);

@@ -1,6 +1,6 @@
 package com.example.books.usecase.bookpagetext;
 
-import com.example.books.domain.core.BookPageText;
+import com.example.books.domain.bookpage.BookPageText;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -2,7 +2,6 @@ package com.example.books.adapter.web.rest;
 
 import com.example.books.adapter.web.rest.errors.BadRequestAlertException;
 import com.example.books.domain.ingestrun.IngestRun;
-import com.example.books.domain.ingestrun.IngestRunService;
 import com.example.books.infrastructure.database.jpa.entity.IngestRunEntity;
 import com.example.books.infrastructure.database.jpa.repository.IngestRunJpaRepository;
 import com.example.books.usecase.ingestrun.IngestRunUseCase;
@@ -57,7 +56,7 @@ public class IngestRunResource {
         if (ingestRunDTO.getId() != null) {
             throw new BadRequestAlertException("A new ingestRun cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        ingestRunDTO = ingestRunService.save(ingestRunDTO);
+        ingestRunDTO = ingestRunService.create(ingestRunDTO);
         return ResponseEntity.created(new URI("/api/ingest-runs/" + ingestRunDTO.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, ingestRunDTO.getId().toString()))
             .body(ingestRunDTO);

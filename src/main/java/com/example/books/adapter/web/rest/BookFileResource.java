@@ -2,7 +2,6 @@ package com.example.books.adapter.web.rest;
 
 import com.example.books.adapter.web.rest.errors.BadRequestAlertException;
 import com.example.books.domain.bookfile.BookFile;
-import com.example.books.domain.bookfile.BookFileService;
 import com.example.books.infrastructure.database.jpa.entity.BookFileEntity;
 import com.example.books.infrastructure.database.jpa.repository.BookFileJpaRepository;
 import com.example.books.usecase.bookfile.BookFileUseCase;
@@ -62,7 +61,7 @@ public class BookFileResource {
         if (bookFileDTO.getId() != null) {
             throw new BadRequestAlertException("A new bookFile cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        bookFileDTO = bookFileService.save(bookFileDTO);
+        bookFileDTO = bookFileService.create(bookFileDTO);
         return ResponseEntity.created(new URI("/api/book-files/" + bookFileDTO.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, bookFileDTO.getId().toString()))
             .body(bookFileDTO);
