@@ -1,7 +1,7 @@
 package com.example.books.adapter.web.rest;
 
 import com.example.books.domain.core.User;
-import com.example.books.domain.service.UserService;
+import com.example.books.usecase.user.UserUseCase;
 import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +25,10 @@ public class PublicUserResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(PublicUserResource.class);
 
-    private final UserService userService;
+    private final UserUseCase userUseCase;
 
-    public PublicUserResource(UserService userService) {
-        this.userService = userService;
+    public PublicUserResource(UserUseCase userUseCase) {
+        this.userUseCase = userUseCase;
     }
 
     /**
@@ -44,7 +44,7 @@ public class PublicUserResource {
             return ResponseEntity.badRequest().build();
         }
 
-        final Page<User> page = userService.getAllPublicUsers(pageable);
+        final Page<User> page = userUseCase.getAllPublicUsers(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }

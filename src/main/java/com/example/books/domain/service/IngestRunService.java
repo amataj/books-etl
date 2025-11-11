@@ -100,6 +100,11 @@ public class IngestRunService {
         return ingestRunRepository.findById(id).map(ingestRunMapper::toDto);
     }
 
+    @Transactional(readOnly = true)
+    public boolean exists(Long id) {
+        return ingestRunRepository.existsById(id);
+    }
+
     /**
      * Delete the ingestRun by id.
      *

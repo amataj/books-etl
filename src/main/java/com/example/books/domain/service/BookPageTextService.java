@@ -109,6 +109,11 @@ public class BookPageTextService {
         return bookPageTextRepository.findOneWithEagerRelationships(id).map(bookPageTextMapper::toDto);
     }
 
+    @Transactional(readOnly = true)
+    public boolean exists(Long id) {
+        return bookPageTextRepository.existsById(id);
+    }
+
     /**
      * Delete the bookPageText by id.
      *

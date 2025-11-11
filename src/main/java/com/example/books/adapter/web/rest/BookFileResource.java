@@ -2,9 +2,8 @@ package com.example.books.adapter.web.rest;
 
 import com.example.books.adapter.web.rest.errors.BadRequestAlertException;
 import com.example.books.domain.core.BookFile;
-import com.example.books.domain.service.BookFileService;
 import com.example.books.infrastructure.database.jpa.entity.BookFileEntity;
-import com.example.books.infrastructure.database.jpa.repository.BookFileJpaRepository;
+import com.example.books.usecase.bookfile.BookFileUseCase;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
@@ -39,13 +38,10 @@ public class BookFileResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final BookFileService bookFileService;
+    private final BookFileUseCase bookFileUseCase;
 
-    private final BookFileJpaRepository bookFileRepository;
-
-    public BookFileResource(BookFileService bookFileService, BookFileJpaRepository bookFileRepository) {
-        this.bookFileService = bookFileService;
-        this.bookFileRepository = bookFileRepository;
+    public BookFileResource(BookFileUseCase bookFileUseCase) {
+        this.bookFileUseCase = bookFileUseCase;
     }
 
     /**
@@ -61,7 +57,7 @@ public class BookFileResource {
         if (bookFileDTO.getId() != null) {
             throw new BadRequestAlertException("A new bookFile cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        bookFileDTO = bookFileService.save(bookFileDTO);
+        bookFileDTO = bookFileUseCase.create(bookFileDTO);
         return ResponseEntity.created(new URI("/api/book-files/" + bookFileDTO.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, bookFileDTO.getId().toString()))
             .body(bookFileDTO);
@@ -90,11 +86,11 @@ public class BookFileResource {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
-        if (!bookFileRepository.existsById(id)) {
+        if (!bookFileUseCase.exists(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        bookFileDTO = bookFileService.update(bookFileDTO);
+        bookFileDTO = bookFileUseCase.update(bookFileDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, bookFileDTO.getId().toString()))
             .body(bookFileDTO);
@@ -124,11 +120,11 @@ public class BookFileResource {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
-        if (!bookFileRepository.existsById(id)) {
+        if (!bookFileUseCase.exists(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<BookFile> result = bookFileService.partialUpdate(bookFileDTO);
+        Optional<BookFile> result = bookFileUseCase.partialUpdate(bookFileDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -150,11 +146,7 @@ public class BookFileResource {
     ) {
         LOG.debug("REST request to get a page of BookFiles");
         Page<BookFile> page;
-        if (eagerload) {
-            page = bookFileService.findAllWithEagerRelationships(pageable);
-        } else {
-            page = bookFileService.findAll(pageable);
-        }
+        page = eagerload ? bookFileUseCase.findAllWithEagerRelationships(pageable) : bookFileUseCase.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -168,7 +160,7 @@ public class BookFileResource {
     @GetMapping("/{id}")
     public ResponseEntity<BookFile> getBookFile(@PathVariable("id") Long id) {
         LOG.debug("REST request to get BookFile : {}", id);
-        Optional<BookFile> bookFileDTO = bookFileService.findOne(id);
+        Optional<BookFile> bookFileDTO = bookFileUseCase.findOne(id);
         return ResponseUtil.wrapOrNotFound(bookFileDTO);
     }
 
@@ -181,7 +173,7 @@ public class BookFileResource {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBookFile(@PathVariable("id") Long id) {
         LOG.debug("REST request to delete BookFile : {}", id);
-        bookFileService.delete(id);
+        bookFileUseCase.delete(id);
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();

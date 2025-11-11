@@ -7,11 +7,10 @@ import com.example.books.adapter.web.rest.vm.KeyAndPasswordVM;
 import com.example.books.adapter.web.rest.vm.ManagedUserVM;
 import com.example.books.domain.core.AdminUser;
 import com.example.books.domain.core.PasswordChange;
-import com.example.books.domain.service.UserService;
 import com.example.books.infrastructure.database.jpa.entity.User;
-import com.example.books.infrastructure.database.jpa.repository.UserJpaRepository;
 import com.example.books.infrastructure.mail.MailService;
 import com.example.books.shared.security.SecurityUtils;
+import com.example.books.usecase.user.UserUseCase;
 import jakarta.validation.Valid;
 import java.util.*;
 import org.apache.commons.lang3.StringUtils;
@@ -36,15 +35,12 @@ public class AccountResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccountResource.class);
 
-    private final UserJpaRepository userRepository;
-
-    private final UserService userService;
+    private final UserUseCase userUseCase;
 
     private final MailService mailService;
 
-    public AccountResource(UserJpaRepository userRepository, UserService userService, MailService mailService) {
-        this.userRepository = userRepository;
-        this.userService = userService;
+    public AccountResource(UserUseCase userUseCase, MailService mailService) {
+        this.userUseCase = userUseCase;
         this.mailService = mailService;
     }
 
@@ -62,7 +58,7 @@ public class AccountResource {
         if (isPasswordLengthInvalid(managedUserVM.getPassword())) {
             throw new InvalidPasswordException();
         }
-        User user = userService.registerUser(managedUserVM, managedUserVM.getPassword());
+        User user = userUseCase.registerUser(managedUserVM, managedUserVM.getPassword());
         mailService.sendActivationEmail(user);
     }
 
@@ -74,7 +70,7 @@ public class AccountResource {
      */
     @GetMapping("/activate")
     public void activateAccount(@RequestParam(value = "key") String key) {
-        Optional<User> user = userService.activateRegistration(key);
+        Optional<User> user = userUseCase.activateRegistration(key);
         if (!user.isPresent()) {
             throw new AccountResourceException("No user was found for this activation key");
         }
@@ -88,7 +84,7 @@ public class AccountResource {
      */
     @GetMapping("/account")
     public AdminUser getAccount() {
-        return userService
+        return userUseCase
             .getUserWithAuthorities()
             .map(AdminUser::new)
             .orElseThrow(() -> new AccountResourceException("User could not be found"));
@@ -105,15 +101,15 @@ public class AccountResource {
     public void saveAccount(@Valid @RequestBody AdminUser userDTO) {
         String userLogin = SecurityUtils.getCurrentUserLogin()
             .orElseThrow(() -> new AccountResourceException("Current user login not found"));
-        Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
+        Optional<User> existingUser = userUseCase.findOneByEmailIgnoreCase(userDTO.getEmail());
         if (existingUser.isPresent() && (!existingUser.orElseThrow().getLogin().equalsIgnoreCase(userLogin))) {
             throw new EmailAlreadyUsedException();
         }
-        Optional<User> user = userRepository.findOneByLogin(userLogin);
+        Optional<User> user = userUseCase.findOneByLogin(userLogin);
         if (!user.isPresent()) {
             throw new AccountResourceException("User could not be found");
         }
-        userService.updateUser(
+        userUseCase.updateUser(
             userDTO.getFirstName(),
             userDTO.getLastName(),
             userDTO.getEmail(),
@@ -133,7 +129,7 @@ public class AccountResource {
         if (isPasswordLengthInvalid(passwordChangeDto.getNewPassword())) {
             throw new InvalidPasswordException();
         }
-        userService.changePassword(passwordChangeDto.getCurrentPassword(), passwordChangeDto.getNewPassword());
+        userUseCase.changePassword(passwordChangeDto.getCurrentPassword(), passwordChangeDto.getNewPassword());
     }
 
     /**
@@ -143,7 +139,7 @@ public class AccountResource {
      */
     @PostMapping(path = "/account/reset-password/init")
     public void requestPasswordReset(@RequestBody String mail) {
-        Optional<User> user = userService.requestPasswordReset(mail);
+        Optional<User> user = userUseCase.requestPasswordReset(mail);
         if (user.isPresent()) {
             mailService.sendPasswordResetMail(user.orElseThrow());
         } else {
@@ -165,7 +161,7 @@ public class AccountResource {
         if (isPasswordLengthInvalid(keyAndPassword.getNewPassword())) {
             throw new InvalidPasswordException();
         }
-        Optional<User> user = userService.completePasswordReset(keyAndPassword.getNewPassword(), keyAndPassword.getKey());
+        Optional<User> user = userUseCase.completePasswordReset(keyAndPassword.getNewPassword(), keyAndPassword.getKey());
 
         if (!user.isPresent()) {
             throw new AccountResourceException("No user was found for this reset key");

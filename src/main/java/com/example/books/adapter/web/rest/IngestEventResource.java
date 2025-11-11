@@ -2,9 +2,8 @@ package com.example.books.adapter.web.rest;
 
 import com.example.books.adapter.web.rest.errors.BadRequestAlertException;
 import com.example.books.domain.core.IngestEvent;
-import com.example.books.domain.service.IngestEventService;
 import com.example.books.infrastructure.database.jpa.entity.IngestEventEntity;
-import com.example.books.infrastructure.database.jpa.repository.IngestEventJpaRepository;
+import com.example.books.usecase.ingestevent.IngestEventUseCase;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
@@ -34,13 +33,10 @@ public class IngestEventResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final IngestEventService ingestEventService;
+    private final IngestEventUseCase ingestEventUseCase;
 
-    private final IngestEventJpaRepository ingestEventRepository;
-
-    public IngestEventResource(IngestEventService ingestEventService, IngestEventJpaRepository ingestEventRepository) {
-        this.ingestEventService = ingestEventService;
-        this.ingestEventRepository = ingestEventRepository;
+    public IngestEventResource(IngestEventUseCase ingestEventUseCase) {
+        this.ingestEventUseCase = ingestEventUseCase;
     }
 
     /**
@@ -56,7 +52,7 @@ public class IngestEventResource {
         if (ingestEventDTO.getId() != null) {
             throw new BadRequestAlertException("A new ingestEvent cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        ingestEventDTO = ingestEventService.save(ingestEventDTO);
+        ingestEventDTO = ingestEventUseCase.create(ingestEventDTO);
         return ResponseEntity.created(new URI("/api/ingest-events/" + ingestEventDTO.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, ingestEventDTO.getId().toString()))
             .body(ingestEventDTO);
@@ -85,11 +81,11 @@ public class IngestEventResource {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
-        if (!ingestEventRepository.existsById(id)) {
+        if (!ingestEventUseCase.exists(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        ingestEventDTO = ingestEventService.update(ingestEventDTO);
+        ingestEventDTO = ingestEventUseCase.update(ingestEventDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, ingestEventDTO.getId().toString()))
             .body(ingestEventDTO);
@@ -119,11 +115,11 @@ public class IngestEventResource {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
-        if (!ingestEventRepository.existsById(id)) {
+        if (!ingestEventUseCase.exists(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<IngestEvent> result = ingestEventService.partialUpdate(ingestEventDTO);
+        Optional<IngestEvent> result = ingestEventUseCase.partialUpdate(ingestEventDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -139,7 +135,7 @@ public class IngestEventResource {
     @GetMapping("")
     public List<IngestEvent> getAllIngestEvents() {
         LOG.debug("REST request to get all IngestEvents");
-        return ingestEventService.findAll();
+        return ingestEventUseCase.findAll();
     }
 
     /**
@@ -151,7 +147,7 @@ public class IngestEventResource {
     @GetMapping("/{id}")
     public ResponseEntity<IngestEvent> getIngestEvent(@PathVariable("id") Long id) {
         LOG.debug("REST request to get IngestEvent : {}", id);
-        Optional<IngestEvent> ingestEventDTO = ingestEventService.findOne(id);
+        Optional<IngestEvent> ingestEventDTO = ingestEventUseCase.findOne(id);
         return ResponseUtil.wrapOrNotFound(ingestEventDTO);
     }
 
@@ -164,7 +160,7 @@ public class IngestEventResource {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteIngestEvent(@PathVariable("id") Long id) {
         LOG.debug("REST request to delete IngestEvent : {}", id);
-        ingestEventService.delete(id);
+        ingestEventUseCase.delete(id);
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();

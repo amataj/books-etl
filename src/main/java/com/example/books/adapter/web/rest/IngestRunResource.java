@@ -2,9 +2,8 @@ package com.example.books.adapter.web.rest;
 
 import com.example.books.adapter.web.rest.errors.BadRequestAlertException;
 import com.example.books.domain.core.IngestRun;
-import com.example.books.domain.service.IngestRunService;
 import com.example.books.infrastructure.database.jpa.entity.IngestRunEntity;
-import com.example.books.infrastructure.database.jpa.repository.IngestRunJpaRepository;
+import com.example.books.usecase.ingestrun.IngestRunUseCase;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
@@ -34,13 +33,10 @@ public class IngestRunResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final IngestRunService ingestRunService;
+    private final IngestRunUseCase ingestRunUseCase;
 
-    private final IngestRunJpaRepository ingestRunRepository;
-
-    public IngestRunResource(IngestRunService ingestRunService, IngestRunJpaRepository ingestRunRepository) {
-        this.ingestRunService = ingestRunService;
-        this.ingestRunRepository = ingestRunRepository;
+    public IngestRunResource(IngestRunUseCase ingestRunUseCase) {
+        this.ingestRunUseCase = ingestRunUseCase;
     }
 
     /**
@@ -56,7 +52,7 @@ public class IngestRunResource {
         if (ingestRunDTO.getId() != null) {
             throw new BadRequestAlertException("A new ingestRun cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        ingestRunDTO = ingestRunService.save(ingestRunDTO);
+        ingestRunDTO = ingestRunUseCase.create(ingestRunDTO);
         return ResponseEntity.created(new URI("/api/ingest-runs/" + ingestRunDTO.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, ingestRunDTO.getId().toString()))
             .body(ingestRunDTO);
@@ -85,11 +81,11 @@ public class IngestRunResource {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
-        if (!ingestRunRepository.existsById(id)) {
+        if (!ingestRunUseCase.exists(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        ingestRunDTO = ingestRunService.update(ingestRunDTO);
+        ingestRunDTO = ingestRunUseCase.update(ingestRunDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, ingestRunDTO.getId().toString()))
             .body(ingestRunDTO);
@@ -119,11 +115,11 @@ public class IngestRunResource {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
-        if (!ingestRunRepository.existsById(id)) {
+        if (!ingestRunUseCase.exists(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<IngestRun> result = ingestRunService.partialUpdate(ingestRunDTO);
+        Optional<IngestRun> result = ingestRunUseCase.partialUpdate(ingestRunDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -139,7 +135,7 @@ public class IngestRunResource {
     @GetMapping("")
     public List<IngestRun> getAllIngestRuns() {
         LOG.debug("REST request to get all IngestRuns");
-        return ingestRunService.findAll();
+        return ingestRunUseCase.findAll();
     }
 
     /**
@@ -151,7 +147,7 @@ public class IngestRunResource {
     @GetMapping("/{id}")
     public ResponseEntity<IngestRun> getIngestRun(@PathVariable("id") Long id) {
         LOG.debug("REST request to get IngestRun : {}", id);
-        Optional<IngestRun> ingestRunDTO = ingestRunService.findOne(id);
+        Optional<IngestRun> ingestRunDTO = ingestRunUseCase.findOne(id);
         return ResponseUtil.wrapOrNotFound(ingestRunDTO);
     }
 
@@ -164,7 +160,7 @@ public class IngestRunResource {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteIngestRun(@PathVariable("id") Long id) {
         LOG.debug("REST request to delete IngestRun : {}", id);
-        ingestRunService.delete(id);
+        ingestRunUseCase.delete(id);
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();

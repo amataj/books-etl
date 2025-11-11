@@ -100,6 +100,11 @@ public class BookService {
         return bookRepository.findById(id).map(bookMapper::toDto);
     }
 
+    @Transactional(readOnly = true)
+    public boolean exists(Long id) {
+        return bookRepository.existsById(id);
+    }
+
     /**
      * Delete the book by id.
      *

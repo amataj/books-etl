@@ -2,9 +2,8 @@ package com.example.books.adapter.web.rest;
 
 import com.example.books.adapter.web.rest.errors.BadRequestAlertException;
 import com.example.books.domain.core.BookPageText;
-import com.example.books.domain.service.BookPageTextService;
 import com.example.books.infrastructure.database.jpa.entity.BookPageTextEntity;
-import com.example.books.infrastructure.database.jpa.repository.BookPageTextJpaRepository;
+import com.example.books.usecase.bookpagetext.BookPageTextUseCase;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
@@ -39,13 +38,10 @@ public class BookPageTextResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final BookPageTextService bookPageTextService;
+    private final BookPageTextUseCase bookPageTextUseCase;
 
-    private final BookPageTextJpaRepository bookPageTextRepository;
-
-    public BookPageTextResource(BookPageTextService bookPageTextService, BookPageTextJpaRepository bookPageTextRepository) {
-        this.bookPageTextService = bookPageTextService;
-        this.bookPageTextRepository = bookPageTextRepository;
+    public BookPageTextResource(BookPageTextUseCase bookPageTextUseCase) {
+        this.bookPageTextUseCase = bookPageTextUseCase;
     }
 
     /**
@@ -61,7 +57,7 @@ public class BookPageTextResource {
         if (bookPageTextDTO.getId() != null) {
             throw new BadRequestAlertException("A new bookPageText cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        bookPageTextDTO = bookPageTextService.save(bookPageTextDTO);
+        bookPageTextDTO = bookPageTextUseCase.create(bookPageTextDTO);
         return ResponseEntity.created(new URI("/api/book-page-texts/" + bookPageTextDTO.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, bookPageTextDTO.getId().toString()))
             .body(bookPageTextDTO);
@@ -90,11 +86,11 @@ public class BookPageTextResource {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
-        if (!bookPageTextRepository.existsById(id)) {
+        if (!bookPageTextUseCase.exists(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        bookPageTextDTO = bookPageTextService.update(bookPageTextDTO);
+        bookPageTextDTO = bookPageTextUseCase.update(bookPageTextDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, bookPageTextDTO.getId().toString()))
             .body(bookPageTextDTO);
@@ -124,11 +120,11 @@ public class BookPageTextResource {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
-        if (!bookPageTextRepository.existsById(id)) {
+        if (!bookPageTextUseCase.exists(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<BookPageText> result = bookPageTextService.partialUpdate(bookPageTextDTO);
+        Optional<BookPageText> result = bookPageTextUseCase.partialUpdate(bookPageTextDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -149,12 +145,9 @@ public class BookPageTextResource {
         @RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload
     ) {
         LOG.debug("REST request to get a page of BookPageTexts");
-        Page<BookPageText> page;
-        if (eagerload) {
-            page = bookPageTextService.findAllWithEagerRelationships(pageable);
-        } else {
-            page = bookPageTextService.findAll(pageable);
-        }
+        Page<BookPageText> page = eagerload
+            ? bookPageTextUseCase.findAllWithEagerRelationships(pageable)
+            : bookPageTextUseCase.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -168,7 +161,7 @@ public class BookPageTextResource {
     @GetMapping("/{id}")
     public ResponseEntity<BookPageText> getBookPageText(@PathVariable("id") Long id) {
         LOG.debug("REST request to get BookPageText : {}", id);
-        Optional<BookPageText> bookPageTextDTO = bookPageTextService.findOne(id);
+        Optional<BookPageText> bookPageTextDTO = bookPageTextUseCase.findOne(id);
         return ResponseUtil.wrapOrNotFound(bookPageTextDTO);
     }
 
@@ -181,7 +174,7 @@ public class BookPageTextResource {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBookPageText(@PathVariable("id") Long id) {
         LOG.debug("REST request to delete BookPageText : {}", id);
-        bookPageTextService.delete(id);
+        bookPageTextUseCase.delete(id);
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();

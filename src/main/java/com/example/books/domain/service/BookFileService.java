@@ -109,6 +109,11 @@ public class BookFileService {
         return bookFileRepository.findOneWithEagerRelationships(id).map(bookFileMapper::toDto);
     }
 
+    @Transactional(readOnly = true)
+    public boolean exists(Long id) {
+        return bookFileRepository.existsById(id);
+    }
+
     /**
      * Delete the bookFile by id.
      *

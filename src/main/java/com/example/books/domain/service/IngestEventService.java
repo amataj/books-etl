@@ -100,6 +100,11 @@ public class IngestEventService {
         return ingestEventRepository.findById(id).map(ingestEventMapper::toDto);
     }
 
+    @Transactional(readOnly = true)
+    public boolean exists(Long id) {
+        return ingestEventRepository.existsById(id);
+    }
+
     /**
      * Delete the ingestEvent by id.
      *

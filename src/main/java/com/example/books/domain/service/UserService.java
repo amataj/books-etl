@@ -280,6 +280,16 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public Optional<com.example.books.infrastructure.database.jpa.entity.User> findOneByEmailIgnoreCase(String email) {
+        return userRepository.findOneByEmailIgnoreCase(email);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<com.example.books.infrastructure.database.jpa.entity.User> findOneByLogin(String login) {
+        return userRepository.findOneByLogin(login.toLowerCase());
+    }
+
+    @Transactional(readOnly = true)
     public Optional<com.example.books.infrastructure.database.jpa.entity.User> getUserWithAuthoritiesByLogin(String login) {
         return userRepository.findOneWithAuthoritiesByLogin(login);
     }
