@@ -2,6 +2,7 @@ package com.example.books.infrastructure.database.jpa.adapter;
 
 import com.example.books.domain.ingestrun.IngestRun;
 import com.example.books.domain.ingestrun.IngestRunDataAccessRepository;
+import com.example.books.domain.ingestrun.IngestRunRepository;
 import com.example.books.infrastructure.database.jpa.mapper.IngestRunMapper;
 import com.example.books.infrastructure.database.jpa.repository.IngestRunJpaRepository;
 import com.example.books.shared.pagination.PageCriteria;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Repository;
  * JPA-backed read adapter for ingest runs.
  */
 @Repository
-public class IngestRunJpaAdapter implements IngestRunDataAccessRepository {
+public class IngestRunJpaAdapter implements IngestRunDataAccessRepository, IngestRunRepository {
 
     private final IngestRunJpaRepository ingestRunJpaRepository;
     private final IngestRunMapper ingestRunMapper;
@@ -27,6 +28,18 @@ public class IngestRunJpaAdapter implements IngestRunDataAccessRepository {
     @Override
     public Optional<IngestRun> findById(Long id) {
         return ingestRunJpaRepository.findById(id).map(ingestRunMapper::toDto);
+    }
+
+    @Override
+    public IngestRun save(IngestRun ingestRun) {
+        var entity = ingestRunMapper.toEntity(ingestRun);
+        var persisted = ingestRunJpaRepository.save(entity);
+        return ingestRunMapper.toDto(persisted);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        ingestRunJpaRepository.deleteById(id);
     }
 
     @Override

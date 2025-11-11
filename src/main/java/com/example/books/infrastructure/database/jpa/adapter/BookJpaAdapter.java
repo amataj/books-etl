@@ -2,6 +2,7 @@ package com.example.books.infrastructure.database.jpa.adapter;
 
 import com.example.books.domain.book.Book;
 import com.example.books.domain.book.BookDataAccessRepository;
+import com.example.books.domain.book.BookRepository;
 import com.example.books.infrastructure.database.jpa.mapper.BookMapper;
 import com.example.books.infrastructure.database.jpa.repository.BookJpaRepository;
 import com.example.books.shared.pagination.PageCriteria;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Repository;
  * JPA-backed implementation of the {@link BookDataAccessRepository} read port.
  */
 @Repository
-public class BookJpaAdapter implements BookDataAccessRepository {
+public class BookJpaAdapter implements BookDataAccessRepository, BookRepository {
 
     private final BookJpaRepository bookJpaRepository;
     private final BookMapper bookMapper;
@@ -32,6 +33,18 @@ public class BookJpaAdapter implements BookDataAccessRepository {
     @Override
     public Optional<Book> findByDocumentId(String documentId) {
         return bookJpaRepository.findByDocumentId(documentId).map(bookMapper::toDto);
+    }
+
+    @Override
+    public Book save(Book book) {
+        var entity = bookMapper.toEntity(book);
+        var persisted = bookJpaRepository.save(entity);
+        return bookMapper.toDto(persisted);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        bookJpaRepository.deleteById(id);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.example.books.infrastructure.database.jpa.adapter;
 
 import com.example.books.domain.ingestevent.IngestEventDataAccessRepository;
+import com.example.books.domain.ingestevent.IngestEventRepository;
 import com.example.books.domain.ingestrun.IngestEvent;
 import com.example.books.infrastructure.database.jpa.mapper.IngestEventMapper;
 import com.example.books.infrastructure.database.jpa.repository.IngestEventJpaRepository;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Repository;
  * JPA-backed read adapter for ingest events.
  */
 @Repository
-public class IngestEventJpaAdapter implements IngestEventDataAccessRepository {
+public class IngestEventJpaAdapter implements IngestEventDataAccessRepository, IngestEventRepository {
 
     private final IngestEventJpaRepository ingestEventJpaRepository;
     private final IngestEventMapper ingestEventMapper;
@@ -27,6 +28,18 @@ public class IngestEventJpaAdapter implements IngestEventDataAccessRepository {
     @Override
     public Optional<IngestEvent> findById(Long id) {
         return ingestEventJpaRepository.findById(id).map(ingestEventMapper::toDto);
+    }
+
+    @Override
+    public IngestEvent save(IngestEvent ingestEvent) {
+        var entity = ingestEventMapper.toEntity(ingestEvent);
+        var persisted = ingestEventJpaRepository.save(entity);
+        return ingestEventMapper.toDto(persisted);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        ingestEventJpaRepository.deleteById(id);
     }
 
     @Override

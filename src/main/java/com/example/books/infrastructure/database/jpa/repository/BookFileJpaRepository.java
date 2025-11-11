@@ -14,6 +14,8 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface BookFileJpaRepository extends JpaRepository<BookFileEntity, Long> {
+    Optional<BookFileEntity> findOneBySha256(String sha256);
+
     default Optional<BookFileEntity> findOneWithEagerRelationships(Long id) {
         return this.findOneWithToOneRelationships(id);
     }

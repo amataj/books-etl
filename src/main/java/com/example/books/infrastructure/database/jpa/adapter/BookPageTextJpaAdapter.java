@@ -2,6 +2,7 @@ package com.example.books.infrastructure.database.jpa.adapter;
 
 import com.example.books.domain.bookpage.BookPageText;
 import com.example.books.domain.bookpage.BookPageTextDataAccessRepository;
+import com.example.books.domain.bookpage.BookPageTextRepository;
 import com.example.books.infrastructure.database.jpa.mapper.BookPageTextMapper;
 import com.example.books.infrastructure.database.jpa.repository.BookPageTextJpaRepository;
 import com.example.books.shared.pagination.PageCriteria;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Repository;
  * JPA adapter that fulfills {@link BookPageTextDataAccessRepository}.
  */
 @Repository
-public class BookPageTextJpaAdapter implements BookPageTextDataAccessRepository {
+public class BookPageTextJpaAdapter implements BookPageTextDataAccessRepository, BookPageTextRepository {
 
     private final BookPageTextJpaRepository bookPageTextJpaRepository;
     private final BookPageTextMapper bookPageTextMapper;
@@ -35,6 +36,18 @@ public class BookPageTextJpaAdapter implements BookPageTextDataAccessRepository 
             ? bookPageTextJpaRepository.findOneWithEagerRelationships(id)
             : bookPageTextJpaRepository.findById(id);
         return entity.map(bookPageTextMapper::toDto);
+    }
+
+    @Override
+    public BookPageText save(BookPageText bookPageText) {
+        var entity = bookPageTextMapper.toEntity(bookPageText);
+        var persisted = bookPageTextJpaRepository.save(entity);
+        return bookPageTextMapper.toDto(persisted);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        bookPageTextJpaRepository.deleteById(id);
     }
 
     @Override
