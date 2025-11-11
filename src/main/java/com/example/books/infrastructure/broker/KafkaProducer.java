@@ -1,5 +1,6 @@
 package com.example.books.infrastructure.broker;
 
+import com.example.books.config.KafkaTopicProperties;
 import com.example.books.shared.ingest.DlqMessage;
 import com.example.books.shared.ingest.FileChangeNotification;
 import com.example.books.shared.ingest.ParsedPdfDocument;
@@ -17,26 +18,32 @@ public class KafkaProducer {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
+    private final String rawTopic;
+    private final String parsedTopic;
+    private final String dlqTopic;
 
-    public KafkaProducer(KafkaTemplate<String, String> kafkaTemplate, ObjectMapper objectMapper) {
+    public KafkaProducer(KafkaTemplate<String, String> kafkaTemplate, ObjectMapper objectMapper, KafkaTopicProperties topics) {
         this.kafkaTemplate = kafkaTemplate;
         this.objectMapper = objectMapper;
+        this.rawTopic = topics.getRaw();
+        this.parsedTopic = topics.getParsed();
+        this.dlqTopic = topics.getDlq();
     }
 
     public void publishFileChange(FileChangeNotification notification) {
-        send(KafkaTopicConfiguration.PDF_INGEST_RAW, notification);
+        send(rawTopic, notification);
     }
 
     public void publishParsedDocument(ParsedPdfDocument document) {
-        send(KafkaTopicConfiguration.PDF_INGEST_PARSED, document);
+        send(parsedTopic, document);
     }
 
     public void publishDeadLetter(DlqMessage message) {
-        send(KafkaTopicConfiguration.PDF_INGEST_DLQ, message);
+        send(dlqTopic, message);
     }
 
     public void publishRawMessage(String message) {
-        kafkaTemplate.send(KafkaTopicConfiguration.PDF_INGEST_RAW, message);
+        kafkaTemplate.send(rawTopic, message);
     }
 
     private void send(String topic, Object payload) {

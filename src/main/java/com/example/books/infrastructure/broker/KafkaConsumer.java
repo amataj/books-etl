@@ -33,13 +33,13 @@ public class KafkaConsumer {
         Optional.ofNullable(emitters.get(key)).ifPresent(SseEmitter::complete);
     }
 
-    @KafkaListener(topics = KafkaTopicConfiguration.PDF_INGEST_PARSED, groupId = "books-etl-sse")
+    @KafkaListener(topics = "${application.kafka.topics.parsed}", groupId = "books-etl-sse")
     public void consumeParsedDocument(String payload) {
         LOG.info("Received parsed PDF event from Kafka");
         broadcast(payload, MediaType.APPLICATION_JSON);
     }
 
-    @KafkaListener(topics = KafkaTopicConfiguration.PDF_INGEST_DLQ, groupId = "books-etl-sse-dlq")
+    @KafkaListener(topics = "${application.kafka.topics.dlq}", groupId = "books-etl-sse-dlq")
     public void consumeDeadLetter(String payload) {
         LOG.error("Received message in dead letter queue: {}", payload);
     }

@@ -1,7 +1,7 @@
 package com.example.books.adapter.batch;
 
 import com.example.books.adapter.parser.PdfParser;
-import com.example.books.infrastructure.broker.KafkaTopicConfiguration;
+import com.example.books.config.KafkaTopicProperties;
 import com.example.books.shared.ingest.DlqMessage;
 import com.example.books.shared.ingest.FileChangeNotification;
 import com.example.books.shared.ingest.ParsedPdfDocument;
@@ -19,10 +19,16 @@ public class PdfIngestRoute extends RouteBuilder {
 
     private final ObjectMapper objectMapper;
     private final PdfParser pdfParser;
+    private final String rawTopic;
+    private final String parsedTopic;
+    private final String dlqTopic;
 
-    public PdfIngestRoute(ObjectMapper objectMapper, PdfParser pdfParser) {
+    public PdfIngestRoute(ObjectMapper objectMapper, PdfParser pdfParser, KafkaTopicProperties topics) {
         this.objectMapper = objectMapper;
         this.pdfParser = pdfParser;
+        this.rawTopic = topics.getRaw();
+        this.parsedTopic = topics.getParsed();
+        this.dlqTopic = topics.getDlq();
     }
 
     @Override
@@ -40,9 +46,9 @@ public class PdfIngestRoute extends RouteBuilder {
                     exchange.getMessage().setBody(dlqMessage.toString());
                 }
             })
-            .to("kafka:" + KafkaTopicConfiguration.PDF_INGEST_DLQ);
+            .to("kafka:" + dlqTopic);
 
-        from("kafka:" + KafkaTopicConfiguration.PDF_INGEST_RAW + "?groupId=books-etl-camel&autoOffsetReset=latest")
+        from("kafka:" + rawTopic + "?groupId=books-etl-camel&autoOffsetReset=latest")
             .routeId("pdf-ingest-batch-route")
             .process(exchange -> {
                 String payload = exchange.getIn().getBody(String.class);
@@ -65,7 +71,7 @@ public class PdfIngestRoute extends RouteBuilder {
                 ParsedPdfDocument parsedPdfDocument = pdfParser.parse(file, change);
                 exchange.getMessage().setBody(objectMapper.writeValueAsString(parsedPdfDocument));
             })
-            .to("kafka:" + KafkaTopicConfiguration.PDF_INGEST_PARSED)
+            .to("kafka:" + parsedTopic)
             .end();
     }
 }
