@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.example.books.IntegrationTest;
 import com.example.books.domain.core.IngestEvent;
+import com.example.books.infrastructure.broker.KafkaTopicConfiguration;
 import com.example.books.infrastructure.database.jpa.entity.IngestEventEntity;
 import com.example.books.infrastructure.database.jpa.mapper.IngestEventMapper;
 import com.example.books.infrastructure.database.jpa.repository.IngestEventJpaRepository;
@@ -43,14 +44,16 @@ class IngestEventResourceIT {
     private static final UUID DEFAULT_RUN_ID = UUID.randomUUID();
     private static final UUID UPDATED_RUN_ID = UUID.randomUUID();
 
-    private static final String DEFAULT_DOCUMENT_ID = "AAAAAAAAAA";
-    private static final String UPDATED_DOCUMENT_ID = "BBBBBBBBBB";
+    private static final String DEFAULT_DOCUMENT_ID = "f4d5f160a2b9c8deabf4d2e8bb2c9a8cd1234567890abcdef1234567890abcd";
+    private static final String UPDATED_DOCUMENT_ID = "0c5e68b9dcb4a53c98f68fd1a2c47e3b11223344556677889900aabbccddeeff";
 
-    private static final String DEFAULT_TOPIC = "AAAAAAAAAA";
-    private static final String UPDATED_TOPIC = "BBBBBBBBBB";
+    private static final String DEFAULT_TOPIC = KafkaTopicConfiguration.PDF_INGEST_RAW;
+    private static final String UPDATED_TOPIC = KafkaTopicConfiguration.PDF_INGEST_PARSED;
 
-    private static final String DEFAULT_PAYLOAD = "AAAAAAAAAA";
-    private static final String UPDATED_PAYLOAD = "BBBBBBBBBB";
+    private static final String DEFAULT_PAYLOAD =
+        "{\"event_id\":\"1f6cc052-79f9-4c5c-9f65-ea8f0d7f7a3d\",\"discovered_at\":\"2025-10-15T10:00:00Z\",\"path\":\"file:///Books/foo/Bar.pdf\",\"size_bytes\":123456,\"sha256\":\"f4d5f160a2b9c8deabf4d2e8bb2c9a8cd1234567890abcdef1234567890abcd\",\"source_host\":\"ingest-host-01\"}";
+    private static final String UPDATED_PAYLOAD =
+        "{\"event_id\":\"5b9e97b8-d52a-4a36-94fa-9e2d0cd4d29c\",\"document_id\":\"f4d5f160a2b9c8deabf4d2e8bb2c9a8cd1234567890abcdef1234567890abcd\",\"title_guess\":\"Clean Architecture\",\"author_guess\":\"Robert C. Martin\",\"pages\":432,\"text_bytes\":3456789,\"lang\":\"en\",\"parser\":\"pdfbox\",\"parse_warnings\":[]}";
 
     private static final ZonedDateTime DEFAULT_CREATED_AT = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_CREATED_AT = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
