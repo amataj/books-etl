@@ -186,6 +186,11 @@ server:
       cookie:
         http-only: true
 
+camel:
+  component:
+    kafka:
+      brokers: ${CAMEL_KAFKA_BROKERS:${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}}
+
 springdoc:
   show-actuator: true
 
