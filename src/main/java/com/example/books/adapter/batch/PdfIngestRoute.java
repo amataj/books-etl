@@ -49,6 +49,7 @@ public class PdfIngestRoute extends RouteBuilder {
                 try {
                     exchange.getMessage().setBody(objectMapper.writeValueAsString(dlqMessage));
                 } catch (JsonProcessingException jsonProcessingException) {
+                    LOG.error("Failed to serialize DLQ message", jsonProcessingException);
                     exchange.getMessage().setBody(dlqMessage.toString());
                 }
             })
@@ -59,6 +60,7 @@ public class PdfIngestRoute extends RouteBuilder {
             .process(exchange -> {
                 String payload = exchange.getIn().getBody(String.class);
                 FileChangeNotification event = objectMapper.readValue(payload, FileChangeNotification.class);
+                LOG.info("Received file change event: '{}' - payload: {}", event, payload);
                 exchange.setProperty("fileChange", event);
             })
             .choice()
