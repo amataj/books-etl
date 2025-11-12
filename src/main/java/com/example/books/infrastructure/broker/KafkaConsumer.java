@@ -33,6 +33,12 @@ public class KafkaConsumer {
         Optional.ofNullable(emitters.get(key)).ifPresent(SseEmitter::complete);
     }
 
+    @KafkaListener(topics = "${application.kafka.topics.raw}", groupId = "books-etl-sse")
+    public void consumeRawDocument(String payload) {
+        LOG.info("Received raw PDF event from Kafka");
+        broadcast(payload, MediaType.APPLICATION_JSON);
+    }
+
     @KafkaListener(topics = "${application.kafka.topics.parsed}", groupId = "books-etl-sse")
     public void consumeParsedDocument(String payload) {
         LOG.info("Received parsed PDF event from Kafka");
@@ -51,7 +57,7 @@ public class KafkaConsumer {
                 try {
                     emitter.send(event().data(payload, mediaType));
                 } catch (IOException e) {
-                    LOG.debug("Error sending SSE payload", e);
+                    LOG.warn("Error sending SSE payload", e);
                 }
             });
     }

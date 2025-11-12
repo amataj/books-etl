@@ -48,6 +48,7 @@ public class KafkaProducer {
 
     private void send(String topic, Object payload) {
         try {
+            LOG.info("Sending to topic: '{}' - message: {}", topic, payload.toString());
             String serialized = objectMapper.writeValueAsString(payload);
             kafkaTemplate.send(topic, serialized);
         } catch (JsonProcessingException e) {
