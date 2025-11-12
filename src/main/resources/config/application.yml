@@ -246,7 +246,7 @@ jhipster:
 
 application:
   books:
-    root: /Volumes/Books
+    root: /Users/albanomataj/Projects/amataj/Applied_AI_and_MLOps_Engineer/books-etl/data
     exclude:
       - '**/.trash/**'
       - '**/*.tmp'
@@ -257,7 +257,7 @@ application:
       indexed: pdf.ingest.indexed
       dlq: pdf.ingest.dlq
   ocr:
-    enabled: false
+    enabled: true
     # Update to the directory containing tessdata if the default lookup fails
     # data-path: /usr/share/tesseract-ocr/5/tessdata
     language: eng
