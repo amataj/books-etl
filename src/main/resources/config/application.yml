@@ -246,10 +246,11 @@ jhipster:
 
 application:
   books:
-    root: /Users/albanomataj/Projects/amataj/Applied_AI_and_MLOps_Engineer/books-etl/data/inbox
     exclude:
       - '**/.trash/**'
       - '**/*.tmp'
+      - '**/.DS_Store'
+    inbox: /Users/albanomataj/Projects/amataj/Applied_AI_and_MLOps_Engineer/books-etl/data/inbox
   kafka:
     topics:
       raw: pdf.ingest.raw
