@@ -18,6 +18,7 @@ public class ApplicationProperties {
     private final Liquibase liquibase = new Liquibase();
     private final Books books = new Books();
     private final Kafka kafka = new Kafka();
+    private final Camel camel = new Camel();
     private final Ocr ocr = new Ocr();
 
     // jhipster-needle-application-properties-property
@@ -32,6 +33,10 @@ public class ApplicationProperties {
 
     public Kafka getKafka() {
         return kafka;
+    }
+
+    public Camel getCamel() {
+        return camel;
     }
 
     public Ocr getOcr() {
@@ -138,6 +143,37 @@ public class ApplicationProperties {
 
             public void setDlq(String dlq) {
                 this.dlq = dlq;
+            }
+        }
+    }
+
+    public static class Camel {
+
+        private final Routes routes = new Routes();
+
+        public Routes getRoutes() {
+            return routes;
+        }
+
+        public static class Routes {
+
+            private final PdfIngest pdfIngest = new PdfIngest();
+
+            public PdfIngest getPdfIngest() {
+                return pdfIngest;
+            }
+
+            public static class PdfIngest {
+
+                private boolean enabled;
+
+                public boolean isEnabled() {
+                    return enabled;
+                }
+
+                public void setEnabled(boolean enabled) {
+                    this.enabled = enabled;
+                }
             }
         }
     }
