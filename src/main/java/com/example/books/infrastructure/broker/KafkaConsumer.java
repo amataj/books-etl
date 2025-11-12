@@ -20,6 +20,10 @@ public class KafkaConsumer {
 
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
 
+    public KafkaConsumer() {
+        LOG.info("Created KafkaConsumer");
+    }
+
     public SseEmitter register(String key) {
         LOG.debug("Registering sse client for {}", key);
         SseEmitter emitter = new SseEmitter();
