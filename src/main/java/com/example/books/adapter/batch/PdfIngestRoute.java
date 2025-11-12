@@ -15,9 +15,11 @@ import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnProperty(prefix = "application.camel.routes.pdf-ingest", name = "enabled", havingValue = "true")
 public class PdfIngestRoute extends RouteBuilder {
 
     private static final Logger LOG = LoggerFactory.getLogger(PdfIngestRoute.class);

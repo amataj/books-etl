@@ -251,6 +251,10 @@ application:
       - '**/*.tmp'
       - '.DS_Store'
     inbox: /Users/albanomataj/Projects/amataj/Applied_AI_and_MLOps_Engineer/books-etl/data/inbox
+  camel:
+    routes:
+      pdf-ingest:
+        enabled: false
   kafka:
     topics:
       raw: pdf.ingest.raw
