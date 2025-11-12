@@ -12,6 +12,12 @@
 
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+    <!-- Enable file logging: use Spring Boot's standard FILE appender.
+         Writes to ${LOG_FILE} if set, otherwise to ${LOG_PATH}/spring.log. -->
+    <!-- Ensure file target is always defined (use Logback's ":-" fallback) -->
+    <property name="LOG_PATH" value="${LOG_PATH:-logs}"/>
+    <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH}/books-etl.log}"/>
+    <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
 
     <!-- The FILE and ASYNC appenders are here as examples for a production configuration -->
     <!--
@@ -65,13 +71,19 @@
     <logger name="org.springframework.boot.docker" level="WARN"/>
     <logger name="liquibase" level="WARN"/>
     <logger name="LiquibaseSchemaResolver" level="INFO"/>
-    <logger name="org.apache.kafka" level="INFO"/>
     <logger name="org.apache.kafka" level="WARN"/>
+
+    <!-- Dev profile: increase Kafka client logging to INFO for diagnostics -->
+    <springProfile name="dev">
+        <logger name="org.apache.kafka" level="INFO"/>
+        <logger name="org.springframework.kafka" level="INFO"/>
+    </springProfile>
     <!-- jhipster-needle-logback-add-log - JHipster will add a new log with level -->
 
     <springProperty name="log.level" source="logging.level.root" defaultValue="INFO" />
     <root level="${log.level}">
         <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
     </root>
 
     <!-- Prevent logback from outputting its own status -->
