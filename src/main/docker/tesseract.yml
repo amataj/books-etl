@@ -3,7 +3,16 @@ services:
   tesseract:
     image: jitesoft/tesseract-ocr
     volumes:
-      - ./data:/data
-      - ./tessdata:/usr/share/tesseract-ocr/4.00/tessdata:ro
-    working_dir: /data
-    command: ['tesseract']
+      - ./tesseract/data:/custom-tessdata:ro
+    environment:
+      - TESSDATA_PREFIX=/usr/share/tesseract-ocr/4.00/tessdata
+    entrypoint: ['/bin/sh', '-c']
+    command:
+      - |
+        if [ -n "$(ls -A /custom-tessdata 2>/dev/null)" ]; then
+          echo "Copying custom tessdata files into container..."
+          cp -R /custom-tessdata/. /usr/share/tesseract-ocr/4.00/tessdata/
+        else
+          echo "No custom tessdata provided; using image defaults."
+        fi
+        tail -f /dev/null

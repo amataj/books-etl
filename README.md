@@ -60,6 +60,27 @@ Optional tuning parameters include `application.ocr.page-seg-mode`,
 `application.ocr.ocr-engine-mode`, and `application.ocr.tess-variables` for
 custom Tesseract settings.
 
+### Running a long-lived Tesseract helper container
+
+If you prefer to run OCR commands inside a container instead of installing the
+native binaries, start the helper service that ships with the repo:
+
+```bash
+docker compose -f src/main/docker/services.yml up -d tesseract
+```
+
+The container stays idle (`tail -f /dev/null`) so you can exec into it whenever
+OCR is required:
+
+```bash
+docker compose -f src/main/docker/services.yml exec tesseract \
+  tesseract /tmp/input.png /tmp/output -l eng
+```
+
+To extend the built-in language packs, copy additional `.traineddata` files into
+`src/main/docker/tesseract/data` on the host. They will be synced to the
+container on startup before the service goes idle.
+
 ### Doing API-First development using openapi-generator-cli
 
 [OpenAPI-Generator]() is configured for this application. You can generate API code from the `src/main/resources/swagger/api.yml` definition file by running:

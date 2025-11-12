@@ -29,7 +29,7 @@ public class TesseractConfiguration {
             tesseract.setOcrEngineMode(ocrProperties.getOcrEngineMode());
         }
         for (Map.Entry<String, String> entry : ocrProperties.getTessVariables().entrySet()) {
-            tesseract.setTessVariable(entry.getKey(), entry.getValue());
+            tesseract.setVariable(entry.getKey(), entry.getValue());
         }
         return tesseract;
     }
