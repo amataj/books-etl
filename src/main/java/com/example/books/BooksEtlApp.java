@@ -9,7 +9,7 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
-import org.apache.camel.spring.boot.CamelSpringBootApplication;
+import org.apache.camel.springboot.CamelSpringBootApplication;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
