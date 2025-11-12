@@ -4,5 +4,6 @@ services:
     image: jitesoft/tesseract-ocr
     volumes:
       - ./data:/data
+      - ./tessdata:/usr/share/tesseract-ocr/4.00/tessdata:ro
     working_dir: /data
     command: ['tesseract']
