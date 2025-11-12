@@ -47,7 +47,7 @@ public class FileSystemWatcher implements SmartLifecycle {
 
     public FileSystemWatcher(ApplicationProperties properties, FileChecksumCalculator checksumCalculator, KafkaProducer kafkaProducer)
         throws IOException {
-        this.root = Path.of(properties.getBooks().getRoot());
+        this.root = Path.of(properties.getBooks().getInbox());
         this.checksumCalculator = checksumCalculator;
         this.kafkaProducer = kafkaProducer;
         ThreadFactory threadFactory = new CustomizableThreadFactory("books-fs-watcher-");

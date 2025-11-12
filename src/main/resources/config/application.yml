@@ -246,7 +246,7 @@ jhipster:
 
 application:
   books:
-    root: /Users/albanomataj/Projects/amataj/Applied_AI_and_MLOps_Engineer/books-etl/data
+    root: /Users/albanomataj/Projects/amataj/Applied_AI_and_MLOps_Engineer/books-etl/data/inbox
     exclude:
       - '**/.trash/**'
       - '**/*.tmp'

@@ -55,15 +55,33 @@ public class ApplicationProperties {
 
     public static class Books {
 
-        private String root;
+        private String inbox;
+        private String completed;
+        private String error;
         private List<String> exclude = new ArrayList<>();
 
-        public String getRoot() {
-            return root;
+        public String getInbox() {
+            return inbox;
         }
 
-        public void setRoot(String root) {
-            this.root = root;
+        public void setInbox(String inbox) {
+            this.inbox = inbox;
+        }
+
+        public String getCompleted() {
+            return completed;
+        }
+
+        public void setCompleted(String completed) {
+            this.completed = completed;
+        }
+
+        public String getError() {
+            return error;
+        }
+
+        public void setError(String error) {
+            this.error = error;
         }
 
         public List<String> getExclude() {
