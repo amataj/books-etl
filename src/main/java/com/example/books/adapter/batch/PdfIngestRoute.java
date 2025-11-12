@@ -1,6 +1,5 @@
 package com.example.books.adapter.batch;
 
-import com.example.books.adapter.fs.FileChecksumCalculator;
 import com.example.books.adapter.parser.PdfParser;
 import com.example.books.config.KafkaTopicProperties;
 import com.example.books.shared.ingest.DlqMessage;

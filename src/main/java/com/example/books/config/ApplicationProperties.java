@@ -180,12 +180,12 @@ public class ApplicationProperties {
 
     public static class Ocr {
 
+        private final Map<String, String> tessVariables = new LinkedHashMap<>();
         private boolean enabled;
         private String dataPath;
         private String language = "eng";
         private Integer pageSegMode;
         private Integer ocrEngineMode;
-        private final Map<String, String> tessVariables = new LinkedHashMap<>();
 
         public boolean isEnabled() {
             return enabled;
