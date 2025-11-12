@@ -44,6 +44,7 @@ public class PdfIngestRoute extends RouteBuilder {
                 String original = exchange.getIn().getBody(String.class);
                 Throwable cause = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
                 String error = cause != null ? cause.getMessage() : "Unknown error";
+                LOG.error("Error processing message: '{}'", original, cause);
                 DlqMessage dlqMessage = new DlqMessage(original, error, Instant.now());
                 try {
                     exchange.getMessage().setBody(objectMapper.writeValueAsString(dlqMessage));
