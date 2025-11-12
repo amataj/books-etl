@@ -37,19 +37,19 @@ public class KafkaConsumer {
         Optional.ofNullable(emitters.get(key)).ifPresent(SseEmitter::complete);
     }
 
-    @KafkaListener(topics = "${application.kafka.topics.raw}", groupId = "books-etl-sse")
+    @KafkaListener(topics = "${application.kafka.topics.raw}", groupId = "books-etl-app")
     public void consumeRawDocument(String payload) {
         LOG.info("Received raw PDF event from Kafka");
         broadcast(payload, MediaType.APPLICATION_JSON);
     }
 
-    @KafkaListener(topics = "${application.kafka.topics.parsed}", groupId = "books-etl-sse")
+    @KafkaListener(topics = "${application.kafka.topics.parsed}", groupId = "books-etl-app")
     public void consumeParsedDocument(String payload) {
         LOG.info("Received parsed PDF event from Kafka");
         broadcast(payload, MediaType.APPLICATION_JSON);
     }
 
-    @KafkaListener(topics = "${application.kafka.topics.dlq}", groupId = "books-etl-sse-dlq")
+    @KafkaListener(topics = "${application.kafka.topics.dlq}", groupId = "books-etl-app-dlq")
     public void consumeDeadLetter(String payload) {
         LOG.error("Received message in dead letter queue: {}", payload);
     }

@@ -57,7 +57,7 @@ public class PdfIngestRoute extends RouteBuilder {
             })
             .to("kafka:" + dlqTopic);
 
-        from("kafka:" + rawTopic + "?groupId=books-etl-camel&autoOffsetReset=latest")
+        from("kafka:" + rawTopic + "?groupId=books-etl-app&autoOffsetReset=latest")
             .routeId("pdf-ingest-batch-route")
             .process(exchange -> {
                 String payload = exchange.getIn().getBody(String.class);
