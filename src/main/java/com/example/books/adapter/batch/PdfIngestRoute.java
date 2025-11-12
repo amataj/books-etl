@@ -1,5 +1,6 @@
 package com.example.books.adapter.batch;
 
+import com.example.books.adapter.fs.FileChecksumCalculator;
 import com.example.books.adapter.parser.PdfParser;
 import com.example.books.config.KafkaTopicProperties;
 import com.example.books.shared.ingest.DlqMessage;
@@ -12,10 +13,14 @@ import java.nio.file.Path;
 import java.time.Instant;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PdfIngestRoute extends RouteBuilder {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PdfIngestRoute.class);
 
     private final ObjectMapper objectMapper;
     private final PdfParser pdfParser;
@@ -66,6 +71,7 @@ public class PdfIngestRoute extends RouteBuilder {
                 FileChangeNotification change = exchange.getProperty("fileChange", FileChangeNotification.class);
                 Path file = Path.of(change.path());
                 if (!Files.exists(file)) {
+                    LOG.warn("File no longer exists: '{}'", file);
                     throw new IllegalStateException("File no longer exists: " + file);
                 }
                 ParsedPdfDocument parsedPdfDocument = pdfParser.parse(file, change);
