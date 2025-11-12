@@ -2,7 +2,12 @@
 name: booksetl
 services:
   app:
+    build:
+      context: ../..
+      dockerfile: Dockerfile
     image: booksetl
+    volumes:
+      - ./tessdata:/usr/share/tesseract-ocr/4.00/tessdata:ro
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
       - SPRING_PROFILES_ACTIVE=prod,api-docs
@@ -10,6 +15,10 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/booksEtl
       - SPRING_LIQUIBASE_URL=jdbc:postgresql://postgresql:5432/booksEtl
       - SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS=kafka:9092
+      - OCR_ENABLED=true
+      - OCR_LANG=eng
+      - OCR_DATAPATH=/usr/share/tesseract-ocr/4.00/tessdata
+      - TESSDATA_PREFIX=/usr/share/tesseract-ocr/4.00/tessdata
     ports:
       - 127.0.0.1:8080:8080
     healthcheck:
