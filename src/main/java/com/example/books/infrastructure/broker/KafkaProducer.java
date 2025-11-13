@@ -6,9 +6,12 @@ import com.example.books.shared.ingest.FileChangeNotification;
 import com.example.books.shared.ingest.ParsedPdfDocument;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.concurrent.CompletableFuture;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -46,12 +49,22 @@ public class KafkaProducer {
         kafkaTemplate.send(rawTopic, message);
     }
 
-    private void send(String topic, Object payload) {
+    public void send(String topic, Object payload) {
         try {
-            LOG.info("Sending to topic: '{}' - message: {}", topic, payload.toString());
-            String serialized = objectMapper.writeValueAsString(payload);
-            kafkaTemplate.send(topic, serialized);
-        } catch (JsonProcessingException e) {
+            LOG.info("Sending kafka message on topic: '{}' - message: {}", topic, payload.toString());
+            String serializedPayload = objectMapper.writeValueAsString(payload);
+
+            ProducerRecord<String, String> producerRecord = new ProducerRecord<>(topic, serializedPayload);
+            CompletableFuture<SendResult<String, String>> completableFuture = kafkaTemplate.send(producerRecord);
+
+            completableFuture.whenComplete((result, ex) -> {
+                if (ex == null) {
+                    LOG.info("Kafka message successfully sent on topic {} and value {}", topic, result.getProducerRecord().value());
+                } else {
+                    LOG.error("An error occurred while sending kafka message for event with value {}", producerRecord);
+                }
+            });
+        } catch (Exception e) {
             LOG.error("Failed to serialize payload for topic {}", topic, e);
             throw new IllegalStateException("Unable to serialize Kafka payload", e);
         }

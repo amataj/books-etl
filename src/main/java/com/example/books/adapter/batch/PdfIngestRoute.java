@@ -38,50 +38,5 @@ public class PdfIngestRoute extends RouteBuilder {
     }
 
     @Override
-    public void configure() {
-        onException(Exception.class)
-            .handled(true)
-            .process(exchange -> {
-                String original = exchange.getIn().getBody(String.class);
-                Throwable cause = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
-                String error = cause != null ? cause.getMessage() : "Unknown error";
-                LOG.error("Error processing message: '{}'", original, cause);
-                DlqMessage dlqMessage = new DlqMessage(original, error, Instant.now());
-                try {
-                    exchange.getMessage().setBody(objectMapper.writeValueAsString(dlqMessage));
-                } catch (JsonProcessingException jsonProcessingException) {
-                    LOG.error("Failed to serialize DLQ message", jsonProcessingException);
-                    exchange.getMessage().setBody(dlqMessage.toString());
-                }
-            })
-            .to("kafka:" + dlqTopic);
-
-        from("kafka:" + rawTopic + "?groupId=books-etl-app&autoOffsetReset=latest")
-            .routeId("pdf-ingest-batch-route")
-            .process(exchange -> {
-                String payload = exchange.getIn().getBody(String.class);
-                FileChangeNotification event = objectMapper.readValue(payload, FileChangeNotification.class);
-                LOG.info("Received file change event: '{}' - payload: {}", event, payload);
-                exchange.setProperty("fileChange", event);
-            })
-            .choice()
-            .when(exchange -> {
-                FileChangeNotification change = exchange.getProperty("fileChange", FileChangeNotification.class);
-                return change == null || !change.changeType().requiresContent();
-            })
-            .log("Skipping change event for ${exchangeProperty.fileChange.path}")
-            .otherwise()
-            .process(exchange -> {
-                FileChangeNotification change = exchange.getProperty("fileChange", FileChangeNotification.class);
-                Path file = Path.of(change.path());
-                if (!Files.exists(file)) {
-                    LOG.warn("File no longer exists: '{}'", file);
-                    throw new IllegalStateException("File no longer exists: " + file);
-                }
-                ParsedPdfDocument parsedPdfDocument = pdfParser.parse(file, change);
-                exchange.getMessage().setBody(objectMapper.writeValueAsString(parsedPdfDocument));
-            })
-            .to("kafka:" + parsedTopic)
-            .end();
-    }
+    public void configure() {}
 }

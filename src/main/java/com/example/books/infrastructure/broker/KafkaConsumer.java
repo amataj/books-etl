@@ -37,7 +37,11 @@ public class KafkaConsumer {
         Optional.ofNullable(emitters.get(key)).ifPresent(SseEmitter::complete);
     }
 
-    @KafkaListener(topics = "${application.kafka.topics.raw}", groupId = "books-etl-app")
+    @KafkaListener(
+        topics = "${application.kafka.topics.raw}",
+        containerFactory = "kafkaListenerContainerFactory",
+        groupId = "books-etl-app"
+    )
     public void consumeRawDocument(String payload) {
         LOG.info("Received raw PDF event from Kafka");
         broadcast(payload, MediaType.APPLICATION_JSON);
