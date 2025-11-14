@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -42,9 +43,9 @@ public class KafkaConsumer {
         containerFactory = "kafkaListenerContainerFactory",
         groupId = "books-etl-app"
     )
-    public void consumeRawDocument(String payload) {
+    public void listen(Message<String> payload) {
         LOG.info("Received raw PDF event from Kafka");
-        broadcast(payload, MediaType.APPLICATION_JSON);
+        broadcast(payload.getPayload(), MediaType.APPLICATION_JSON);
     }
 
     @KafkaListener(topics = "${application.kafka.topics.parsed}", groupId = "books-etl-app")
