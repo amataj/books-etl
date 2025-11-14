@@ -13,6 +13,8 @@ public class KafkaTopicProperties {
 
     private String dlq;
 
+    private String sse;
+
     public String getRaw() {
         return raw;
     }
@@ -43,5 +45,13 @@ public class KafkaTopicProperties {
 
     public void setDlq(String dlq) {
         this.dlq = dlq;
+    }
+
+    public String getSse() {
+        return sse;
+    }
+
+    public void setSse(String sse) {
+        this.sse = sse;
     }
 }

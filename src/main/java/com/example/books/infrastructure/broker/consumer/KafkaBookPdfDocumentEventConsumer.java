@@ -1,4 +1,4 @@
-package com.example.books.infrastructure.broker;
+package com.example.books.infrastructure.broker.consumer;
 
 import static org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event;
 
@@ -15,13 +15,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @Component
-public class KafkaConsumer {
+public class KafkaBookPdfDocumentEventConsumer {
 
-    private static final Logger LOG = LoggerFactory.getLogger(KafkaConsumer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(KafkaBookPdfDocumentEventConsumer.class);
 
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
 
-    public KafkaConsumer() {
+    public KafkaBookPdfDocumentEventConsumer() {
         LOG.info("Created KafkaConsumer");
     }
 
@@ -44,8 +44,8 @@ public class KafkaConsumer {
         groupId = "books-etl-app"
     )
     public void consumeRawDocument(Message<String> payload) {
-        LOG.info("Received raw PDF event from Kafka");
-        broadcast(payload.getPayload(), MediaType.APPLICATION_JSON);
+        LOG.info("Kafka Consumer received raw PDF event from Kafka");
+        broadcastToSSEEmitters(payload.getPayload(), MediaType.APPLICATION_JSON);
     }
 
     @KafkaListener(
@@ -54,8 +54,8 @@ public class KafkaConsumer {
         groupId = "books-etl-app"
     )
     public void consumeParsedDocument(Message<String> payload) {
-        LOG.info("Received parsed PDF event from Kafka");
-        broadcast(payload.getPayload(), MediaType.APPLICATION_JSON);
+        LOG.info("Kafka Consumer received parsed PDF event from Kafka");
+        broadcastToSSEEmitters(payload.getPayload(), MediaType.APPLICATION_JSON);
     }
 
     @KafkaListener(
@@ -64,16 +64,17 @@ public class KafkaConsumer {
         groupId = "books-etl-app-dlq"
     )
     public void consumeDeadLetter(Message<String> payload) {
-        LOG.error("Received message in dead letter queue: {}", payload);
+        LOG.error("Kafka Consumer received message in dead letter queue: {}", payload);
     }
 
-    private void broadcast(String payload, MediaType mediaType) {
+    private void broadcastToSSEEmitters(String payload, MediaType mediaType) {
+        LOG.debug("Broadcasting to SSE -payload: {}", payload);
         emitters
             .values()
             .forEach(emitter -> {
                 try {
                     emitter.send(event().data(payload, mediaType));
-                } catch (IOException e) {
+                } catch (Exception e) {
                     LOG.warn("Error sending SSE payload", e);
                 }
             });

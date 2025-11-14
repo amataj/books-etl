@@ -43,7 +43,7 @@ class BooksEtlKafkaResourceIT {
 
     @Test
     void producesMessages() throws Exception {
-        restMockMvc.perform(post("/api/books-etl-kafka/publish?message=value-produce")).andExpect(status().isOk());
+        restMockMvc.perform(post("/api/books-etl-kafka-sse/publish?message=value-produce")).andExpect(status().isOk());
         assertThat(output.receive(1000, "binding-out-0").getPayload()).isEqualTo("value-produce".getBytes());
     }
 
@@ -59,7 +59,7 @@ class BooksEtlKafkaResourceIT {
         MessageHeaders headers = new MessageHeaders(map);
         Message<String> testMessage = new GenericMessage<>("value-consume", headers);
         MvcResult mvcResult = restMockMvc
-            .perform(get("/api/books-etl-kafka/register"))
+            .perform(get("/api/books-etl-kafka-sse/register"))
             .andExpect(status().isOk())
             .andExpect(request().asyncStarted())
             .andReturn();
@@ -68,7 +68,7 @@ class BooksEtlKafkaResourceIT {
             Thread.sleep(100);
             String content = mvcResult.getResponse().getContentAsString();
             if (content.contains("data:value-consume")) {
-                restMockMvc.perform(get("/api/books-etl-kafka/unregister"));
+                restMockMvc.perform(get("/api/books-etl-kafka-sse/unregister"));
                 return;
             }
         }

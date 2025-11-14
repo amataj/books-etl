@@ -1,10 +1,9 @@
-package com.example.books.infrastructure.broker;
+package com.example.books.infrastructure.broker.producer;
 
 import com.example.books.config.KafkaTopicProperties;
 import com.example.books.shared.ingest.DlqMessage;
 import com.example.books.shared.ingest.FileChangeNotification;
 import com.example.books.shared.ingest.ParsedPdfDocument;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.concurrent.CompletableFuture;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -15,9 +14,9 @@ import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 
 @Component
-public class KafkaProducer {
+public class KafkaBookPdfDocuentEventProducer {
 
-    private static final Logger LOG = LoggerFactory.getLogger(KafkaProducer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(KafkaBookPdfDocuentEventProducer.class);
 
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
@@ -25,7 +24,11 @@ public class KafkaProducer {
     private final String parsedTopic;
     private final String dlqTopic;
 
-    public KafkaProducer(KafkaTemplate<String, String> kafkaTemplate, ObjectMapper objectMapper, KafkaTopicProperties topics) {
+    public KafkaBookPdfDocuentEventProducer(
+        KafkaTemplate<String, String> kafkaTemplate,
+        ObjectMapper objectMapper,
+        KafkaTopicProperties topics
+    ) {
         this.kafkaTemplate = kafkaTemplate;
         this.objectMapper = objectMapper;
         this.rawTopic = topics.getRaw();
@@ -34,24 +37,28 @@ public class KafkaProducer {
     }
 
     public void publishFileChange(FileChangeNotification notification) {
-        send(rawTopic, notification);
+        LOG.info("Publishing file change notification on topic {}", rawTopic);
+        publishToTopic(rawTopic, notification);
     }
 
     public void publishParsedDocument(ParsedPdfDocument document) {
-        send(parsedTopic, document);
+        LOG.info("Publishing parsed document on topic {}", parsedTopic);
+        publishToTopic(parsedTopic, document);
     }
 
     public void publishDeadLetter(DlqMessage message) {
-        send(dlqTopic, message);
+        LOG.info("Publishing dead letter message on topic {}", dlqTopic);
+        publishToTopic(dlqTopic, message);
     }
 
     public void publishRawMessage(String message) {
+        LOG.info("Publishing raw message on topic {}", rawTopic);
         kafkaTemplate.send(rawTopic, message);
     }
 
-    public void send(String topic, Object payload) {
+    private void publishToTopic(String topic, Object payload) {
         try {
-            LOG.info("Sending kafka message on topic: '{}' - message: {}", topic, payload.toString());
+            LOG.info("Publishing kafka message on topic: '{}' - message: {}", topic, payload.toString());
             String serializedPayload = objectMapper.writeValueAsString(payload);
 
             ProducerRecord<String, String> producerRecord = new ProducerRecord<>(topic, serializedPayload);

@@ -1,7 +1,8 @@
 package com.example.books.adapter.fs;
 
 import com.example.books.config.ApplicationProperties;
-import com.example.books.infrastructure.broker.KafkaProducer;
+import com.example.books.infrastructure.broker.producer.KafkaBookPdfDocuentEventProducer;
+import com.example.books.infrastructure.broker.producer.KafkaSseMessageProducer;
 import com.example.books.shared.ingest.FileChangeNotification;
 import com.example.books.shared.ingest.FileChangeType;
 import java.io.IOException;
@@ -39,14 +40,17 @@ public class FileSystemWatcher implements SmartLifecycle {
     private final Path root;
     private final List<PathMatcher> excludeMatchers = new ArrayList<>();
     private final FileChecksumCalculator checksumCalculator;
-    private final KafkaProducer kafkaProducer;
+    private final KafkaBookPdfDocuentEventProducer kafkaProducer;
     private final AtomicBoolean running = new AtomicBoolean(false);
     private final ExecutorService executor;
     private final WatchService watchService;
     private final Set<Path> registeredDirectories = ConcurrentHashMap.newKeySet();
 
-    public FileSystemWatcher(ApplicationProperties properties, FileChecksumCalculator checksumCalculator, KafkaProducer kafkaProducer)
-        throws IOException {
+    public FileSystemWatcher(
+        ApplicationProperties properties,
+        FileChecksumCalculator checksumCalculator,
+        KafkaBookPdfDocuentEventProducer kafkaProducer
+    ) throws IOException {
         this.root = Path.of(properties.getBooks().getInbox());
         this.checksumCalculator = checksumCalculator;
         this.kafkaProducer = kafkaProducer;

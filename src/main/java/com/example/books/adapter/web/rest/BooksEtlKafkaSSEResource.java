@@ -1,30 +1,33 @@
 package com.example.books.adapter.web.rest;
 
-import com.example.books.infrastructure.broker.KafkaConsumer;
-import com.example.books.infrastructure.broker.KafkaProducer;
+import com.example.books.infrastructure.broker.consumer.KafkaSseMessageConsumer;
+import com.example.books.infrastructure.broker.producer.KafkaSseMessageProducer;
 import java.security.Principal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 
 @RestController
-@RequestMapping("/api/books-etl-kafka")
-public class BooksEtlKafkaResource {
+@RequestMapping("/api/books-etl-kafka-sse")
+public class BooksEtlKafkaSSEResource {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BooksEtlKafkaResource.class);
-    private final KafkaConsumer kafkaConsumer;
-    private final KafkaProducer kafkaProducer;
+    private static final Logger LOG = LoggerFactory.getLogger(BooksEtlKafkaSSEResource.class);
+    private static final String PRODUCER_BINDING_NAME = "binding-out-0";
 
-    public BooksEtlKafkaResource(KafkaConsumer kafkaConsumer, KafkaProducer kafkaProducer) {
+    private final KafkaSseMessageConsumer kafkaConsumer;
+    private final StreamBridge streamBridge;
+
+    public BooksEtlKafkaSSEResource(KafkaSseMessageConsumer kafkaConsumer, StreamBridge streamBridge) {
+        this.streamBridge = streamBridge;
         this.kafkaConsumer = kafkaConsumer;
-        this.kafkaProducer = kafkaProducer;
     }
 
     @PostMapping("/publish")
     public void publish(@RequestParam("message") String message) {
         LOG.debug("REST request the message : {} to send to Kafka topic ", message);
-        kafkaProducer.publishRawMessage(message);
+        streamBridge.send(PRODUCER_BINDING_NAME, message);
     }
 
     @GetMapping("/register")
