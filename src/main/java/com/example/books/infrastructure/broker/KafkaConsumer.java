@@ -43,19 +43,27 @@ public class KafkaConsumer {
         containerFactory = "kafkaListenerContainerFactory",
         groupId = "books-etl-app"
     )
-    public void listen(Message<String> payload) {
+    public void consumeRawDocument(Message<String> payload) {
         LOG.info("Received raw PDF event from Kafka");
         broadcast(payload.getPayload(), MediaType.APPLICATION_JSON);
     }
 
-    @KafkaListener(topics = "${application.kafka.topics.parsed}", groupId = "books-etl-app")
-    public void consumeParsedDocument(String payload) {
+    @KafkaListener(
+        topics = "${application.kafka.topics.parsed}",
+        containerFactory = "kafkaListenerContainerFactory",
+        groupId = "books-etl-app"
+    )
+    public void consumeParsedDocument(Message<String> payload) {
         LOG.info("Received parsed PDF event from Kafka");
-        broadcast(payload, MediaType.APPLICATION_JSON);
+        broadcast(payload.getPayload(), MediaType.APPLICATION_JSON);
     }
 
-    @KafkaListener(topics = "${application.kafka.topics.dlq}", groupId = "books-etl-app-dlq")
-    public void consumeDeadLetter(String payload) {
+    @KafkaListener(
+        topics = "${application.kafka.topics.dlq}",
+        containerFactory = "kafkaListenerContainerFactory",
+        groupId = "books-etl-app-dlq"
+    )
+    public void consumeDeadLetter(Message<String> payload) {
         LOG.error("Received message in dead letter queue: {}", payload);
     }
 
