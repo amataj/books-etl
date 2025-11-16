@@ -41,8 +41,10 @@ public class PdfboxPdfParser implements PdfParser {
     }
 
     @Override
-    public ParsedPdfDocument parse(Path pdfPath, FileChangeNotification sourceEvent) throws IOException {
+    public ParsedPdfDocument parse(FileChangeNotification sourceEvent) throws IOException {
+        Path pdfPath = Path.of(sourceEvent.path());
         LOG.info("Parsing PDF file: '{}' - sourceEvent: {}", pdfPath, sourceEvent);
+
         try (PDDocument document = Loader.loadPDF(pdfPath.toFile())) {
             int numberOfPages = document.getNumberOfPages();
             PDFTextStripper textStripper = new PDFTextStripper();
