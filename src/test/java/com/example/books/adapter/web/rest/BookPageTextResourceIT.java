@@ -233,23 +233,6 @@ class BookPageTextResourceIT {
             .andExpect(jsonPath("$.[*].text").value(hasItem(DEFAULT_TEXT)));
     }
 
-    @SuppressWarnings({ "unchecked" })
-    void getAllBookPageTextsWithEagerRelationshipsIsEnabled() throws Exception {
-        when(bookPageTextServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restBookPageTextMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(bookPageTextServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllBookPageTextsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(bookPageTextServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restBookPageTextMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
-        verify(bookPageTextRepositoryMock, times(1)).findAll(any(Pageable.class));
-    }
-
     @Test
     @Transactional
     void getBookPageText() throws Exception {

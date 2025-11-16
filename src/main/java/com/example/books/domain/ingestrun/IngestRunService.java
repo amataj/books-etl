@@ -65,38 +65,6 @@ public class IngestRunService {
     }
 
     /**
-     * Get all the ingestRuns.
-     *
-     * @return the list of aggregates.
-     */
-    public List<IngestRun> findAll() {
-        LOG.debug("Request to get all IngestRuns");
-        PageResult<IngestRun> page = ingestRunQueryRepository.findAll(new PageCriteria(0, Integer.MAX_VALUE));
-        return page.content();
-    }
-
-    /**
-     * Get one ingestRun by id.
-     *
-     * @param id the id of the aggregate.
-     * @return the aggregate.
-     */
-    public Optional<IngestRun> findOne(Long id) {
-        LOG.debug("Request to get IngestRun : {}", id);
-        return ingestRunQueryRepository.findById(id);
-    }
-
-    /**
-     * Check if the ingestRun exists by id.
-     *
-     * @param id the id of the aggregate.
-     * @return true if the ingestRun exists.
-     */
-    public boolean exists(Long id) {
-        return ingestRunQueryRepository.findById(id).isPresent();
-    }
-
-    /**
      * Delete the ingestRun by id.
      *
      * @param id the id of the aggregate.

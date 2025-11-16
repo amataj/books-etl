@@ -69,28 +69,6 @@ public class IngestEventService {
     }
 
     /**
-     * Get all the ingestEvents.
-     *
-     * @return the list of aggregates.
-     */
-    public List<IngestEvent> findAll() {
-        LOG.debug("Request to get all IngestEvents");
-        PageResult<IngestEvent> page = ingestEventQueryRepository.findAll(new PageCriteria(0, Integer.MAX_VALUE));
-        return page.content();
-    }
-
-    /**
-     * Get one ingestEvent by id.
-     *
-     * @param id the id of the aggregate.
-     * @return the aggregate.
-     */
-    public Optional<IngestEvent> findOne(Long id) {
-        LOG.debug("Request to get IngestEvent : {}", id);
-        return ingestEventQueryRepository.findById(id);
-    }
-
-    /**
      * Delete the ingestEvent by id.
      *
      * @param id the id of the aggregate.

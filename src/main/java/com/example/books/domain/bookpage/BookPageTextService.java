@@ -70,47 +70,6 @@ public class BookPageTextService {
     }
 
     /**
-     * Get all the bookPageTexts.
-     *
-     * @param pageable the pagination information.
-     * @return the list of aggregates.
-     */
-    public Page<BookPageText> findAll(Pageable pageable) {
-        LOG.debug("Request to get all BookPageTexts");
-        PageResult<BookPageText> result = bookPageTextQueryRepository.findAll(
-            new PageCriteria(pageable.getPageNumber(), pageable.getPageSize()),
-            false
-        );
-        return new PageImpl<>(result.content(), pageable, result.totalElements());
-    }
-
-    /**
-     * Get all the bookPageTexts with eager load of relationships.
-     *
-     * @param pageable the pagination information.
-     * @return the list of aggregates.
-     */
-    public Page<BookPageText> findAllWithEagerRelationships(Pageable pageable) {
-        LOG.debug("Request to get all BookPageTexts with eager relationships");
-        PageResult<BookPageText> result = bookPageTextQueryRepository.findAll(
-            new PageCriteria(pageable.getPageNumber(), pageable.getPageSize()),
-            true
-        );
-        return new PageImpl<>(result.content(), pageable, result.totalElements());
-    }
-
-    /**
-     * Get one bookPageText by id.
-     *
-     * @param id the id of the aggregate.
-     * @return the aggregate.
-     */
-    public Optional<BookPageText> findOne(Long id) {
-        LOG.debug("Request to get BookPageText : {}", id);
-        return bookPageTextQueryRepository.findById(id, true);
-    }
-
-    /**
      * Delete the bookPageText by id.
      *
      * @param id the id of the aggregate.
