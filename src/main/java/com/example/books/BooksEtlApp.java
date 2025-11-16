@@ -2,7 +2,7 @@ package com.example.books;
 
 import com.example.books.infrastructure.broker.KafkaTopicProperties;
 import com.example.books.infrastructure.config.ApplicationProperties;
-import com.example.books.infrastructure.logging.CrlfLogConverter;
+import com.example.books.infrastructure.logging.CRLFLogConverter;
 import jakarta.annotation.PostConstruct;
 import java.net.InetAddress;
 import java.net.UnknownHostException;

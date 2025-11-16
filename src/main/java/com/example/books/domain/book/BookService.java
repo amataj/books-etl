@@ -64,7 +64,7 @@ public class BookService {
             LOG.info("Book with id {} does not exist", book.getId());
             return Optional.empty();
         }
-        Book existingBook = optionalBook.get();
+        Book existingBook = optionalBook.orElseThrow();
         partialUpdate(existingBook, book);
 
         return Optional.ofNullable(bookCommandRepository.save(existingBook));

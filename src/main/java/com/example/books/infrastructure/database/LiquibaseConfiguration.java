@@ -1,5 +1,6 @@
 package com.example.books.infrastructure.database;
 
+import com.example.books.infrastructure.config.ApplicationProperties;
 import java.util.concurrent.Executor;
 import javax.sql.DataSource;
 import liquibase.integration.spring.SpringLiquibase;

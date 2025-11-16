@@ -1,4 +1,4 @@
-package com.example.books.config;
+package com.example.books.interfaces.web;
 
 import static com.example.books.interfaces.web.StaticResourcesWebConfiguration.*;
 import static org.assertj.core.api.Assertions.assertThat;

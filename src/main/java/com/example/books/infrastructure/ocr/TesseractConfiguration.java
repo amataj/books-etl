@@ -1,5 +1,6 @@
 package com.example.books.infrastructure.ocr;
 
+import com.example.books.infrastructure.config.ApplicationProperties;
 import java.util.Map;
 import net.sourceforge.tess4j.Tesseract;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
