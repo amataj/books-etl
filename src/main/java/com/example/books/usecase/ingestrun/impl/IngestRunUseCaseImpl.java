@@ -1,7 +1,10 @@
 package com.example.books.usecase.ingestrun.impl;
 
 import com.example.books.domain.ingestrun.IngestRun;
+import com.example.books.domain.ingestrun.IngestRunQueryRepository;
 import com.example.books.domain.ingestrun.IngestRunService;
+import com.example.books.shared.pagination.PageCriteria;
+import com.example.books.shared.pagination.PageResult;
 import com.example.books.usecase.ingestrun.IngestRunUseCase;
 import java.util.List;
 import java.util.Optional;
@@ -13,9 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class IngestRunUseCaseImpl implements IngestRunUseCase {
 
     private final IngestRunService ingestRunService;
+    private final IngestRunQueryRepository ingestRunQueryRepository;
 
-    public IngestRunUseCaseImpl(IngestRunService ingestRunService) {
+    public IngestRunUseCaseImpl(IngestRunService ingestRunService, IngestRunQueryRepository ingestRunQueryRepository) {
         this.ingestRunService = ingestRunService;
+        this.ingestRunQueryRepository = ingestRunQueryRepository;
     }
 
     @Override
@@ -36,13 +41,14 @@ public class IngestRunUseCaseImpl implements IngestRunUseCase {
     @Override
     @Transactional(readOnly = true)
     public List<IngestRun> findAll() {
-        return ingestRunService.findAll();
+        PageResult<IngestRun> all = ingestRunQueryRepository.findAll(new PageCriteria(0, Integer.MAX_VALUE));
+        return all.content();
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<IngestRun> findOne(Long id) {
-        return ingestRunService.findOne(id);
+        return ingestRunQueryRepository.findById(id);
     }
 
     @Override
@@ -53,6 +59,6 @@ public class IngestRunUseCaseImpl implements IngestRunUseCase {
     @Override
     @Transactional(readOnly = true)
     public boolean exists(Long id) {
-        return ingestRunService.exists(id);
+        return ingestRunQueryRepository.findById(id).isPresent();
     }
 }

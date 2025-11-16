@@ -3,6 +3,8 @@ package com.example.books.usecase.ingestevent.impl;
 import com.example.books.domain.ingestevent.IngestEventQueryRepository;
 import com.example.books.domain.ingestevent.IngestEventService;
 import com.example.books.domain.ingestrun.IngestEvent;
+import com.example.books.shared.pagination.PageCriteria;
+import com.example.books.shared.pagination.PageResult;
 import com.example.books.usecase.ingestevent.IngestEventUseCase;
 import java.util.List;
 import java.util.Optional;
@@ -39,13 +41,14 @@ public class IngestEventUseCaseImpl implements IngestEventUseCase {
     @Override
     @Transactional(readOnly = true)
     public List<IngestEvent> findAll() {
-        return ingestEventService.findAll();
+        PageResult<IngestEvent> all = ingestEventQueryRepository.findAll(new PageCriteria(0, Integer.MAX_VALUE));
+        return all.content();
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<IngestEvent> findOne(Long id) {
-        return ingestEventService.findOne(id);
+        return ingestEventQueryRepository.findById(id);
     }
 
     @Override
@@ -56,6 +59,6 @@ public class IngestEventUseCaseImpl implements IngestEventUseCase {
     @Override
     @Transactional(readOnly = true)
     public boolean exists(Long id) {
-        return ingestEventService.findOne(id).isPresent();
+        return ingestEventQueryRepository.findById(id).isPresent();
     }
 }
