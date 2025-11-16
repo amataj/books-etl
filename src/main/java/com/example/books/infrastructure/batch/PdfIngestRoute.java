@@ -1,16 +1,8 @@
-package com.example.books.adapter.batch;
+package com.example.books.infrastructure.batch;
 
-import com.example.books.adapter.parser.PdfParser;
 import com.example.books.config.KafkaTopicProperties;
-import com.example.books.shared.ingest.DlqMessage;
-import com.example.books.shared.ingest.FileChangeNotification;
-import com.example.books.shared.ingest.ParsedPdfDocument;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.example.books.infrastructure.parser.PdfParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.Instant;
-import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

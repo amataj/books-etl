@@ -1,4 +1,4 @@
-package com.example.books.adapter.parser;
+package com.example.books.infrastructure.parser;
 
 import com.example.books.shared.ingest.FileChangeNotification;
 import com.example.books.shared.ingest.ParsedPdfDocument;

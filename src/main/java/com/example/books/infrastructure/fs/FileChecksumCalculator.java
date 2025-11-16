@@ -1,4 +1,4 @@
-package com.example.books.adapter.fs;
+package com.example.books.infrastructure.fs;
 
 import java.io.IOException;
 import java.io.InputStream;
