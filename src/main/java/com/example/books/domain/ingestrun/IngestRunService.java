@@ -1,119 +1,136 @@
 package com.example.books.domain.ingestrun;
 
-import com.example.books.infrastructure.database.jpa.entity.IngestRunEntity;
-import com.example.books.infrastructure.database.jpa.mapper.IngestRunMapper;
-import com.example.books.infrastructure.database.jpa.repository.IngestRunJpaRepository;
-import java.util.LinkedList;
+import com.example.books.shared.pagination.PageCriteria;
+import com.example.books.shared.pagination.PageResult;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service Implementation for managing {@link IngestRunEntity}.
+ * Domain service for managing {@link IngestRun} aggregates.
  */
 public class IngestRunService {
 
     private static final Logger LOG = LoggerFactory.getLogger(IngestRunService.class);
 
-    private final IngestRunJpaRepository ingestRunRepository;
+    private final IngestRunCommandRepository ingestRunCommandRepository;
+    private final IngestRunQueryRepository ingestRunQueryRepository;
 
-    private final IngestRunMapper ingestRunMapper;
-
-    public IngestRunService(IngestRunJpaRepository ingestRunRepository, IngestRunMapper ingestRunMapper) {
-        this.ingestRunRepository = ingestRunRepository;
-        this.ingestRunMapper = ingestRunMapper;
+    public IngestRunService(IngestRunCommandRepository ingestRunCommandRepository, IngestRunQueryRepository ingestRunQueryRepository) {
+        this.ingestRunCommandRepository = ingestRunCommandRepository;
+        this.ingestRunQueryRepository = ingestRunQueryRepository;
     }
 
     /**
-     * Save a ingestRun.
+     * Save an ingestRun.
      *
-     * @param ingestRunDTO the entity to save.
-     * @return the persisted entity.
+     * @param ingestRun the aggregate to save.
+     * @return the persisted aggregate.
      */
-    public IngestRun save(IngestRun ingestRunDTO) {
-        LOG.debug("Request to save IngestRun : {}", ingestRunDTO);
-        IngestRunEntity ingestRun = ingestRunMapper.toEntity(ingestRunDTO);
-        ingestRun = ingestRunRepository.save(ingestRun);
-        return ingestRunMapper.toDto(ingestRun);
+    public IngestRun save(IngestRun ingestRun) {
+        LOG.debug("Request to save IngestRun : {}", ingestRun);
+        return ingestRunCommandRepository.save(ingestRun);
     }
 
     /**
-     * Update a ingestRun.
+     * Update an ingestRun.
      *
-     * @param ingestRunDTO the entity to save.
-     * @return the persisted entity.
+     * @param ingestRun the aggregate to update.
+     * @return the persisted aggregate.
      */
-    public IngestRun update(IngestRun ingestRunDTO) {
-        LOG.debug("Request to update IngestRun : {}", ingestRunDTO);
-        IngestRunEntity ingestRun = ingestRunMapper.toEntity(ingestRunDTO);
-        ingestRun = ingestRunRepository.save(ingestRun);
-        return ingestRunMapper.toDto(ingestRun);
+    public IngestRun update(IngestRun ingestRun) {
+        LOG.debug("Request to update IngestRun : {}", ingestRun);
+        return ingestRunCommandRepository.save(ingestRun);
     }
 
     /**
-     * Partially update a ingestRun.
+     * Partially update an ingestRun.
      *
-     * @param ingestRunDTO the entity to update partially.
-     * @return the persisted entity.
+     * @param ingestRun the aggregate to update partially.
+     * @return the persisted aggregate.
      */
-    public Optional<IngestRun> partialUpdate(IngestRun ingestRunDTO) {
-        LOG.debug("Request to partially update IngestRun : {}", ingestRunDTO);
+    public Optional<IngestRun> partialUpdate(IngestRun ingestRun) {
+        LOG.debug("Request to partially update IngestRun : {}", ingestRun);
+        if (ingestRun.getId() == null) {
+            return Optional.empty();
+        }
 
-        return ingestRunRepository
-            .findById(ingestRunDTO.getId())
-            .map(existingIngestRun -> {
-                ingestRunMapper.partialUpdate(existingIngestRun, ingestRunDTO);
-
-                return existingIngestRun;
-            })
-            .map(ingestRunRepository::save)
-            .map(ingestRunMapper::toDto);
+        return ingestRunQueryRepository
+            .findById(ingestRun.getId())
+            .map(existing -> {
+                partialUpdate(existing, ingestRun);
+                return ingestRunCommandRepository.save(existing);
+            });
     }
 
     /**
      * Get all the ingestRuns.
      *
-     * @return the list of entities.
+     * @return the list of aggregates.
      */
-    @Transactional(readOnly = true)
     public List<IngestRun> findAll() {
         LOG.debug("Request to get all IngestRuns");
-        return ingestRunRepository.findAll().stream().map(ingestRunMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
+        PageResult<IngestRun> page = ingestRunQueryRepository.findAll(new PageCriteria(0, Integer.MAX_VALUE));
+        return page.content();
     }
 
     /**
      * Get one ingestRun by id.
      *
-     * @param id the id of the entity.
-     * @return the entity.
+     * @param id the id of the aggregate.
+     * @return the aggregate.
      */
-    @Transactional(readOnly = true)
     public Optional<IngestRun> findOne(Long id) {
         LOG.debug("Request to get IngestRun : {}", id);
-        return ingestRunRepository.findById(id).map(ingestRunMapper::toDto);
+        return ingestRunQueryRepository.findById(id);
     }
 
     /**
      * Check if the ingestRun exists by id.
      *
-     * @param id the id of the entity.
+     * @param id the id of the aggregate.
      * @return true if the ingestRun exists.
      */
-    @Transactional(readOnly = true)
     public boolean exists(Long id) {
-        return ingestRunRepository.existsById(id);
+        return ingestRunQueryRepository.findById(id).isPresent();
     }
 
     /**
      * Delete the ingestRun by id.
      *
-     * @param id the id of the entity.
+     * @param id the id of the aggregate.
      */
     public void delete(Long id) {
         LOG.debug("Request to delete IngestRun : {}", id);
-        ingestRunRepository.deleteById(id);
+        ingestRunCommandRepository.deleteById(id);
+    }
+
+    private void partialUpdate(IngestRun existing, IngestRun incoming) {
+        if (incoming == null) {
+            return;
+        }
+
+        if (incoming.getId() != null) {
+            existing.setId(incoming.getId());
+        }
+        if (incoming.getStartedAt() != null) {
+            existing.setStartedAt(incoming.getStartedAt());
+        }
+        if (incoming.getFinishedAt() != null) {
+            existing.setFinishedAt(incoming.getFinishedAt());
+        }
+        if (incoming.getStatus() != null) {
+            existing.setStatus(incoming.getStatus());
+        }
+        if (incoming.getFilesSeen() != null) {
+            existing.setFilesSeen(incoming.getFilesSeen());
+        }
+        if (incoming.getFilesParsed() != null) {
+            existing.setFilesParsed(incoming.getFilesParsed());
+        }
+        if (incoming.getFilesFailed() != null) {
+            existing.setFilesFailed(incoming.getFilesFailed());
+        }
     }
 }

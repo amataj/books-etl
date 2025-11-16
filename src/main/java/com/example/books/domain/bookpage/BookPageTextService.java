@@ -1,117 +1,144 @@
 package com.example.books.domain.bookpage;
 
-import com.example.books.infrastructure.database.jpa.entity.BookPageTextEntity;
-import com.example.books.infrastructure.database.jpa.mapper.BookPageTextMapper;
-import com.example.books.infrastructure.database.jpa.repository.BookPageTextJpaRepository;
+import com.example.books.shared.pagination.PageCriteria;
+import com.example.books.shared.pagination.PageResult;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service Implementation for managing {@link BookPageTextEntity}.
+ * Domain service for managing {@link BookPageText} aggregates.
  */
 public class BookPageTextService {
 
     private static final Logger LOG = LoggerFactory.getLogger(BookPageTextService.class);
 
-    private final BookPageTextJpaRepository bookPageTextRepository;
+    private final BookPageTextCommandRepository bookPageTextCommandRepository;
+    private final BookPageTextQueryRepository bookPageTextQueryRepository;
 
-    private final BookPageTextMapper bookPageTextMapper;
-
-    public BookPageTextService(BookPageTextJpaRepository bookPageTextRepository, BookPageTextMapper bookPageTextMapper) {
-        this.bookPageTextRepository = bookPageTextRepository;
-        this.bookPageTextMapper = bookPageTextMapper;
+    public BookPageTextService(
+        BookPageTextCommandRepository bookPageTextCommandRepository,
+        BookPageTextQueryRepository bookPageTextQueryRepository
+    ) {
+        this.bookPageTextCommandRepository = bookPageTextCommandRepository;
+        this.bookPageTextQueryRepository = bookPageTextQueryRepository;
     }
 
     /**
      * Save a bookPageText.
      *
-     * @param bookPageTextDTO the entity to save.
-     * @return the persisted entity.
+     * @param bookPageText the aggregate to save.
+     * @return the persisted aggregate.
      */
-    public BookPageText save(BookPageText bookPageTextDTO) {
-        LOG.debug("Request to save BookPageText : {}", bookPageTextDTO);
-        BookPageTextEntity bookPageText = bookPageTextMapper.toEntity(bookPageTextDTO);
-        bookPageText = bookPageTextRepository.save(bookPageText);
-        return bookPageTextMapper.toDto(bookPageText);
+    public BookPageText save(BookPageText bookPageText) {
+        LOG.debug("Request to save BookPageText : {}", bookPageText);
+        return bookPageTextCommandRepository.save(bookPageText);
     }
 
     /**
      * Update a bookPageText.
      *
-     * @param bookPageTextDTO the entity to save.
-     * @return the persisted entity.
+     * @param bookPageText the aggregate to update.
+     * @return the persisted aggregate.
      */
-    public BookPageText update(BookPageText bookPageTextDTO) {
-        LOG.debug("Request to update BookPageText : {}", bookPageTextDTO);
-        BookPageTextEntity bookPageText = bookPageTextMapper.toEntity(bookPageTextDTO);
-        bookPageText = bookPageTextRepository.save(bookPageText);
-        return bookPageTextMapper.toDto(bookPageText);
+    public BookPageText update(BookPageText bookPageText) {
+        LOG.debug("Request to update BookPageText : {}", bookPageText);
+        return bookPageTextCommandRepository.save(bookPageText);
     }
 
     /**
      * Partially update a bookPageText.
      *
-     * @param bookPageTextDTO the entity to update partially.
-     * @return the persisted entity.
+     * @param bookPageText the aggregate to update partially.
+     * @return the persisted aggregate.
      */
-    public Optional<BookPageText> partialUpdate(BookPageText bookPageTextDTO) {
-        LOG.debug("Request to partially update BookPageText : {}", bookPageTextDTO);
+    public Optional<BookPageText> partialUpdate(BookPageText bookPageText) {
+        LOG.debug("Request to partially update BookPageText : {}", bookPageText);
+        if (bookPageText.getId() == null) {
+            return Optional.empty();
+        }
 
-        return bookPageTextRepository
-            .findById(bookPageTextDTO.getId())
-            .map(existingBookPageText -> {
-                bookPageTextMapper.partialUpdate(existingBookPageText, bookPageTextDTO);
-
-                return existingBookPageText;
-            })
-            .map(bookPageTextRepository::save)
-            .map(bookPageTextMapper::toDto);
+        return bookPageTextQueryRepository
+            .findById(bookPageText.getId(), true)
+            .map(existing -> {
+                partialUpdate(existing, bookPageText);
+                return bookPageTextCommandRepository.save(existing);
+            });
     }
 
     /**
      * Get all the bookPageTexts.
      *
      * @param pageable the pagination information.
-     * @return the list of entities.
+     * @return the list of aggregates.
      */
-    @Transactional(readOnly = true)
     public Page<BookPageText> findAll(Pageable pageable) {
         LOG.debug("Request to get all BookPageTexts");
-        return bookPageTextRepository.findAll(pageable).map(bookPageTextMapper::toDto);
+        PageResult<BookPageText> result = bookPageTextQueryRepository.findAll(
+            new PageCriteria(pageable.getPageNumber(), pageable.getPageSize()),
+            false
+        );
+        return new PageImpl<>(result.content(), pageable, result.totalElements());
     }
 
     /**
-     * Get all the bookPageTexts with eager load of many-to-many relationships.
+     * Get all the bookPageTexts with eager load of relationships.
      *
-     * @return the list of entities.
+     * @param pageable the pagination information.
+     * @return the list of aggregates.
      */
     public Page<BookPageText> findAllWithEagerRelationships(Pageable pageable) {
-        return bookPageTextRepository.findAllWithEagerRelationships(pageable).map(bookPageTextMapper::toDto);
+        LOG.debug("Request to get all BookPageTexts with eager relationships");
+        PageResult<BookPageText> result = bookPageTextQueryRepository.findAll(
+            new PageCriteria(pageable.getPageNumber(), pageable.getPageSize()),
+            true
+        );
+        return new PageImpl<>(result.content(), pageable, result.totalElements());
     }
 
     /**
      * Get one bookPageText by id.
      *
-     * @param id the id of the entity.
-     * @return the entity.
+     * @param id the id of the aggregate.
+     * @return the aggregate.
      */
-    @Transactional(readOnly = true)
     public Optional<BookPageText> findOne(Long id) {
         LOG.debug("Request to get BookPageText : {}", id);
-        return bookPageTextRepository.findOneWithEagerRelationships(id).map(bookPageTextMapper::toDto);
+        return bookPageTextQueryRepository.findById(id, true);
     }
 
     /**
      * Delete the bookPageText by id.
      *
-     * @param id the id of the entity.
+     * @param id the id of the aggregate.
      */
     public void delete(Long id) {
         LOG.debug("Request to delete BookPageText : {}", id);
-        bookPageTextRepository.deleteById(id);
+        bookPageTextCommandRepository.deleteById(id);
+    }
+
+    private void partialUpdate(BookPageText existing, BookPageText incoming) {
+        if (incoming == null) {
+            return;
+        }
+
+        if (incoming.getId() != null) {
+            existing.setId(incoming.getId());
+        }
+        if (incoming.getDocumentId() != null) {
+            existing.setDocumentId(incoming.getDocumentId());
+        }
+        if (incoming.getPageNo() != null) {
+            existing.setPageNo(incoming.getPageNo());
+        }
+        if (incoming.getText() != null) {
+            existing.setText(incoming.getText());
+        }
+        if (incoming.getBook() != null) {
+            existing.setBook(incoming.getBook());
+        }
     }
 }

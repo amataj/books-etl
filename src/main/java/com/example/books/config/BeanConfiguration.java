@@ -3,16 +3,21 @@ package com.example.books.config;
 import com.example.books.domain.book.BookCommandRepository;
 import com.example.books.domain.book.BookQueryRepository;
 import com.example.books.domain.book.BookService;
+import com.example.books.domain.bookfile.BookFileCommandRepository;
+import com.example.books.domain.bookfile.BookFileQueryRepository;
 import com.example.books.domain.bookfile.BookFileService;
+import com.example.books.domain.bookpage.BookPageTextCommandRepository;
+import com.example.books.domain.bookpage.BookPageTextQueryRepository;
 import com.example.books.domain.bookpage.BookPageTextService;
+import com.example.books.domain.ingestevent.IngestEventCommandRepository;
+import com.example.books.domain.ingestevent.IngestEventQueryRepository;
 import com.example.books.domain.ingestevent.IngestEventService;
+import com.example.books.domain.ingestrun.IngestRunCommandRepository;
+import com.example.books.domain.ingestrun.IngestRunQueryRepository;
 import com.example.books.domain.ingestrun.IngestRunService;
 import com.example.books.domain.user.UserService;
-import com.example.books.infrastructure.database.jpa.mapper.BookFileMapper;
-import com.example.books.infrastructure.database.jpa.mapper.BookPageTextMapper;
-import com.example.books.infrastructure.database.jpa.mapper.IngestEventMapper;
-import com.example.books.infrastructure.database.jpa.mapper.IngestRunMapper;
-import com.example.books.infrastructure.database.jpa.repository.*;
+import com.example.books.infrastructure.database.jpa.repository.AuthorityJpaRepository;
+import com.example.books.infrastructure.database.jpa.repository.UserJpaRepository;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,26 +35,35 @@ public class BeanConfiguration {
     }
 
     @Bean
-    public BookFileService bookFileService(BookFileJpaRepository bookFileJpaRepository, BookFileMapper bookFileMapper) {
-        return new BookFileService(bookFileJpaRepository, bookFileMapper);
+    public BookFileService bookFileService(
+        BookFileCommandRepository bookFileCommandRepository,
+        BookFileQueryRepository bookFileQueryRepository
+    ) {
+        return new BookFileService(bookFileCommandRepository, bookFileQueryRepository);
     }
 
     @Bean
     public BookPageTextService bookPageTextService(
-        BookPageTextJpaRepository bookPageTextJpaRepository,
-        BookPageTextMapper bookPageTextMapper
+        BookPageTextCommandRepository bookPageTextCommandRepository,
+        BookPageTextQueryRepository bookPageTextQueryRepository
     ) {
-        return new BookPageTextService(bookPageTextJpaRepository, bookPageTextMapper);
+        return new BookPageTextService(bookPageTextCommandRepository, bookPageTextQueryRepository);
     }
 
     @Bean
-    public IngestRunService ingestRunService(IngestRunJpaRepository ingestRunJpaRepository, IngestRunMapper ingestRunMapper) {
-        return new IngestRunService(ingestRunJpaRepository, ingestRunMapper);
+    public IngestRunService ingestRunService(
+        IngestRunCommandRepository ingestRunCommandRepository,
+        IngestRunQueryRepository ingestRunQueryRepository
+    ) {
+        return new IngestRunService(ingestRunCommandRepository, ingestRunQueryRepository);
     }
 
     @Bean
-    public IngestEventService ingestEventService(IngestEventJpaRepository ingestEventJpaRepository, IngestEventMapper ingestEventMapper) {
-        return new IngestEventService(ingestEventJpaRepository, ingestEventMapper);
+    public IngestEventService ingestEventService(
+        IngestEventCommandRepository ingestEventCommandRepository,
+        IngestEventQueryRepository ingestEventQueryRepository
+    ) {
+        return new IngestEventService(ingestEventCommandRepository, ingestEventQueryRepository);
     }
 
     @Bean

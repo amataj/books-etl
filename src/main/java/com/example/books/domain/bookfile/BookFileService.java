@@ -1,117 +1,153 @@
 package com.example.books.domain.bookfile;
 
-import com.example.books.infrastructure.database.jpa.entity.BookFileEntity;
-import com.example.books.infrastructure.database.jpa.mapper.BookFileMapper;
-import com.example.books.infrastructure.database.jpa.repository.BookFileJpaRepository;
+import com.example.books.shared.pagination.PageCriteria;
+import com.example.books.shared.pagination.PageResult;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service Implementation for managing {@link BookFileEntity}.
+ * Domain service for managing {@link BookFile} aggregates.
  */
 public class BookFileService {
 
     private static final Logger LOG = LoggerFactory.getLogger(BookFileService.class);
 
-    private final BookFileJpaRepository bookFileRepository;
+    private final BookFileCommandRepository bookFileCommandRepository;
+    private final BookFileQueryRepository bookFileQueryRepository;
 
-    private final BookFileMapper bookFileMapper;
-
-    public BookFileService(BookFileJpaRepository bookFileRepository, BookFileMapper bookFileMapper) {
-        this.bookFileRepository = bookFileRepository;
-        this.bookFileMapper = bookFileMapper;
+    public BookFileService(BookFileCommandRepository bookFileCommandRepository, BookFileQueryRepository bookFileQueryRepository) {
+        this.bookFileCommandRepository = bookFileCommandRepository;
+        this.bookFileQueryRepository = bookFileQueryRepository;
     }
 
     /**
      * Save a bookFile.
      *
-     * @param bookFileDTO the entity to save.
-     * @return the persisted entity.
+     * @param bookFile the aggregate to save.
+     * @return the persisted aggregate.
      */
-    public BookFile save(BookFile bookFileDTO) {
-        LOG.debug("Request to save BookFile : {}", bookFileDTO);
-        BookFileEntity bookFile = bookFileMapper.toEntity(bookFileDTO);
-        bookFile = bookFileRepository.save(bookFile);
-        return bookFileMapper.toDto(bookFile);
+    public BookFile save(BookFile bookFile) {
+        LOG.debug("Request to save BookFile : {}", bookFile);
+        return bookFileCommandRepository.save(bookFile);
     }
 
     /**
      * Update a bookFile.
      *
-     * @param bookFileDTO the entity to save.
-     * @return the persisted entity.
+     * @param bookFile the aggregate to update.
+     * @return the persisted aggregate.
      */
-    public BookFile update(BookFile bookFileDTO) {
-        LOG.debug("Request to update BookFile : {}", bookFileDTO);
-        BookFileEntity bookFile = bookFileMapper.toEntity(bookFileDTO);
-        bookFile = bookFileRepository.save(bookFile);
-        return bookFileMapper.toDto(bookFile);
+    public BookFile update(BookFile bookFile) {
+        LOG.debug("Request to update BookFile : {}", bookFile);
+        return bookFileCommandRepository.save(bookFile);
     }
 
     /**
      * Partially update a bookFile.
      *
-     * @param bookFileDTO the entity to update partially.
-     * @return the persisted entity.
+     * @param bookFile the aggregate to update partially.
+     * @return the persisted aggregate.
      */
-    public Optional<BookFile> partialUpdate(BookFile bookFileDTO) {
-        LOG.debug("Request to partially update BookFile : {}", bookFileDTO);
+    public Optional<BookFile> partialUpdate(BookFile bookFile) {
+        LOG.debug("Request to partially update BookFile : {}", bookFile);
+        if (bookFile.getId() == null) {
+            return Optional.empty();
+        }
 
-        return bookFileRepository
-            .findById(bookFileDTO.getId())
+        return bookFileQueryRepository
+            .findById(bookFile.getId(), true)
             .map(existingBookFile -> {
-                bookFileMapper.partialUpdate(existingBookFile, bookFileDTO);
-
-                return existingBookFile;
-            })
-            .map(bookFileRepository::save)
-            .map(bookFileMapper::toDto);
+                partialUpdate(existingBookFile, bookFile);
+                return bookFileCommandRepository.save(existingBookFile);
+            });
     }
 
     /**
      * Get all the bookFiles.
      *
      * @param pageable the pagination information.
-     * @return the list of entities.
+     * @return the list of aggregates.
      */
-    @Transactional(readOnly = true)
     public Page<BookFile> findAll(Pageable pageable) {
         LOG.debug("Request to get all BookFiles");
-        return bookFileRepository.findAll(pageable).map(bookFileMapper::toDto);
+        PageResult<BookFile> result = bookFileQueryRepository.findAll(
+            new PageCriteria(pageable.getPageNumber(), pageable.getPageSize()),
+            false
+        );
+        return new PageImpl<>(result.content(), pageable, result.totalElements());
     }
 
     /**
-     * Get all the bookFiles with eager load of many-to-many relationships.
+     * Get all the bookFiles with eager load of relationships.
      *
-     * @return the list of entities.
+     * @param pageable the pagination information.
+     * @return the list of aggregates.
      */
     public Page<BookFile> findAllWithEagerRelationships(Pageable pageable) {
-        return bookFileRepository.findAllWithEagerRelationships(pageable).map(bookFileMapper::toDto);
+        LOG.debug("Request to get all BookFiles with eager relationships");
+        PageResult<BookFile> result = bookFileQueryRepository.findAll(
+            new PageCriteria(pageable.getPageNumber(), pageable.getPageSize()),
+            true
+        );
+        return new PageImpl<>(result.content(), pageable, result.totalElements());
     }
 
     /**
      * Get one bookFile by id.
      *
-     * @param id the id of the entity.
-     * @return the entity.
+     * @param id the id of the aggregate.
+     * @return the aggregate.
      */
-    @Transactional(readOnly = true)
     public Optional<BookFile> findOne(Long id) {
         LOG.debug("Request to get BookFile : {}", id);
-        return bookFileRepository.findOneWithEagerRelationships(id).map(bookFileMapper::toDto);
+        return bookFileQueryRepository.findById(id, true);
     }
 
     /**
      * Delete the bookFile by id.
      *
-     * @param id the id of the entity.
+     * @param id the id of the aggregate.
      */
     public void delete(Long id) {
         LOG.debug("Request to delete BookFile : {}", id);
-        bookFileRepository.deleteById(id);
+        bookFileCommandRepository.deleteById(id);
+    }
+
+    private void partialUpdate(BookFile existing, BookFile incoming) {
+        if (incoming == null) {
+            return;
+        }
+
+        if (incoming.getId() != null) {
+            existing.setId(incoming.getId());
+        }
+        if (incoming.getPathNorm() != null) {
+            existing.setPathNorm(incoming.getPathNorm());
+        }
+        if (incoming.getSha256() != null) {
+            existing.setSha256(incoming.getSha256());
+        }
+        if (incoming.getSizeBytes() != null) {
+            existing.setSizeBytes(incoming.getSizeBytes());
+        }
+        if (incoming.getMtime() != null) {
+            existing.setMtime(incoming.getMtime());
+        }
+        if (incoming.getStorageUri() != null) {
+            existing.setStorageUri(incoming.getStorageUri());
+        }
+        if (incoming.getFirstSeenAt() != null) {
+            existing.setFirstSeenAt(incoming.getFirstSeenAt());
+        }
+        if (incoming.getLastSeenAt() != null) {
+            existing.setLastSeenAt(incoming.getLastSeenAt());
+        }
+        if (incoming.getBook() != null) {
+            existing.setBook(incoming.getBook());
+        }
     }
 }

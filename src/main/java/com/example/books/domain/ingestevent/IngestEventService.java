@@ -1,109 +1,130 @@
 package com.example.books.domain.ingestevent;
 
 import com.example.books.domain.ingestrun.IngestEvent;
-import com.example.books.infrastructure.database.jpa.entity.IngestEventEntity;
-import com.example.books.infrastructure.database.jpa.mapper.IngestEventMapper;
-import com.example.books.infrastructure.database.jpa.repository.IngestEventJpaRepository;
-import java.util.LinkedList;
+import com.example.books.shared.pagination.PageCriteria;
+import com.example.books.shared.pagination.PageResult;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service Implementation for managing {@link IngestEventEntity}.
+ * Domain service for managing {@link IngestEvent} aggregates.
  */
 public class IngestEventService {
 
     private static final Logger LOG = LoggerFactory.getLogger(IngestEventService.class);
 
-    private final IngestEventJpaRepository ingestEventRepository;
+    private final IngestEventCommandRepository ingestEventCommandRepository;
+    private final IngestEventQueryRepository ingestEventQueryRepository;
 
-    private final IngestEventMapper ingestEventMapper;
-
-    public IngestEventService(IngestEventJpaRepository ingestEventRepository, IngestEventMapper ingestEventMapper) {
-        this.ingestEventRepository = ingestEventRepository;
-        this.ingestEventMapper = ingestEventMapper;
+    public IngestEventService(
+        IngestEventCommandRepository ingestEventCommandRepository,
+        IngestEventQueryRepository ingestEventQueryRepository
+    ) {
+        this.ingestEventCommandRepository = ingestEventCommandRepository;
+        this.ingestEventQueryRepository = ingestEventQueryRepository;
     }
 
     /**
-     * Save a ingestEvent.
+     * Save an ingestEvent.
      *
-     * @param ingestEventDTO the entity to save.
-     * @return the persisted entity.
+     * @param ingestEvent the aggregate to save.
+     * @return the persisted aggregate.
      */
-    public IngestEvent save(IngestEvent ingestEventDTO) {
-        LOG.debug("Request to save IngestEvent : {}", ingestEventDTO);
-        IngestEventEntity ingestEvent = ingestEventMapper.toEntity(ingestEventDTO);
-        ingestEvent = ingestEventRepository.save(ingestEvent);
-        return ingestEventMapper.toDto(ingestEvent);
+    public IngestEvent save(IngestEvent ingestEvent) {
+        LOG.debug("Request to save IngestEvent : {}", ingestEvent);
+        return ingestEventCommandRepository.save(ingestEvent);
     }
 
     /**
-     * Update a ingestEvent.
+     * Update an ingestEvent.
      *
-     * @param ingestEventDTO the entity to save.
-     * @return the persisted entity.
+     * @param ingestEvent the aggregate to update.
+     * @return the persisted aggregate.
      */
-    public IngestEvent update(IngestEvent ingestEventDTO) {
-        LOG.debug("Request to update IngestEvent : {}", ingestEventDTO);
-        IngestEventEntity ingestEvent = ingestEventMapper.toEntity(ingestEventDTO);
-        ingestEvent = ingestEventRepository.save(ingestEvent);
-        return ingestEventMapper.toDto(ingestEvent);
+    public IngestEvent update(IngestEvent ingestEvent) {
+        LOG.debug("Request to update IngestEvent : {}", ingestEvent);
+        return ingestEventCommandRepository.save(ingestEvent);
     }
 
     /**
-     * Partially update a ingestEvent.
+     * Partially update an ingestEvent.
      *
-     * @param ingestEventDTO the entity to update partially.
-     * @return the persisted entity.
+     * @param ingestEvent the aggregate to update partially.
+     * @return the persisted aggregate.
      */
-    public Optional<IngestEvent> partialUpdate(IngestEvent ingestEventDTO) {
-        LOG.debug("Request to partially update IngestEvent : {}", ingestEventDTO);
+    public Optional<IngestEvent> partialUpdate(IngestEvent ingestEvent) {
+        LOG.debug("Request to partially update IngestEvent : {}", ingestEvent);
+        if (ingestEvent.getId() == null) {
+            return Optional.empty();
+        }
 
-        return ingestEventRepository
-            .findById(ingestEventDTO.getId())
-            .map(existingIngestEvent -> {
-                ingestEventMapper.partialUpdate(existingIngestEvent, ingestEventDTO);
-
-                return existingIngestEvent;
-            })
-            .map(ingestEventRepository::save)
-            .map(ingestEventMapper::toDto);
+        return ingestEventQueryRepository
+            .findById(ingestEvent.getId())
+            .map(existing -> {
+                partialUpdate(existing, ingestEvent);
+                return ingestEventCommandRepository.save(existing);
+            });
     }
 
     /**
      * Get all the ingestEvents.
      *
-     * @return the list of entities.
+     * @return the list of aggregates.
      */
-    @Transactional(readOnly = true)
     public List<IngestEvent> findAll() {
         LOG.debug("Request to get all IngestEvents");
-        return ingestEventRepository.findAll().stream().map(ingestEventMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
+        PageResult<IngestEvent> page = ingestEventQueryRepository.findAll(new PageCriteria(0, Integer.MAX_VALUE));
+        return page.content();
     }
 
     /**
      * Get one ingestEvent by id.
      *
-     * @param id the id of the entity.
-     * @return the entity.
+     * @param id the id of the aggregate.
+     * @return the aggregate.
      */
-    @Transactional(readOnly = true)
     public Optional<IngestEvent> findOne(Long id) {
         LOG.debug("Request to get IngestEvent : {}", id);
-        return ingestEventRepository.findById(id).map(ingestEventMapper::toDto);
+        return ingestEventQueryRepository.findById(id);
     }
 
     /**
      * Delete the ingestEvent by id.
      *
-     * @param id the id of the entity.
+     * @param id the id of the aggregate.
      */
     public void delete(Long id) {
         LOG.debug("Request to delete IngestEvent : {}", id);
-        ingestEventRepository.deleteById(id);
+        ingestEventCommandRepository.deleteById(id);
+    }
+
+    private void partialUpdate(IngestEvent existing, IngestEvent incoming) {
+        if (incoming == null) {
+            return;
+        }
+
+        if (incoming.getId() != null) {
+            existing.setId(incoming.getId());
+        }
+        if (incoming.getRunId() != null) {
+            existing.setRunId(incoming.getRunId());
+        }
+        if (incoming.getDocumentId() != null) {
+            existing.setDocumentId(incoming.getDocumentId());
+        }
+        if (incoming.getTopic() != null) {
+            existing.setTopic(incoming.getTopic());
+        }
+        if (incoming.getPayload() != null) {
+            existing.setPayload(incoming.getPayload());
+        }
+        if (incoming.getCreatedAt() != null) {
+            existing.setCreatedAt(incoming.getCreatedAt());
+        }
+        if (incoming.getIngestRun() != null) {
+            existing.setIngestRun(incoming.getIngestRun());
+        }
     }
 }
