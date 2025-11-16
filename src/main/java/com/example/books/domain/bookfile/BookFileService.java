@@ -67,47 +67,6 @@ public class BookFileService {
     }
 
     /**
-     * Get all the bookFiles.
-     *
-     * @param pageable the pagination information.
-     * @return the list of aggregates.
-     */
-    public Page<BookFile> findAll(Pageable pageable) {
-        LOG.debug("Request to get all BookFiles");
-        PageResult<BookFile> result = bookFileQueryRepository.findAll(
-            new PageCriteria(pageable.getPageNumber(), pageable.getPageSize()),
-            false
-        );
-        return new PageImpl<>(result.content(), pageable, result.totalElements());
-    }
-
-    /**
-     * Get all the bookFiles with eager load of relationships.
-     *
-     * @param pageable the pagination information.
-     * @return the list of aggregates.
-     */
-    public Page<BookFile> findAllWithEagerRelationships(Pageable pageable) {
-        LOG.debug("Request to get all BookFiles with eager relationships");
-        PageResult<BookFile> result = bookFileQueryRepository.findAll(
-            new PageCriteria(pageable.getPageNumber(), pageable.getPageSize()),
-            true
-        );
-        return new PageImpl<>(result.content(), pageable, result.totalElements());
-    }
-
-    /**
-     * Get one bookFile by id.
-     *
-     * @param id the id of the aggregate.
-     * @return the aggregate.
-     */
-    public Optional<BookFile> findOne(Long id) {
-        LOG.debug("Request to get BookFile : {}", id);
-        return bookFileQueryRepository.findById(id, true);
-    }
-
-    /**
      * Delete the bookFile by id.
      *
      * @param id the id of the aggregate.

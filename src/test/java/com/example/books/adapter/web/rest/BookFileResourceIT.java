@@ -252,23 +252,6 @@ class BookFileResourceIT {
             .andExpect(jsonPath("$.[*].lastSeenAt").value(hasItem(sameInstant(DEFAULT_LAST_SEEN_AT))));
     }
 
-    @SuppressWarnings({ "unchecked" })
-    void getAllBookFilesWithEagerRelationshipsIsEnabled() throws Exception {
-        when(bookFileServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restBookFileMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(bookFileServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllBookFilesWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(bookFileServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restBookFileMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
-        verify(bookFileRepositoryMock, times(1)).findAll(any(Pageable.class));
-    }
-
     @Test
     @Transactional
     void getBookFile() throws Exception {
