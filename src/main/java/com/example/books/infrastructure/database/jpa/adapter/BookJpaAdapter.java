@@ -54,4 +54,9 @@ public class BookJpaAdapter implements BookDataAccessRepository, BookRepository 
         var content = page.stream().map(bookMapper::toDto).toList();
         return new PageResult<>(content, page.getTotalElements(), page.getNumber(), page.getSize());
     }
+
+    @Override
+    public Optional<Book> findByTitle(String title) {
+        return bookJpaRepository.findByTitle(title).map(bookMapper::toDto);
+    }
 }
