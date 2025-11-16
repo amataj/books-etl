@@ -3,7 +3,7 @@ package com.example.books.cucumber.stepdefs;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.example.books.adapter.web.rest.UserResource;
+import com.example.books.interfaces.web.rest.UserResource;
 import com.example.books.shared.security.AuthoritiesConstants;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;

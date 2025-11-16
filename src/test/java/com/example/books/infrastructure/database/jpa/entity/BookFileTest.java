@@ -4,7 +4,7 @@ import static com.example.books.infrastructure.database.jpa.entity.BookFileTestS
 import static com.example.books.infrastructure.database.jpa.entity.BookTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.example.books.adapter.web.rest.TestUtil;
+import com.example.books.interfaces.web.rest.TestUtil;
 import org.junit.jupiter.api.Test;
 
 class BookFileTest {
