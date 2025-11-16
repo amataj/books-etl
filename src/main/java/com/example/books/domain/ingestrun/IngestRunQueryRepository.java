@@ -5,9 +5,9 @@ import com.example.books.shared.pagination.PageResult;
 import java.util.Optional;
 
 /**
- * Read-only port for ingest runs.
+ * Query-side port for ingest runs.
  */
-public interface IngestRunDataAccessRepository {
+public interface IngestRunQueryRepository {
     Optional<IngestRun> findById(Long id);
 
     PageResult<IngestRun> findAll(PageCriteria criteria);

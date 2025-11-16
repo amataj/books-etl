@@ -1,8 +1,8 @@
 package com.example.books.infrastructure.database.jpa.adapter;
 
 import com.example.books.domain.bookfile.BookFile;
-import com.example.books.domain.bookfile.BookFileDataAccessRepository;
-import com.example.books.domain.bookfile.BookFileRepository;
+import com.example.books.domain.bookfile.BookFileCommandRepository;
+import com.example.books.domain.bookfile.BookFileQueryRepository;
 import com.example.books.infrastructure.database.jpa.mapper.BookFileMapper;
 import com.example.books.infrastructure.database.jpa.repository.BookFileJpaRepository;
 import com.example.books.shared.pagination.PageCriteria;
@@ -12,10 +12,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 /**
- * JPA-backed implementation of {@link BookFileDataAccessRepository}.
+ * JPA-backed implementation of {@link BookFileQueryRepository}.
  */
 @Repository
-public class BookFileJpaAdapter implements BookFileDataAccessRepository, BookFileRepository {
+public class BookFileJpaAdapter implements BookFileQueryRepository, BookFileCommandRepository {
 
     private final BookFileJpaRepository bookFileJpaRepository;
     private final BookFileMapper bookFileMapper;

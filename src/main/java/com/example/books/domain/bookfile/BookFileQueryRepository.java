@@ -5,9 +5,9 @@ import com.example.books.shared.pagination.PageResult;
 import java.util.Optional;
 
 /**
- * Read-only port for book files.
+ * Query-side port for book files.
  */
-public interface BookFileDataAccessRepository {
+public interface BookFileQueryRepository {
     Optional<BookFile> findById(Long id);
 
     Optional<BookFile> findById(Long id, boolean eagerRelationships);

@@ -1,9 +1,9 @@
 package com.example.books.domain.bookpage;
 
 /**
- * Port for mutating BookPageText aggregates.
+ * Command-side port for mutating BookPageText aggregates.
  */
-public interface BookPageTextRepository {
+public interface BookPageTextCommandRepository {
     BookPageText save(BookPageText bookPageText);
 
     void deleteById(Long id);

@@ -1,7 +1,7 @@
 package com.example.books.infrastructure.database.jpa.adapter;
 
-import com.example.books.domain.ingestevent.IngestEventDataAccessRepository;
-import com.example.books.domain.ingestevent.IngestEventRepository;
+import com.example.books.domain.ingestevent.IngestEventCommandRepository;
+import com.example.books.domain.ingestevent.IngestEventQueryRepository;
 import com.example.books.domain.ingestrun.IngestEvent;
 import com.example.books.infrastructure.database.jpa.mapper.IngestEventMapper;
 import com.example.books.infrastructure.database.jpa.repository.IngestEventJpaRepository;
@@ -12,10 +12,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 /**
- * JPA-backed read adapter for ingest events.
+ * JPA-backed adapter for ingest events.
  */
 @Repository
-public class IngestEventJpaAdapter implements IngestEventDataAccessRepository, IngestEventRepository {
+public class IngestEventJpaAdapter implements IngestEventQueryRepository, IngestEventCommandRepository {
 
     private final IngestEventJpaRepository ingestEventJpaRepository;
     private final IngestEventMapper ingestEventMapper;

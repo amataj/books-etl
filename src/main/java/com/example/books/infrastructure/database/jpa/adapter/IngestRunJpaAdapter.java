@@ -1,8 +1,8 @@
 package com.example.books.infrastructure.database.jpa.adapter;
 
 import com.example.books.domain.ingestrun.IngestRun;
-import com.example.books.domain.ingestrun.IngestRunDataAccessRepository;
-import com.example.books.domain.ingestrun.IngestRunRepository;
+import com.example.books.domain.ingestrun.IngestRunCommandRepository;
+import com.example.books.domain.ingestrun.IngestRunQueryRepository;
 import com.example.books.infrastructure.database.jpa.mapper.IngestRunMapper;
 import com.example.books.infrastructure.database.jpa.repository.IngestRunJpaRepository;
 import com.example.books.shared.pagination.PageCriteria;
@@ -12,10 +12,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 /**
- * JPA-backed read adapter for ingest runs.
+ * JPA-backed adapter for ingest runs.
  */
 @Repository
-public class IngestRunJpaAdapter implements IngestRunDataAccessRepository, IngestRunRepository {
+public class IngestRunJpaAdapter implements IngestRunQueryRepository, IngestRunCommandRepository {
 
     private final IngestRunJpaRepository ingestRunJpaRepository;
     private final IngestRunMapper ingestRunMapper;

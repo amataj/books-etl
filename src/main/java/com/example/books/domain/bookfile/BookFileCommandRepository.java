@@ -3,9 +3,9 @@ package com.example.books.domain.bookfile;
 import java.util.Optional;
 
 /**
- * Port for persisting book files.
+ * Command-side port for persisting book files.
  */
-public interface BookFileRepository {
+public interface BookFileCommandRepository {
     BookFile save(BookFile file);
 
     void deleteById(Long id);

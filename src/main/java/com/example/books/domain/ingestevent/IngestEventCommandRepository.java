@@ -3,9 +3,9 @@ package com.example.books.domain.ingestevent;
 import com.example.books.domain.ingestrun.IngestEvent;
 
 /**
- * Port for mutating ingest events.
+ * Command-side port for mutating ingest events.
  */
-public interface IngestEventRepository {
+public interface IngestEventCommandRepository {
     IngestEvent save(IngestEvent ingestEvent);
 
     void deleteById(Long id);

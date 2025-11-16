@@ -1,7 +1,7 @@
 package com.example.books.usecase.bookpagetext.impl;
 
 import com.example.books.domain.bookpage.BookPageText;
-import com.example.books.domain.bookpage.BookPageTextDataAccessRepository;
+import com.example.books.domain.bookpage.BookPageTextQueryRepository;
 import com.example.books.domain.bookpage.BookPageTextService;
 import com.example.books.shared.pagination.PageCriteria;
 import com.example.books.shared.pagination.PageResult;
@@ -18,14 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class BookPageTextUseCaseImpl implements BookPageTextUseCase {
 
     private final BookPageTextService bookPageTextService;
-    private final BookPageTextDataAccessRepository bookPageTextDataAccessRepository;
+    private final BookPageTextQueryRepository bookPageTextQueryRepository;
 
-    public BookPageTextUseCaseImpl(
-        BookPageTextService bookPageTextService,
-        BookPageTextDataAccessRepository bookPageTextDataAccessRepository
-    ) {
+    public BookPageTextUseCaseImpl(BookPageTextService bookPageTextService, BookPageTextQueryRepository bookPageTextQueryRepository) {
         this.bookPageTextService = bookPageTextService;
-        this.bookPageTextDataAccessRepository = bookPageTextDataAccessRepository;
+        this.bookPageTextQueryRepository = bookPageTextQueryRepository;
     }
 
     @Override
@@ -46,7 +43,7 @@ public class BookPageTextUseCaseImpl implements BookPageTextUseCase {
     @Override
     @Transactional(readOnly = true)
     public Page<BookPageText> findAll(Pageable pageable) {
-        PageResult<BookPageText> all = bookPageTextDataAccessRepository.findAll(
+        PageResult<BookPageText> all = bookPageTextQueryRepository.findAll(
             new PageCriteria(pageable.getPageNumber(), pageable.getPageSize()),
             false
         );
@@ -56,7 +53,7 @@ public class BookPageTextUseCaseImpl implements BookPageTextUseCase {
     @Override
     @Transactional(readOnly = true)
     public Page<BookPageText> findAllWithEagerRelationships(Pageable pageable) {
-        PageResult<BookPageText> all = bookPageTextDataAccessRepository.findAll(
+        PageResult<BookPageText> all = bookPageTextQueryRepository.findAll(
             new PageCriteria(pageable.getPageNumber(), pageable.getPageSize()),
             true
         );
@@ -66,7 +63,7 @@ public class BookPageTextUseCaseImpl implements BookPageTextUseCase {
     @Override
     @Transactional(readOnly = true)
     public Optional<BookPageText> findOne(Long id) {
-        return bookPageTextDataAccessRepository.findById(id);
+        return bookPageTextQueryRepository.findById(id);
     }
 
     @Override
@@ -77,6 +74,6 @@ public class BookPageTextUseCaseImpl implements BookPageTextUseCase {
     @Override
     @Transactional(readOnly = true)
     public boolean exists(Long id) {
-        return bookPageTextDataAccessRepository.findById(id).isPresent();
+        return bookPageTextQueryRepository.findById(id).isPresent();
     }
 }

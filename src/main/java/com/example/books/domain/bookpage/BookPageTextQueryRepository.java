@@ -5,9 +5,9 @@ import com.example.books.shared.pagination.PageResult;
 import java.util.Optional;
 
 /**
- * Read-only port for BookPageText aggregates.
+ * Query-side port for BookPageText aggregates.
  */
-public interface BookPageTextDataAccessRepository {
+public interface BookPageTextQueryRepository {
     Optional<BookPageText> findById(Long id);
 
     Optional<BookPageText> findById(Long id, boolean eagerRelationships);

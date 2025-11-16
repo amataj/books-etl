@@ -1,7 +1,7 @@
 package com.example.books.usecase.bookfile.impl;
 
 import com.example.books.domain.bookfile.BookFile;
-import com.example.books.domain.bookfile.BookFileDataAccessRepository;
+import com.example.books.domain.bookfile.BookFileQueryRepository;
 import com.example.books.domain.bookfile.BookFileService;
 import com.example.books.usecase.bookfile.BookFileUseCase;
 import java.util.Optional;
@@ -15,11 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class BookFileUseCaseImpl implements BookFileUseCase {
 
     private final BookFileService bookFileService;
-    private final BookFileDataAccessRepository bookFileDataAccessRepository;
+    private final BookFileQueryRepository bookFileQueryRepository;
 
-    public BookFileUseCaseImpl(BookFileService bookFileService, BookFileDataAccessRepository bookFileDataAccessRepository) {
+    public BookFileUseCaseImpl(BookFileService bookFileService, BookFileQueryRepository bookFileQueryRepository) {
         this.bookFileService = bookFileService;
-        this.bookFileDataAccessRepository = bookFileDataAccessRepository;
+        this.bookFileQueryRepository = bookFileQueryRepository;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class BookFileUseCaseImpl implements BookFileUseCase {
     @Override
     @Transactional(readOnly = true)
     public Optional<BookFile> findOne(Long id) {
-        return bookFileDataAccessRepository.findById(id);
+        return bookFileQueryRepository.findById(id);
     }
 
     @Override
@@ -63,6 +63,6 @@ public class BookFileUseCaseImpl implements BookFileUseCase {
     @Override
     @Transactional(readOnly = true)
     public boolean exists(Long id) {
-        return bookFileDataAccessRepository.findById(id).isPresent();
+        return bookFileQueryRepository.findById(id).isPresent();
     }
 }

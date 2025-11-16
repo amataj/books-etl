@@ -6,9 +6,9 @@ import com.example.books.shared.pagination.PageResult;
 import java.util.Optional;
 
 /**
- * Read-only port for ingest events.
+ * Query-side port for ingest events.
  */
-public interface IngestEventDataAccessRepository {
+public interface IngestEventQueryRepository {
     Optional<IngestEvent> findById(Long id);
 
     PageResult<IngestEvent> findAll(PageCriteria criteria);

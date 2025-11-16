@@ -1,9 +1,9 @@
 package com.example.books.domain.ingestrun;
 
 /**
- * Port for mutating ingest runs.
+ * Command-side port for mutating ingest runs.
  */
-public interface IngestRunRepository {
+public interface IngestRunCommandRepository {
     IngestRun save(IngestRun ingestRun);
 
     void deleteById(Long id);
