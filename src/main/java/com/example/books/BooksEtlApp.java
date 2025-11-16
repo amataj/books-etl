@@ -3,6 +3,7 @@ package com.example.books;
 import com.example.books.etl.infrastructure.broker.KafkaTopicProperties;
 import com.example.books.etl.infrastructure.config.ApplicationProperties;
 import com.example.books.etl.infrastructure.logging.CRLFLogConverter;
+import com.example.books.workflow.infrastructure.config.TemporalProperties;
 import jakarta.annotation.PostConstruct;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -23,7 +24,9 @@ import tech.jhipster.config.JHipsterConstants;
 
 @SpringBootApplication
 @EnableKafka
-@EnableConfigurationProperties({ LiquibaseProperties.class, ApplicationProperties.class, KafkaTopicProperties.class })
+@EnableConfigurationProperties(
+    { LiquibaseProperties.class, ApplicationProperties.class, KafkaTopicProperties.class, TemporalProperties.class }
+)
 public class BooksEtlApp {
 
     private static final Logger LOG = LoggerFactory.getLogger(BooksEtlApp.class);

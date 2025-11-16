@@ -260,7 +260,7 @@ application:
         enabled: false
   temporal:
     namespace: books-etl
-    TEMPORAL_SERVER_ADDRESS: localhost:7233
+    server-address: ${TEMPORAL_SERVER_ADDRESS:localhost:7233}
   kafka:
     topics:
       raw: pdf.ingest.raw
