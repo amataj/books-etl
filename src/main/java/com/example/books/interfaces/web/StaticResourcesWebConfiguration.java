@@ -1,4 +1,4 @@
-package com.example.books.config;
+package com.example.books.interfaces.web;
 
 import java.util.concurrent.TimeUnit;
 import org.springframework.context.annotation.Configuration;

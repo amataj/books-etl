@@ -1,4 +1,4 @@
-package com.example.books.config;
+package com.example.books.interfaces.web;
 
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

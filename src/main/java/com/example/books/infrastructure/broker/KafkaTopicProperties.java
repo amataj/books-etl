@@ -1,4 +1,4 @@
-package com.example.books.config;
+package com.example.books.infrastructure.broker;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

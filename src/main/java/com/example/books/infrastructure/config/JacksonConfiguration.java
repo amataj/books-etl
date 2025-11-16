@@ -1,4 +1,4 @@
-package com.example.books.config;
+package com.example.books.infrastructure.config;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

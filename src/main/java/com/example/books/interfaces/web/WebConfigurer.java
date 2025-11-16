@@ -1,4 +1,4 @@
-package com.example.books.config;
+package com.example.books.interfaces.web;
 
 import static java.net.URLDecoder.decode;
 

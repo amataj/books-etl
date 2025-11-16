@@ -1,4 +1,4 @@
-package com.example.books.config;
+package com.example.books.infrastructure.config;
 
 import com.example.books.domain.book.BookCommandRepository;
 import com.example.books.domain.book.BookQueryRepository;

@@ -1,4 +1,4 @@
-package com.example.books.config;
+package com.example.books.infrastructure.logging;
 
 import static tech.jhipster.config.logging.LoggingUtils.*;
 

@@ -1,4 +1,4 @@
-package com.example.books.config;
+package com.example.books.shared;
 
 /**
  * Application constants.

@@ -1,4 +1,4 @@
-package com.example.books.config;
+package com.example.books.infrastructure.config;
 
 import java.util.concurrent.Executor;
 import org.slf4j.Logger;

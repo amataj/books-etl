@@ -1,4 +1,4 @@
-package com.example.books.config;
+package com.example.books.infrastructure.ocr;
 
 import java.util.Map;
 import net.sourceforge.tess4j.Tesseract;

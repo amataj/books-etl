@@ -1,4 +1,4 @@
-package com.example.books.config;
+package com.example.books.infrastructure.database;
 
 import java.util.concurrent.Executor;
 import javax.sql.DataSource;

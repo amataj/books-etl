@@ -1,4 +1,4 @@
-package com.example.books.config;
+package com.example.books.interfaces.security;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 

@@ -1,4 +1,4 @@
-package com.example.books.config;
+package com.example.books.infrastructure.broker;
 
 import java.util.Map;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;

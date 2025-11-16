@@ -1,6 +1,6 @@
-package com.example.books.config;
+package com.example.books.infrastructure.aop;
 
-import com.example.books.aop.logging.LoggingAspect;
+import com.example.books.infrastructure.aop.logging.LoggingAspect;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;

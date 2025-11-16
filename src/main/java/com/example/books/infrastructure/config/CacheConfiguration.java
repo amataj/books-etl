@@ -1,4 +1,4 @@
-package com.example.books.config;
+package com.example.books.infrastructure.config;
 
 import com.example.books.infrastructure.database.jpa.entity.*;
 import com.example.books.infrastructure.database.jpa.repository.UserJpaRepository;

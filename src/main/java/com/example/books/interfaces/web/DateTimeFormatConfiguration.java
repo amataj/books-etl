@@ -1,4 +1,4 @@
-package com.example.books.config;
+package com.example.books.interfaces.web;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;

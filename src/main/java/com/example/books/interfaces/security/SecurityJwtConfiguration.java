@@ -1,4 +1,4 @@
-package com.example.books.config;
+package com.example.books.interfaces.security;
 
 import static com.example.books.shared.security.SecurityUtils.JWT_ALGORITHM;
 
