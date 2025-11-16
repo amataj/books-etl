@@ -1,7 +1,7 @@
 package com.example.books.infrastructure.batch;
 
 import com.example.books.config.KafkaTopicProperties;
-import com.example.books.infrastructure.parser.PdfParser;
+import com.example.books.domain.book.PdfParserPort;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.camel.builder.RouteBuilder;
 import org.slf4j.Logger;
@@ -16,14 +16,14 @@ public class PdfIngestRoute extends RouteBuilder {
     private static final Logger LOG = LoggerFactory.getLogger(PdfIngestRoute.class);
 
     private final ObjectMapper objectMapper;
-    private final PdfParser pdfParser;
+    private final PdfParserPort pdfParserPort;
     private final String rawTopic;
     private final String parsedTopic;
     private final String dlqTopic;
 
-    public PdfIngestRoute(ObjectMapper objectMapper, PdfParser pdfParser, KafkaTopicProperties topics) {
+    public PdfIngestRoute(ObjectMapper objectMapper, PdfParserPort pdfParserPort, KafkaTopicProperties topics) {
         this.objectMapper = objectMapper;
-        this.pdfParser = pdfParser;
+        this.pdfParserPort = pdfParserPort;
         this.rawTopic = topics.getRaw();
         this.parsedTopic = topics.getParsed();
         this.dlqTopic = topics.getDlq();

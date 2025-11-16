@@ -1,5 +1,6 @@
 package com.example.books.infrastructure.parser;
 
+import com.example.books.domain.book.PdfParserPort;
 import com.example.books.shared.ingest.FileChangeNotification;
 import com.example.books.shared.ingest.ParsedPdfDocument;
 import com.example.books.shared.ingest.ParsedPdfPage;
@@ -25,7 +26,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PdfboxPdfParser implements PdfParser {
+public class PdfboxPdfParser implements PdfParserPort {
 
     private static final Logger LOG = LoggerFactory.getLogger(PdfboxPdfParser.class);
 
