@@ -34,7 +34,7 @@ class TechnicalStructureTest {
 
         .ignoreDependency(belongToAnyOf(BooksEtlApp.class), alwaysTrue())
         .ignoreDependency(alwaysTrue(), belongToAnyOf(
-            com.example.books.config.Constants.class,
-            com.example.books.config.ApplicationProperties.class
+            com.example.books.shared.Constants.class,
+            com.example.books.infrastructure.config.ApplicationProperties.class
         ));
 }

@@ -1,6 +1,6 @@
 package com.example.books.infrastructure.broker.producer;
 
-import com.example.books.config.KafkaTopicProperties;
+import com.example.books.infrastructure.broker.KafkaTopicProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;

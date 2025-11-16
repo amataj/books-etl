@@ -1,6 +1,5 @@
 package com.example.books.interfaces.web.rest;
 
-import com.example.books.config.Constants;
 import com.example.books.domain.user.AdminUser;
 import com.example.books.domain.user.UserService;
 import com.example.books.infrastructure.database.jpa.entity.User;
@@ -9,6 +8,7 @@ import com.example.books.infrastructure.mail.MailService;
 import com.example.books.interfaces.web.rest.errors.BadRequestAlertException;
 import com.example.books.interfaces.web.rest.errors.EmailAlreadyUsedException;
 import com.example.books.interfaces.web.rest.errors.LoginAlreadyUsedException;
+import com.example.books.shared.Constants;
 import com.example.books.shared.security.AuthoritiesConstants;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;

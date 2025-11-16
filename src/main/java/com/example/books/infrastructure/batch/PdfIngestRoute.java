@@ -1,7 +1,7 @@
 package com.example.books.infrastructure.batch;
 
-import com.example.books.config.KafkaTopicProperties;
 import com.example.books.domain.book.PdfParserPort;
+import com.example.books.infrastructure.broker.KafkaTopicProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.camel.builder.RouteBuilder;
 import org.slf4j.Logger;

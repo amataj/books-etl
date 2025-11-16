@@ -1,7 +1,7 @@
 package com.example.books.infrastructure.fs;
 
-import com.example.books.config.ApplicationProperties;
 import com.example.books.infrastructure.broker.producer.KafkaBookPdfDocuentEventProducer;
+import com.example.books.infrastructure.config.ApplicationProperties;
 import com.example.books.shared.ingest.FileChangeNotification;
 import com.example.books.shared.ingest.FileChangeType;
 import java.io.IOException;

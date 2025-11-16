@@ -1,6 +1,6 @@
 package com.example.books.config;
 
-import static com.example.books.config.StaticResourcesWebConfiguration.*;
+import static com.example.books.interfaces.web.StaticResourcesWebConfiguration.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 

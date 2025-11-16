@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import com.example.books.infrastructure.logging.CrlfLogConverter;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;

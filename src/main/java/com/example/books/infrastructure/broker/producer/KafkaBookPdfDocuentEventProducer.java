@@ -1,6 +1,6 @@
 package com.example.books.infrastructure.broker.producer;
 
-import com.example.books.config.KafkaTopicProperties;
+import com.example.books.infrastructure.broker.KafkaTopicProperties;
 import com.example.books.shared.ingest.DlqMessage;
 import com.example.books.shared.ingest.FileChangeNotification;
 import com.example.books.shared.ingest.ParsedPdfDocument;

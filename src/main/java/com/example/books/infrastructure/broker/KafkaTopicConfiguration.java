@@ -1,6 +1,6 @@
 package com.example.books.infrastructure.broker;
 
-import com.example.books.config.KafkaTopicProperties;
+import com.example.books.infrastructure.broker.KafkaTopicProperties;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

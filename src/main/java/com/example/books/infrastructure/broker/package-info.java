@@ -1,4 +1,2 @@
-/**
- * Spring cloud consumers and providers
- */
+@org.springframework.lang.NonNullApi
 package com.example.books.infrastructure.broker;

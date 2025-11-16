@@ -1,8 +1,8 @@
 package com.example.books.domain.user;
 
-import com.example.books.config.Constants;
 import com.example.books.infrastructure.database.jpa.entity.Authority;
 import com.example.books.infrastructure.database.jpa.entity.User;
+import com.example.books.shared.Constants;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

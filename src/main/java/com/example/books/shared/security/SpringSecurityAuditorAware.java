@@ -1,6 +1,6 @@
 package com.example.books.shared.security;
 
-import com.example.books.config.Constants;
+import com.example.books.shared.Constants;
 import java.util.Optional;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;

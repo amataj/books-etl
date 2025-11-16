@@ -1,4 +1,4 @@
-package com.example.books.aop.logging;
+package com.example.books.infrastructure.aop.logging;
 
 import java.util.Arrays;
 import org.aspectj.lang.JoinPoint;

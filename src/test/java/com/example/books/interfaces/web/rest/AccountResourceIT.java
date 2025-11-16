@@ -5,7 +5,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.books.IntegrationTest;
-import com.example.books.config.Constants;
 import com.example.books.domain.user.AdminUser;
 import com.example.books.domain.user.PasswordChange;
 import com.example.books.domain.user.UserService;
@@ -14,6 +13,7 @@ import com.example.books.infrastructure.database.jpa.repository.AuthorityJpaRepo
 import com.example.books.infrastructure.database.jpa.repository.UserJpaRepository;
 import com.example.books.interfaces.web.rest.vm.KeyAndPasswordVM;
 import com.example.books.interfaces.web.rest.vm.ManagedUserVM;
+import com.example.books.shared.Constants;
 import com.example.books.shared.security.AuthoritiesConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;

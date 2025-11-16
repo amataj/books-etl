@@ -1,6 +1,6 @@
 package com.example.books.infrastructure.database.jpa.entity;
 
-import com.example.books.config.Constants;
+import com.example.books.shared.Constants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

@@ -1,8 +1,8 @@
 package com.example.books.shared.security.jwt;
 
-import com.example.books.config.SecurityConfiguration;
-import com.example.books.config.SecurityJwtConfiguration;
-import com.example.books.config.WebConfigurer;
+import com.example.books.interfaces.security.SecurityConfiguration;
+import com.example.books.interfaces.security.SecurityJwtConfiguration;
+import com.example.books.interfaces.web.WebConfigurer;
 import com.example.books.interfaces.web.rest.AuthenticateController;
 import com.example.books.shared.management.SecurityMetersService;
 import java.lang.annotation.ElementType;

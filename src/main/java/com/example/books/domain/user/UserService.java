@@ -1,9 +1,9 @@
 package com.example.books.domain.user;
 
-import com.example.books.config.Constants;
 import com.example.books.infrastructure.database.jpa.entity.Authority;
 import com.example.books.infrastructure.database.jpa.repository.AuthorityJpaRepository;
 import com.example.books.infrastructure.database.jpa.repository.UserJpaRepository;
+import com.example.books.shared.Constants;
 import com.example.books.shared.security.AuthoritiesConstants;
 import com.example.books.shared.security.SecurityUtils;
 import java.time.Instant;

@@ -3,7 +3,7 @@ package com.example.books;
 import com.example.books.config.AsyncSyncConfiguration;
 import com.example.books.config.EmbeddedKafka;
 import com.example.books.config.EmbeddedSQL;
-import com.example.books.config.JacksonConfiguration;
+import com.example.books.infrastructure.config.JacksonConfiguration;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
