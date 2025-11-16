@@ -1,13 +1,8 @@
 package com.example.books.domain.book;
 
-import com.example.books.infrastructure.database.jpa.entity.BookEntity;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Implementation for managing {@link Book}.
@@ -16,12 +11,12 @@ public class BookService {
 
     private static final Logger LOG = LoggerFactory.getLogger(BookService.class);
 
-    private final BookRepository bookRepository;
-    private final BookDataAccessRepository bookDataAccessRepository;
+    private final BookCommandRepository bookCommandRepository;
+    private final BookQueryRepository bookQueryRepository;
 
-    public BookService(BookRepository bookRepository, BookDataAccessRepository bookDataAccessRepository) {
-        this.bookRepository = bookRepository;
-        this.bookDataAccessRepository = bookDataAccessRepository;
+    public BookService(BookCommandRepository bookCommandRepository, BookQueryRepository bookQueryRepository) {
+        this.bookCommandRepository = bookCommandRepository;
+        this.bookQueryRepository = bookQueryRepository;
     }
 
     /**
@@ -32,12 +27,12 @@ public class BookService {
      */
     public Book save(Book book) {
         LOG.debug("Request to save Book : {}", book);
-        Optional<Book> existingBook = bookDataAccessRepository.findByTitle(book.getTitle());
+        Optional<Book> existingBook = bookQueryRepository.findByTitle(book.getTitle());
         if (existingBook.isPresent()) {
             LOG.info("Book with title {} already exists", book.getTitle());
             throw new IllegalArgumentException("Book with title " + book.getTitle() + " already exists");
         }
-        return bookRepository.save(book);
+        return bookCommandRepository.save(book);
     }
 
     /**
@@ -48,11 +43,11 @@ public class BookService {
      */
     public Book update(Book book) {
         LOG.debug("Request to update Book : {}", book);
-        if (bookDataAccessRepository.findById(book.getId()).isEmpty()) {
+        if (bookQueryRepository.findById(book.getId()).isEmpty()) {
             LOG.info("Book with id {} does not exist", book.getId());
             throw new IllegalArgumentException("Book with id " + book.getId() + " does not exist");
         }
-        return bookRepository.save(book);
+        return bookCommandRepository.save(book);
     }
 
     /**
@@ -64,7 +59,7 @@ public class BookService {
     public Optional<Book> partialUpdate(Book book) {
         LOG.debug("Request to partially update Book : {}", book);
 
-        Optional<Book> optionalBook = bookDataAccessRepository.findById(book.getId());
+        Optional<Book> optionalBook = bookQueryRepository.findById(book.getId());
         if (optionalBook.isEmpty()) {
             LOG.info("Book with id {} does not exist", book.getId());
             return Optional.empty();
@@ -72,7 +67,7 @@ public class BookService {
         Book existingBook = optionalBook.get();
         partialUpdate(existingBook, book);
 
-        return Optional.ofNullable(bookRepository.save(existingBook));
+        return Optional.ofNullable(bookCommandRepository.save(existingBook));
     }
 
     /**
@@ -82,11 +77,11 @@ public class BookService {
      */
     public void delete(Long id) {
         LOG.debug("Request to delete Book : {}", id);
-        if (bookDataAccessRepository.findById(id).isEmpty()) {
+        if (bookQueryRepository.findById(id).isEmpty()) {
             LOG.info("Book with id {} does not exist", id);
             throw new IllegalArgumentException("Book with id " + id + " does not exist");
         }
-        bookRepository.deleteById(id);
+        bookCommandRepository.deleteById(id);
     }
 
     private void partialUpdate(Book existingBook, Book book) {

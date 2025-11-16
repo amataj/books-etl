@@ -1,7 +1,7 @@
 package com.example.books.usecase.book.impl;
 
 import com.example.books.domain.book.Book;
-import com.example.books.domain.book.BookDataAccessRepository;
+import com.example.books.domain.book.BookQueryRepository;
 import com.example.books.domain.book.BookService;
 import com.example.books.shared.pagination.PageCriteria;
 import com.example.books.shared.pagination.PageResult;
@@ -18,11 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class BookUseCaseImpl implements BookUseCase {
 
     private final BookService bookService;
-    private final BookDataAccessRepository bookDataAccessRepository;
+    private final BookQueryRepository bookQueryRepository;
 
-    public BookUseCaseImpl(BookService bookService, BookDataAccessRepository bookDataAccessRepository) {
+    public BookUseCaseImpl(BookService bookService, BookQueryRepository bookQueryRepository) {
         this.bookService = bookService;
-        this.bookDataAccessRepository = bookDataAccessRepository;
+        this.bookQueryRepository = bookQueryRepository;
     }
 
     @Override
@@ -43,14 +43,14 @@ public class BookUseCaseImpl implements BookUseCase {
     @Override
     @Transactional(readOnly = true)
     public Page<Book> findAll(Pageable pageable) {
-        PageResult<Book> all = bookDataAccessRepository.findAll(new PageCriteria(pageable.getPageNumber(), pageable.getPageSize()));
+        PageResult<Book> all = bookQueryRepository.findAll(new PageCriteria(pageable.getPageNumber(), pageable.getPageSize()));
         return new PageImpl<>(all.content(), pageable, all.totalElements());
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<Book> findOne(Long id) {
-        return bookDataAccessRepository.findById(id);
+        return bookQueryRepository.findById(id);
     }
 
     @Override
@@ -61,6 +61,6 @@ public class BookUseCaseImpl implements BookUseCase {
     @Override
     @Transactional(readOnly = true)
     public boolean exists(Long id) {
-        return bookDataAccessRepository.findById(id).isPresent();
+        return bookQueryRepository.findById(id).isPresent();
     }
 }

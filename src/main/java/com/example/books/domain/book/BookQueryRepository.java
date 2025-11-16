@@ -7,7 +7,7 @@ import java.util.Optional;
 /**
  * Read-only port for accessing Book aggregates.
  */
-public interface BookDataAccessRepository {
+public interface BookQueryRepository {
     Optional<Book> findById(Long id);
 
     Optional<Book> findByDocumentId(String documentId);

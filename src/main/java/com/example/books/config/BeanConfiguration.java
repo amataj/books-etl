@@ -1,7 +1,7 @@
 package com.example.books.config;
 
-import com.example.books.domain.book.BookDataAccessRepository;
-import com.example.books.domain.book.BookRepository;
+import com.example.books.domain.book.BookCommandRepository;
+import com.example.books.domain.book.BookQueryRepository;
 import com.example.books.domain.book.BookService;
 import com.example.books.domain.bookfile.BookFileService;
 import com.example.books.domain.bookpage.BookPageTextService;
@@ -30,8 +30,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class BeanConfiguration {
 
     @Bean
-    public BookService bookService(BookRepository bookRepository, BookDataAccessRepository bookDataAccessRepository) {
-        return new BookService(bookRepository, bookDataAccessRepository);
+    public BookService bookService(BookCommandRepository bookCommandRepository, BookQueryRepository bookQueryRepository) {
+        return new BookService(bookCommandRepository, bookQueryRepository);
     }
 
     @Bean
