@@ -1,11 +1,11 @@
-package com.example.books.usecase.ingestrun.impl;
+package com.example.books.application.ingestrun.impl;
 
+import com.example.books.application.ingestrun.IngestRunUseCase;
 import com.example.books.domain.ingestrun.IngestRun;
 import com.example.books.domain.ingestrun.IngestRunQueryRepository;
 import com.example.books.domain.ingestrun.IngestRunService;
 import com.example.books.shared.pagination.PageCriteria;
 import com.example.books.shared.pagination.PageResult;
-import com.example.books.usecase.ingestrun.IngestRunUseCase;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;

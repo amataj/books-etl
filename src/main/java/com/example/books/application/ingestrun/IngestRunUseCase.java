@@ -1,4 +1,4 @@
-package com.example.books.usecase.ingestrun;
+package com.example.books.application.ingestrun;
 
 import com.example.books.domain.ingestrun.IngestRun;
 import java.util.List;

@@ -1,10 +1,10 @@
 package com.example.books.interfaces.web.rest;
 
+import com.example.books.application.ingestrun.IngestRunUseCase;
 import com.example.books.domain.ingestrun.IngestRun;
 import com.example.books.infrastructure.database.jpa.entity.IngestRunEntity;
 import com.example.books.infrastructure.database.jpa.repository.IngestRunJpaRepository;
 import com.example.books.interfaces.web.rest.errors.BadRequestAlertException;
-import com.example.books.usecase.ingestrun.IngestRunUseCase;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;

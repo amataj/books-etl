@@ -1,4 +1,4 @@
-package com.example.books.usecase.bookpagetext;
+package com.example.books.application.bookpagetext;
 
 import com.example.books.domain.bookpage.BookPageText;
 import java.util.Optional;

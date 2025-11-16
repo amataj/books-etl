@@ -1,10 +1,10 @@
 package com.example.books.interfaces.web.rest;
 
+import com.example.books.application.book.BookUseCase;
 import com.example.books.domain.book.Book;
 import com.example.books.infrastructure.database.jpa.entity.BookEntity;
 import com.example.books.infrastructure.database.jpa.repository.BookJpaRepository;
 import com.example.books.interfaces.web.rest.errors.BadRequestAlertException;
-import com.example.books.usecase.book.BookUseCase;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;

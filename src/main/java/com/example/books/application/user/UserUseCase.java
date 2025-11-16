@@ -1,4 +1,4 @@
-package com.example.books.usecase.user;
+package com.example.books.application.user;
 
 import com.example.books.domain.user.AdminUser;
 import com.example.books.domain.user.User;

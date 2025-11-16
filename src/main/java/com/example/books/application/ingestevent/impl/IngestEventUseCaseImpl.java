@@ -1,11 +1,11 @@
-package com.example.books.usecase.ingestevent.impl;
+package com.example.books.application.ingestevent.impl;
 
+import com.example.books.application.ingestevent.IngestEventUseCase;
 import com.example.books.domain.ingestevent.IngestEventQueryRepository;
 import com.example.books.domain.ingestevent.IngestEventService;
 import com.example.books.domain.ingestrun.IngestEvent;
 import com.example.books.shared.pagination.PageCriteria;
 import com.example.books.shared.pagination.PageResult;
-import com.example.books.usecase.ingestevent.IngestEventUseCase;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;

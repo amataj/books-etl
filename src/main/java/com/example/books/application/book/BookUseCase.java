@@ -1,4 +1,4 @@
-package com.example.books.usecase.book;
+package com.example.books.application.book;
 
 import com.example.books.domain.book.Book;
 import java.util.Optional;

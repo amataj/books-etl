@@ -1,4 +1,4 @@
-package com.example.books.usecase.ingestevent;
+package com.example.books.application.ingestevent;
 
 import com.example.books.domain.ingestrun.IngestEvent;
 import java.util.List;

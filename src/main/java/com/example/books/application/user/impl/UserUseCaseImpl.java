@@ -1,9 +1,9 @@
-package com.example.books.usecase.user.impl;
+package com.example.books.application.user.impl;
 
+import com.example.books.application.user.UserUseCase;
 import com.example.books.domain.user.AdminUser;
 import com.example.books.domain.user.User;
 import com.example.books.domain.user.UserService;
-import com.example.books.usecase.user.UserUseCase;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;

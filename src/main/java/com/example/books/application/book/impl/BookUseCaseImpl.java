@@ -1,11 +1,11 @@
-package com.example.books.usecase.book.impl;
+package com.example.books.application.book.impl;
 
+import com.example.books.application.book.BookUseCase;
 import com.example.books.domain.book.Book;
 import com.example.books.domain.book.BookQueryRepository;
 import com.example.books.domain.book.BookService;
 import com.example.books.shared.pagination.PageCriteria;
 import com.example.books.shared.pagination.PageResult;
-import com.example.books.usecase.book.BookUseCase;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
