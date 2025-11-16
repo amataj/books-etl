@@ -110,7 +110,14 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-# application:
+application:
+  kafka:
+    topics:
+      raw: pdf.ingest.raw
+      parsed: pdf.ingest.parsed
+      indexed: pdf.ingest.indexed
+      dlq: pdf.ingest.dlq
+
 management:
   health:
     mail:
