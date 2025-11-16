@@ -3,9 +3,12 @@ package com.example.books.usecase.bookfile.impl;
 import com.example.books.domain.bookfile.BookFile;
 import com.example.books.domain.bookfile.BookFileQueryRepository;
 import com.example.books.domain.bookfile.BookFileService;
+import com.example.books.shared.pagination.PageCriteria;
+import com.example.books.shared.pagination.PageResult;
 import com.example.books.usecase.bookfile.BookFileUseCase;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,13 +43,21 @@ public class BookFileUseCaseImpl implements BookFileUseCase {
     @Override
     @Transactional(readOnly = true)
     public Page<BookFile> findAll(Pageable pageable) {
-        return bookFileService.findAll(pageable);
+        PageResult<BookFile> all = bookFileQueryRepository.findAll(
+            new PageCriteria(pageable.getPageNumber(), pageable.getPageSize()),
+            false
+        );
+        return new PageImpl<>(all.content(), pageable, all.totalElements());
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<BookFile> findAllWithEagerRelationships(Pageable pageable) {
-        return bookFileService.findAllWithEagerRelationships(pageable);
+        PageResult<BookFile> all = bookFileQueryRepository.findAll(
+            new PageCriteria(pageable.getPageNumber(), pageable.getPageSize()),
+            true
+        );
+        return new PageImpl<>(all.content(), pageable, all.totalElements());
     }
 
     @Override
