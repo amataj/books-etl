@@ -13,7 +13,7 @@ import com.example.books.infrastructure.database.jpa.repository.UserJpaRepositor
 import com.example.books.infrastructure.mail.MailService;
 import com.example.books.shared.security.SecurityUtils;
 import jakarta.validation.Valid;
-import java.util.*;
+import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

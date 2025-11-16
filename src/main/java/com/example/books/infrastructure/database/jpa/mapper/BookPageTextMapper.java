@@ -4,7 +4,10 @@ import com.example.books.domain.book.Book;
 import com.example.books.domain.bookpage.BookPageText;
 import com.example.books.infrastructure.database.jpa.entity.BookEntity;
 import com.example.books.infrastructure.database.jpa.entity.BookPageTextEntity;
-import org.mapstruct.*;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 /**
  * Mapper for the entity {@link BookPageTextEntity} and its DTO {@link BookPageText}.

@@ -2,7 +2,6 @@ package com.example.books.infrastructure.broker.consumer;
 
 import static org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;

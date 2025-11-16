@@ -1,8 +1,6 @@
 package com.example.books.adapter.web.rest;
 
-import static com.example.books.shared.security.SecurityUtils.AUTHORITIES_CLAIM;
-import static com.example.books.shared.security.SecurityUtils.JWT_ALGORITHM;
-import static com.example.books.shared.security.SecurityUtils.USER_ID_CLAIM;
+import static com.example.books.shared.security.SecurityUtils.*;
 
 import com.example.books.adapter.web.rest.vm.LoginVM;
 import com.example.books.shared.security.DomainUserDetailsService.UserWithId;

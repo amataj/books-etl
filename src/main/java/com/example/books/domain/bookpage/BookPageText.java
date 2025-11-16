@@ -3,7 +3,9 @@ package com.example.books.domain.bookpage;
 import com.example.books.domain.book.Book;
 import com.example.books.infrastructure.database.jpa.entity.BookPageTextEntity;
 import jakarta.persistence.Lob;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Objects;
 

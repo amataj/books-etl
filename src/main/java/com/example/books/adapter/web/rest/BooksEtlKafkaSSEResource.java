@@ -1,7 +1,6 @@
 package com.example.books.adapter.web.rest;
 
 import com.example.books.infrastructure.broker.consumer.KafkaSseMessageConsumer;
-import com.example.books.infrastructure.broker.producer.KafkaSseMessageProducer;
 import java.security.Principal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

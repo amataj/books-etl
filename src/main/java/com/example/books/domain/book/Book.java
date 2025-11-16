@@ -1,7 +1,9 @@
 package com.example.books.domain.book;
 
 import com.example.books.infrastructure.database.jpa.entity.BookEntity;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Objects;
 

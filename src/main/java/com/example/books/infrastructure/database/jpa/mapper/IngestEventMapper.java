@@ -4,7 +4,10 @@ import com.example.books.domain.ingestrun.IngestEvent;
 import com.example.books.domain.ingestrun.IngestRun;
 import com.example.books.infrastructure.database.jpa.entity.IngestEventEntity;
 import com.example.books.infrastructure.database.jpa.entity.IngestRunEntity;
-import org.mapstruct.*;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 /**
  * Mapper for the entity {@link IngestEventEntity} and its DTO {@link IngestEvent}.

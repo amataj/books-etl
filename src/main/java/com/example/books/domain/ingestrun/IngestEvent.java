@@ -2,7 +2,8 @@ package com.example.books.domain.ingestrun;
 
 import com.example.books.infrastructure.database.jpa.entity.IngestEventEntity;
 import jakarta.persistence.Lob;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
