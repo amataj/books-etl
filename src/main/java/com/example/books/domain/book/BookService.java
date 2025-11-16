@@ -1,8 +1,6 @@
 package com.example.books.domain.book;
 
 import com.example.books.infrastructure.database.jpa.entity.BookEntity;
-import com.example.books.infrastructure.database.jpa.mapper.BookMapper;
-import com.example.books.infrastructure.database.jpa.repository.BookJpaRepository;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service Implementation for managing {@link BookEntity}.
+ * Service Implementation for managing {@link Book}.
  */
 @Service
 @Transactional
@@ -20,83 +18,63 @@ public class BookService {
 
     private static final Logger LOG = LoggerFactory.getLogger(BookService.class);
 
-    private final BookJpaRepository bookRepository;
+    private final BookRepository bookRepository;
+    private final BookDataAccessRepository bookDataAccessRepository;
 
-    private final BookMapper bookMapper;
-
-    public BookService(BookJpaRepository bookRepository, BookMapper bookMapper) {
+    public BookService(BookRepository bookRepository, BookDataAccessRepository bookDataAccessRepository) {
         this.bookRepository = bookRepository;
-        this.bookMapper = bookMapper;
+        this.bookDataAccessRepository = bookDataAccessRepository;
     }
 
     /**
      * Save a book.
      *
-     * @param bookDTO the entity to save.
+     * @param book the entity to save.
      * @return the persisted entity.
      */
-    public Book save(Book bookDTO) {
-        LOG.debug("Request to save Book : {}", bookDTO);
-        BookEntity book = bookMapper.toEntity(bookDTO);
-        book = bookRepository.save(book);
-        return bookMapper.toDto(book);
+    public Book save(Book book) {
+        LOG.debug("Request to save Book : {}", book);
+        Optional<Book> existingBook = bookDataAccessRepository.findByTitle(book.getTitle());
+        if (existingBook.isPresent()) {
+            LOG.info("Book with title {} already exists", book.getTitle());
+            throw new IllegalArgumentException("Book with title " + book.getTitle() + " already exists");
+        }
+        return bookRepository.save(book);
     }
 
     /**
      * Update a book.
      *
-     * @param bookDTO the entity to save.
+     * @param book the entity to save.
      * @return the persisted entity.
      */
-    public Book update(Book bookDTO) {
-        LOG.debug("Request to update Book : {}", bookDTO);
-        BookEntity book = bookMapper.toEntity(bookDTO);
-        book = bookRepository.save(book);
-        return bookMapper.toDto(book);
+    public Book update(Book book) {
+        LOG.debug("Request to update Book : {}", book);
+        if (bookDataAccessRepository.findById(book.getId()).isEmpty()) {
+            LOG.info("Book with id {} does not exist", book.getId());
+            throw new IllegalArgumentException("Book with id " + book.getId() + " does not exist");
+        }
+        return bookRepository.save(book);
     }
 
     /**
      * Partially update a book.
      *
-     * @param bookDTO the entity to update partially.
+     * @param book the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<Book> partialUpdate(Book bookDTO) {
-        LOG.debug("Request to partially update Book : {}", bookDTO);
+    public Optional<Book> partialUpdate(Book book) {
+        LOG.debug("Request to partially update Book : {}", book);
 
-        return bookRepository
-            .findById(bookDTO.getId())
-            .map(existingBook -> {
-                bookMapper.partialUpdate(existingBook, bookDTO);
+        Optional<Book> optionalBook = bookDataAccessRepository.findById(book.getId());
+        if (optionalBook.isEmpty()) {
+            LOG.info("Book with id {} does not exist", book.getId());
+            return Optional.empty();
+        }
+        Book existingBook = optionalBook.get();
+        partialUpdate(existingBook, book);
 
-                return existingBook;
-            })
-            .map(bookRepository::save)
-            .map(bookMapper::toDto);
-    }
-
-    /**
-     * Get all the books.
-     *
-     * @param pageable the pagination information.
-     * @return the list of entities.
-     */
-    @Transactional(readOnly = true)
-    public Page<Book> findAll(Pageable pageable) {
-        LOG.debug("Request to get all Books");
-        return bookRepository.findAll(pageable).map(bookMapper::toDto);
-    }
-
-    /**
-     * Get one book by id.
-     *
-     * @param id the id of the entity.
-     * @return the entity.
-     */
-    @Transactional(readOnly = true)
-    public Optional<Book> findOne(Long id) {
-        LOG.debug("Request to get Book : {}", id);
-        return bookRepository.findById(id).map(bookMapper::toDto);
+        return Optional.ofNullable(bookRepository.save(existingBook));
     }
 
     /**
@@ -106,6 +84,35 @@ public class BookService {
      */
     public void delete(Long id) {
         LOG.debug("Request to delete Book : {}", id);
+        if (bookDataAccessRepository.findById(id).isEmpty()) {
+            LOG.info("Book with id {} does not exist", id);
+            throw new IllegalArgumentException("Book with id " + id + " does not exist");
+        }
         bookRepository.deleteById(id);
+    }
+
+    private void partialUpdate(Book existingBook, Book book) {
+        if (book == null) {
+            return;
+        }
+
+        if (book.getId() != null) {
+            existingBook.setId(book.getId());
+        }
+        if (book.getDocumentId() != null) {
+            existingBook.setDocumentId(book.getDocumentId());
+        }
+        if (book.getTitle() != null) {
+            existingBook.setTitle(book.getTitle());
+        }
+        if (book.getAuthor() != null) {
+            existingBook.setAuthor(book.getAuthor());
+        }
+        if (book.getLang() != null) {
+            existingBook.setLang(book.getLang());
+        }
+        if (book.getPages() != null) {
+            existingBook.setPages(book.getPages());
+        }
     }
 }

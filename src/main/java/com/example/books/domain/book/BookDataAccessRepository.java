@@ -13,4 +13,6 @@ public interface BookDataAccessRepository {
     Optional<Book> findByDocumentId(String documentId);
 
     PageResult<Book> findAll(PageCriteria criteria);
+
+    Optional<Book> findByTitle(String title);
 }

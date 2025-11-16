@@ -9,6 +9,4 @@ public interface BookRepository {
     Book save(Book book);
 
     void deleteById(Long id);
-
-    Optional<Book> findByDocumentId(String documentId);
 }
