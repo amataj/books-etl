@@ -14,8 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Service Implementation for managing {@link BookPageTextEntity}.
  */
-@Service
-@Transactional
 public class BookPageTextService {
 
     private static final Logger LOG = LoggerFactory.getLogger(BookPageTextService.class);

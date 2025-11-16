@@ -15,8 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Service Implementation for managing {@link IngestRunEntity}.
  */
-@Service
-@Transactional
 public class IngestRunService {
 
     private static final Logger LOG = LoggerFactory.getLogger(IngestRunService.class);

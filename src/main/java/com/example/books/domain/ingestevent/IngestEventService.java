@@ -16,8 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Service Implementation for managing {@link IngestEventEntity}.
  */
-@Service
-@Transactional
 public class IngestEventService {
 
     private static final Logger LOG = LoggerFactory.getLogger(IngestEventService.class);

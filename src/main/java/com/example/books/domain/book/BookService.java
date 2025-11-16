@@ -12,8 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Service Implementation for managing {@link Book}.
  */
-@Service
-@Transactional
 public class BookService {
 
     private static final Logger LOG = LoggerFactory.getLogger(BookService.class);

@@ -24,8 +24,6 @@ import tech.jhipster.security.RandomUtil;
 /**
  * Service class for managing users.
  */
-@Service
-@Transactional
 public class UserService {
 
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
