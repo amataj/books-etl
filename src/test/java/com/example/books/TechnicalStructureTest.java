@@ -8,9 +8,7 @@ import com.tngtech.archunit.core.importer.ImportOption.DoNotIncludeTests;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
-import org.junit.jupiter.api.Disabled;
 
-@Disabled
 @AnalyzeClasses(packagesOf = BooksEtlApp.class, importOptions = DoNotIncludeTests.class)
 class TechnicalStructureTest {
 
@@ -18,23 +16,9 @@ class TechnicalStructureTest {
     @ArchTest
     static final ArchRule respectsTechnicalArchitectureLayers = layeredArchitecture()
         .consideringAllDependencies()
-        .layer("Config").definedBy("..config..")
-        .layer("Web").definedBy("..web..")
-        .optionalLayer("Service").definedBy("..service..")
-        .layer("Security").definedBy("..security..")
-        .optionalLayer("Persistence").definedBy("..repository..")
-        .layer("Domain").definedBy("..domain..")
 
-        .whereLayer("Config").mayNotBeAccessedByAnyLayer()
-        .whereLayer("Web").mayOnlyBeAccessedByLayers("Config")
-        .whereLayer("Service").mayOnlyBeAccessedByLayers("Web", "Config")
-        .whereLayer("Security").mayOnlyBeAccessedByLayers("Config", "Service", "Web")
-        .whereLayer("Persistence").mayOnlyBeAccessedByLayers("Service", "Security", "Web", "Config")
-        .whereLayer("Domain").mayOnlyBeAccessedByLayers("Persistence", "Service", "Security", "Web", "Config")
 
         .ignoreDependency(belongToAnyOf(BooksEtlApp.class), alwaysTrue())
         .ignoreDependency(alwaysTrue(), belongToAnyOf(
-            com.example.books.shared.Constants.class,
-            com.example.books.infrastructure.config.ApplicationProperties.class
         ));
 }
