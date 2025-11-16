@@ -1,9 +1,9 @@
 package com.example.books;
 
-import com.example.books.config.AsyncSyncConfiguration;
-import com.example.books.config.EmbeddedKafka;
-import com.example.books.config.EmbeddedSQL;
-import com.example.books.infrastructure.config.*;
+import com.example.books.etl.config.AsyncSyncConfiguration;
+import com.example.books.etl.config.EmbeddedKafka;
+import com.example.books.etl.config.EmbeddedSQL;
+import com.example.books.etl.infrastructure.config.JacksonConfiguration;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
