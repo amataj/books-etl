@@ -33,20 +33,26 @@ public class FileSystemWatcher implements SmartLifecycle {
     private final KafkaBookPdfDocuentEventProducer kafkaProducer;
     private final AtomicBoolean running = new AtomicBoolean(false);
     private final ExecutorService executor;
-    private final WatchService watchService;
+    private WatchService watchService;
     private final Set<Path> registeredDirectories = ConcurrentHashMap.newKeySet();
 
     public FileSystemWatcher(
         ApplicationProperties properties,
         FileChecksumCalculator checksumCalculator,
         KafkaBookPdfDocuentEventProducer kafkaProducer
-    ) throws IOException {
-        this.root = Path.of(properties.getBooks().getInbox());
+    ) {
+        String inbox = properties.getBooks().getInbox();
+        if (inbox == null || inbox.isBlank()) {
+            LOG.warn("Filesystem watcher disabled; application.books.inbox is not configured");
+            this.root = null;
+        } else {
+            this.root = Path.of(inbox);
+        }
         this.checksumCalculator = checksumCalculator;
         this.kafkaProducer = kafkaProducer;
         ThreadFactory threadFactory = new CustomizableThreadFactory("books-fs-watcher-");
         this.executor = Executors.newSingleThreadExecutor(threadFactory);
-        this.watchService = FileSystems.getDefault().newWatchService();
+        this.watchService = null;
         properties.getBooks().getExclude().stream().filter(Objects::nonNull).forEach(pattern -> excludeMatchers.add(glob(pattern)));
     }
 
@@ -58,16 +64,23 @@ public class FileSystemWatcher implements SmartLifecycle {
     @Override
     public void start() {
         if (running.compareAndSet(false, true)) {
+            if (root == null) {
+                LOG.warn("Skipping filesystem watcher startup; root inbox directory is not configured");
+                running.set(false);
+                return;
+            }
             if (!Files.isDirectory(root)) {
                 LOG.warn("Skipping filesystem watcher startup; root {} does not exist", root);
                 running.set(false);
                 return;
             }
             try {
+                this.watchService = FileSystems.getDefault().newWatchService();
                 registerRecursively(root);
             } catch (IOException e) {
-                LOG.error("Failed to register directories for watcher", e);
+                LOG.error("Failed to initialize filesystem watcher for {}", root, e);
                 running.set(false);
+                closeWatchServiceQuietly();
                 return;
             }
             executor.submit(this::run);
@@ -78,11 +91,7 @@ public class FileSystemWatcher implements SmartLifecycle {
     @Override
     public void stop() {
         if (running.compareAndSet(true, false)) {
-            try {
-                watchService.close();
-            } catch (IOException e) {
-                LOG.warn("Error closing watch service", e);
-            }
+            closeWatchServiceQuietly();
             executor.shutdownNow();
             registeredDirectories.clear();
         }
@@ -130,6 +139,18 @@ public class FileSystemWatcher implements SmartLifecycle {
             LOG.error("Watcher error", e);
         } finally {
             stop();
+        }
+    }
+
+    private void closeWatchServiceQuietly() {
+        if (watchService != null) {
+            try {
+                watchService.close();
+            } catch (IOException e) {
+                LOG.warn("Error closing watch service", e);
+            } finally {
+                watchService = null;
+            }
         }
     }
 
