@@ -4,8 +4,10 @@ import com.example.books.workflow.DocumentLifecycleWorkflowImpl;
 import com.example.books.workflow.activities.DocumentActivitiesImpl;
 import io.temporal.client.WorkflowClient;
 import io.temporal.serviceclient.WorkflowServiceStubs;
+import io.temporal.serviceclient.WorkflowServiceStubsOptions;
 import io.temporal.worker.Worker;
 import io.temporal.worker.WorkerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -14,9 +16,12 @@ import org.springframework.context.annotation.Profile;
 @Profile("workflow")
 public class TemporalConfig {
 
+    @Value("${TEMPORAL_SERVER_ADDRESS:temporal.temporal.svc.cluster.local:7233}")
+    private String temporalAddress;
+
     @Bean
     public WorkflowServiceStubs workflowServiceStubs() {
-        return WorkflowServiceStubs.newLocalServiceStubs();
+        return WorkflowServiceStubs.newInstance(WorkflowServiceStubsOptions.newBuilder().setTarget(temporalAddress).build());
     }
 
     @Bean

@@ -13,3 +13,7 @@ services:
     extends:
       file: ./tesseract.yml
       service: tesseract
+  temporal:
+    extends:
+      file: ./temporal.yml
+      service: temporal
