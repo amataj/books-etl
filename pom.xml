@@ -213,9 +213,14 @@
             <artifactId>jcache</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.temporal</groupId>
-            <artifactId>temporal-spring-boot-starter</artifactId>
-            <version>${temporal-spring-boot-starter.version}</version>
+          <groupId>io.temporal</groupId>
+          <artifactId>temporal-spring-boot-starter</artifactId>
+          <version>${temporal-spring-boot-starter.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>io.temporal</groupId>
+          <artifactId>temporal-sdk</artifactId>
+          <version>${temporal-spring-boot-starter.version}</version>
         </dependency>
 
         <dependency>
