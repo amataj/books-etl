@@ -2,7 +2,7 @@ services:
   postgresql:
     environment:
       POSTGRES_PASSWORD: temporal
-      POSTGRES_USER: postgres
+      POSTGRES_USER: temporal
       POSTGRES_DB: temporal
     image: postgres:17.4
     ports:
@@ -15,7 +15,7 @@ services:
     environment:
       - DB=postgres12
       - DB_PORT=5432
-      - POSTGRES_USER=postgres
+      - POSTGRES_USER=temporal
       - POSTGRES_PWD=temporal
       - POSTGRES_SEEDS=postgresql
       - DBNAME=temporal
