@@ -2,13 +2,13 @@
 name: booksetl
 services:
   postgresql:
+    environment:
+      POSTGRES_DB: booksEtl
+      POSTGRES_PASSWORD: temporal
+      POSTGRES_USER: booksEtl
     image: postgres:17.4
     volumes:
-      #   - ~/volumes/jhipster/booksEtl/postgresql/:/var/lib/postgresql/data/
-      - ./postgresql/booksetl/:/var/lib/postgresql/data/booksetl
-    environment:
-      - POSTGRES_USER=booksEtl
-      - POSTGRES_HOST_AUTH_METHOD=trust
+      - postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER}']
       interval: 5s
