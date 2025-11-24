@@ -4,11 +4,12 @@ services:
     environment:
       POSTGRES_PASSWORD: temporal
       POSTGRES_USER: temporal
+      POSTGRES_DB: temporal
     image: postgres:17.4
     ports:
       - 5432:5432
     volumes:
-      - /var/lib/postgresql/data
+      - temporal-postgres-data:/var/lib/postgresql/data
   temporal:
     depends_on:
       - postgresql
@@ -18,6 +19,7 @@ services:
       - POSTGRES_USER=temporal
       - POSTGRES_PWD=temporal
       - POSTGRES_SEEDS=postgresql
+      - DBNAME=temporal
       - TEMPORAL_ADDRESS=temporal:7233
       - TEMPORAL_CLI_ADDRESS=temporal:7233
     image: temporalio/auto-setup:1.25.0
@@ -41,3 +43,6 @@ services:
     image: temporalio/ui:2.26.2
     ports:
       - 8282:8080
+
+volumes:
+  temporal-postgres-data:
