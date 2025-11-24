@@ -17,3 +17,6 @@ services:
     extends:
       file: ./temporal.yml
       service: temporal
+
+volumes:
+  postgres-data:
