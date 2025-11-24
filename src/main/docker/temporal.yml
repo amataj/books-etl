@@ -43,4 +43,4 @@ services:
       - TEMPORAL_CORS_ORIGINS=http://localhost:3000
     image: temporalio/ui:2.26.2
     ports:
-      - 8080:8080
+      - 8282:8080
