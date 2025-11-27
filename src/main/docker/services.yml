@@ -13,22 +13,23 @@ services:
     extends:
       file: ./tesseract.yml
       service: tesseract
-#  postgresql-temporal:
-#    extends:
-#      file: ./temporal.yml
-#      service: postgresql-temporal
-#  temporal:
-#    extends:
-#      file: ./temporal.yml
-#      service: temporal
-#  temporal-admin-tools:
-#    extends:
-#      file: ./temporal.yml
-#      service: temporal-admin-tools
-#  temporal-ui:
-#    extends:
-#      file: ./temporal.yml
-#      service: temporal-ui
+  postgresql-temporal:
+    extends:
+      file: ./temporal.yml
+      service: postgresql-temporal
+  temporal:
+    extends:
+      file: ./temporal.yml
+      service: temporal
+  temporal-admin-tools:
+    extends:
+      file: ./temporal.yml
+      service: temporal-admin-tools
+  temporal-ui:
+    extends:
+      file: ./temporal.yml
+      service: temporal-ui
 
 volumes:
   postgres-data:
+  temporal-postgres-data:
