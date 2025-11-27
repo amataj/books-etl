@@ -1,10 +1,10 @@
 # This configuration is intended for development purpose, it's **your** responsibility to harden it for production
 name: booksetl
 services:
-  postgresql:
+  postgresql-books-etl:
     extends:
       file: ./postgresql.yml
-      service: postgresql
+      service: postgresql-books-etl
   kafka:
     extends:
       file: ./kafka.yml
