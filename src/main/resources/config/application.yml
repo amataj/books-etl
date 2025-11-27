@@ -132,6 +132,7 @@ spring:
       repositories:
         bootstrap-mode: deferred
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: false
     properties:
       hibernate.jdbc.time_zone: UTC

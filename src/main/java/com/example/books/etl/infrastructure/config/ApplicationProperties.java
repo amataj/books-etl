@@ -20,6 +20,7 @@ public class ApplicationProperties {
     private final Kafka kafka = new Kafka();
     private final Camel camel = new Camel();
     private final Ocr ocr = new Ocr();
+    private final Temporal temporal = new Temporal();
 
     // jhipster-needle-application-properties-property
 
@@ -41,6 +42,10 @@ public class ApplicationProperties {
 
     public Ocr getOcr() {
         return ocr;
+    }
+
+    public Temporal getTemporal() {
+        return temporal;
     }
 
     // jhipster-needle-application-properties-property-getter
@@ -229,6 +234,28 @@ public class ApplicationProperties {
 
         public Map<String, String> getTessVariables() {
             return tessVariables;
+        }
+    }
+
+    public static class Temporal {
+
+        private String namespace;
+        private String serverAddress;
+
+        public String getNamespace() {
+            return namespace;
+        }
+
+        public void setNamespace(String namespace) {
+            this.namespace = namespace;
+        }
+
+        public String getServerAddress() {
+            return serverAddress;
+        }
+
+        public void setServerAddress(String serverAddress) {
+            this.serverAddress = serverAddress;
         }
     }
     // jhipster-needle-application-properties-property-class

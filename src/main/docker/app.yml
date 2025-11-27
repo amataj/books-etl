@@ -13,7 +13,11 @@ services:
       - SPRING_PROFILES_ACTIVE=prod,api-docs
       - MANAGEMENT_PROMETHEUS_METRICS_EXPORT_ENABLED=true
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/booksEtl
+      - SPRING_DATASOURCE_USERNAME=booksEtl
+      - SPRING_DATASOURCE_PASSWORD=booksEtl
       - SPRING_LIQUIBASE_URL=jdbc:postgresql://postgresql:5432/booksEtl
+      - SPRING_LIQUIBASE_USER=booksEtl
+      - SPRING_LIQUIBASE_PASSWORD=booksEtl
       - SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS=kafka:9092
       - OCR_ENABLED=true
       - OCR_LANG=eng

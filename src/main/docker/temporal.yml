@@ -1,15 +1,25 @@
 name: booksetl
 services:
+  postgresql-temporal:
+    environment:
+      POSTGRES_PASSWORD: temporal
+      POSTGRES_USER: temporal
+      POSTGRES_DB: temporal
+    image: postgres:17.4
+    ports:
+      - 15432:5432
+    volumes:
+      - temporal-postgres-data:/var/lib/postgresql/data
   temporal:
     depends_on:
-      - postgresql
+      - postgresql-temporal
     environment:
       - DB=postgres12
       - DB_PORT=5432
-      - POSTGRES_USER=booksEtl
+      - POSTGRES_USER=temporal
       - POSTGRES_PWD=temporal
-      - POSTGRES_SEEDS=postgresql
-      - DBNAME=booksEtl
+      - POSTGRES_SEEDS=postgresql-temporal
+      - DBNAME=temporal
       - TEMPORAL_ADDRESS=temporal:7233
       - TEMPORAL_CLI_ADDRESS=temporal:7233
     image: temporalio/auto-setup:1.25.0
@@ -33,3 +43,6 @@ services:
     image: temporalio/ui:2.26.2
     ports:
       - 8282:8080
+
+volumes:
+  temporal-postgres-data:
