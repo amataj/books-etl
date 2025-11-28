@@ -40,7 +40,7 @@ services:
   postgresql:
     extends:
       file: ./postgresql.yml
-      service: postgresql
+      service: postgresql-books-etl
   kafka:
     extends:
       file: ./kafka.yml
